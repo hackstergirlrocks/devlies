@@ -6,22 +6,21 @@ import { useAudioPlayer } from 'expo-audio';
 
 
 export default function App({ navigation }) {
-    const audioSource = require('../assets/Song/lonelytree.mp3');
-    const [press, setPress] = useState(false)
 
+    const audioSource = require('../assets/Song/lonelytree.mp3');
+    const player = useAudioPlayer(audioSource);
+
+    const [press, setPress] = useState(false)
     const [pressSound, setPressSound] = useState(false)
     const [isPressed, setPressed] = useState(false)
 
-    const player = useAudioPlayer(audioSource);
-
-
+    // Function qui lance la musique 
     const SongStart = () => {
         player.seekTo(0);
         player.play();
     }
-
     useEffect(() => {
-     SongStart()
+        SongStart()
     }, [])
 
 
@@ -30,6 +29,7 @@ export default function App({ navigation }) {
         setPress(!press)
     }
 
+    // Function stop ou pas la musique via le button
     const ChangeSound = () => {
         setPressSound(!pressSound)
         setPressed(!isPressed)

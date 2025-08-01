@@ -1,18 +1,30 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function App({ navigation }) {
+  // Recup le token du joueur via redux ici
+  const token = 'MOIFF'
+
+  // Gestion des animation des buttons 
   const [pressPlay, setPressPlay] = useState(false);
   const [pressProfile, setPressProfile] = useState(false);
   const [pressSkin, setPressSkin] = useState(false);
   const [pressInfo, setPressInfo] = useState(false);
   const [pressShop, setPressShop] = useState(false);
 
+
+  // Sécurité si utilisateur pas connecte zebi
+  useEffect(() => {
+    if (!token) {
+      navigation.navigate('Waiting')
+    }
+  }, [])
+
   return (
     <ImageBackground style={styles.container} source={require('../assets/HomePage/desk-home-page-bigger.png')}>
 
+     {/* Menu en haut a droite */}
       <View style={styles.MainTop}>
-
         <Image style={styles.top} source={require('../assets/btn/star.png')} />
         <Image style={styles.top} source={require('../assets/btn/ecroue.png')} />
       </View>
