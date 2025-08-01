@@ -88,7 +88,7 @@ export default function App({ navigation }) {
       </View>
 
       <View style={styles.Mainskin}>
-        <Image style={styles.skin} source={require('../assets/skin/onlyguts.png')} />
+        <Image style={styles.skin} source={require('../assets/Skin/onlyguts.png')} />
       </View>
     </ImageBackground>
   );
