@@ -6,7 +6,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Waiting from './screens/Waiting';
 import Home from './screens/Home';
-import PageSign from './screens/PageSign';
+import PageSign from './screens/Login/PageSign';
+import SignUp from './screens/Login/SignUp';
+import SignIn from './screens/Login/SignIn';
+
 
 
 
@@ -18,11 +21,15 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Waiting" component={Waiting}  />
-         <Stack.Screen name="Home" component={Home}  />
-       <Stack.Screen name="PageSign" component={PageSign}  />
+        <Stack.Screen name="Waiting" component={Waiting} />
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="PageSign" component={PageSign} />
+        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="SignIn" component={SignIn} />
 
-          {/*<Stack.Screen name="TabNavigator" component={TabNavigator} />  */}
+
+
+        {/*<Stack.Screen name="TabNavigator" component={TabNavigator} />  */}
       </Stack.Navigator>
     </NavigationContainer>
   );

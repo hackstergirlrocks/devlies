@@ -5,7 +5,7 @@ export default function App({ navigation }) {
     // Recup le token du joueur via redux ici
     const token = 'MOIFF'
     // Recup le skin du joueur ici
-    const [skinUser, setSkinUser] = useState(require('../assets/Skin/onlyguts.png'));
+    const [skinUser, setSkinUser] = useState(require('../../assets/Skin/onlyguts.png'));
 
     // Gestion des animation des buttons 
     const [pressSignUP, setPressSignUP] = useState(false);
@@ -19,27 +19,37 @@ export default function App({ navigation }) {
         }
     }, [])
 
+    const SignUP = () => {
+        setPressSignUP(false)
+        navigation.navigate('SignUp')
+    }
+
+     const SignIN = () => {
+        setPressSignIN(false)
+        navigation.navigate('SignIn')
+    }
+
     return (
-        <ImageBackground style={styles.container} source={require('../assets/WaitingPage/animation-desk-bigger.gif')}>
+        <ImageBackground style={styles.container} source={require('../../assets/WaitingPage/animation-desk-bigger.gif')}>
             <TouchableOpacity
                 activeOpacity={1}
                 onPressIn={() => setPressSignUP(true)}
-                onPressOut={() => setPressSignUP(false)}
+                onPressOut={() => SignUP()}
             >
                 {pressSignUP
-                    ? <Image style={styles.btn} source={require('../assets/btn/btn-sign-up-down.png')} />
-                    : <Image style={styles.btn} source={require('../assets/btn/btn-sign-up.png')} />
+                    ? <Image style={styles.btn} source={require('../../assets/btn/btn-sign-up-down.png')} />
+                    : <Image style={styles.btn} source={require('../../assets/btn/btn-sign-up.png')} />
                 }
             </TouchableOpacity>
             <TouchableOpacity
 
                 activeOpacity={1}
                 onPressIn={() => setPressSignIN(true)}
-                onPressOut={() => setPressSignIN(false)}
+            onPressOut={() => SignIN()}
             >
                 {pressSignIN
-                    ? <Image style={styles.btn} source={require('../assets/btn/btn-sign-in-down.png')} />
-                    : <Image style={styles.btn} source={require('../assets/btn/btn-sign-in.png')} />
+                    ? <Image style={styles.btn} source={require('../../assets/btn/btn-sign-in-down.png')} />
+                    : <Image style={styles.btn} source={require('../../assets/btn/btn-sign-in.png')} />
                 }
             </TouchableOpacity>
 
