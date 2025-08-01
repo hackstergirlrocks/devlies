@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 export default function App({ navigation }) {
   // Recup le token du joueur via redux ici
   const token = 'MOIFF'
+  // Recup le skin du joueur ici
+  const [skinUser, setSkinUser] = useState(require('../assets/Skin/onlyguts.png'));
 
   // Gestion des animation des buttons 
   const [pressPlay, setPressPlay] = useState(false);
@@ -11,7 +13,6 @@ export default function App({ navigation }) {
   const [pressSkin, setPressSkin] = useState(false);
   const [pressInfo, setPressInfo] = useState(false);
   const [pressShop, setPressShop] = useState(false);
-
 
   // Sécurité si utilisateur pas connecte zebi
   useEffect(() => {
@@ -23,7 +24,7 @@ export default function App({ navigation }) {
   return (
     <ImageBackground style={styles.container} source={require('../assets/HomePage/desk-home-page-bigger.png')}>
 
-     {/* Menu en haut a droite */}
+      {/* Menu en haut a droite */}
       <View style={styles.MainTop}>
         <Image style={styles.top} source={require('../assets/btn/star.png')} />
         <Image style={styles.top} source={require('../assets/btn/ecroue.png')} />
@@ -70,7 +71,7 @@ export default function App({ navigation }) {
           }
         </TouchableOpacity>
 
-        {/* SHOP BUTTON */}
+
         {/* INFO BUTTON */}
         <TouchableOpacity
           style={styles.switchPage}
@@ -83,6 +84,8 @@ export default function App({ navigation }) {
             : <Image style={styles.btn} source={require('../assets/btn/info-btn.png')} />
           }
         </TouchableOpacity>
+
+        {/* SHOP BUTTON */}
         <TouchableOpacity
           style={styles.switchPage}
           activeOpacity={1}
@@ -100,7 +103,7 @@ export default function App({ navigation }) {
       </View>
 
       <View style={styles.Mainskin}>
-        <Image style={styles.skin} source={require('../assets/Skin/onlyguts.png')} />
+        <Image style={styles.skin} source={skinUser} />
       </View>
     </ImageBackground>
   );

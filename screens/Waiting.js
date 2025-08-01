@@ -25,7 +25,7 @@ export default function App({ navigation }) {
 
 
     const NavigateToLogin = () => {
-        navigation.navigate('Home')
+        navigation.navigate('PageSign')
         setPress(!press)
     }
 

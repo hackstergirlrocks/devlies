@@ -6,6 +6,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Waiting from './screens/Waiting';
 import Home from './screens/Home';
+import PageSign from './screens/PageSign';
+
 
 
 
@@ -18,9 +20,9 @@ export default function App() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Waiting" component={Waiting}  />
          <Stack.Screen name="Home" component={Home}  />
-        {/* <Stack.Screen name="Login" component={Login}  />
+       <Stack.Screen name="PageSign" component={PageSign}  />
 
-        <Stack.Screen name="TabNavigator" component={TabNavigator} />  */}
+          {/*<Stack.Screen name="TabNavigator" component={TabNavigator} />  */}
       </Stack.Navigator>
     </NavigationContainer>
   );
