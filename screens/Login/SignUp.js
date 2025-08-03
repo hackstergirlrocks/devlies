@@ -19,7 +19,8 @@ export default function App({ navigation }) {
                 activeOpacity={1}
             >
                 <Image source={require('../../assets/btn/icone-fleche-retour.png')} />
-                <View style={styles.inputs}>
+            </TouchableOpacity>
+            <View style={styles.inputs}>
                     <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
                         <TextInput style={[styles.username, { textAlign: 'center' }]} placeholderTextColor="black" placeholder='username'></TextInput>
                     </ImageBackground>
@@ -36,7 +37,6 @@ export default function App({ navigation }) {
                         <TextInput style={[styles.passwordConfirm, { textAlign: 'center' }]} placeholderTextColor="black" placeholder='confirm password'></TextInput>
                     </ImageBackground>
                 </View>
-            </TouchableOpacity>
         </ImageBackground>
     );
 }
