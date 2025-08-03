@@ -5,8 +5,15 @@ import { useFonts } from 'expo-font'
 export default function App({ navigation }) {
 
     const [pressNext, setPressNext] = useState(false);
-    const [focusedField, setFocusedField] = useState(null);
-    const [message, setMessage] = useState('');
+
+    const [signUpUsername, setSignUpUsername] = useState('');
+    const [signUpPassword, setSignUpPassword] = useState('');
+    const [signUpPasswordVerif, setSignUpPasswordVerif] = useState('');
+    const [signUpEmail, setSignUpEmail] = useState('');
+    const [error, setError] = useState('');
+
+    const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 
     const [fontsLoaded] = useFonts({
         'Minecraft': require('../../assets/fonts/Minecraft.ttf'),
@@ -17,15 +24,32 @@ export default function App({ navigation }) {
     }
 
     const Next = () => {
+        if (EMAIL_REGEX.test(signUpEmail)) {
+            if (signUpPassword === signUpPasswordVerif) {
+                console.log(true)
+                fetch('http://192.168.1.2:3000/users/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: signUpUsername, email: signUpEmail, password: signUpPassword }),
+            }).then(response => response.json())
+                .then(data => {
+                    if (data.result) {
+                        console.log(data)
+                    }else {
+                        console.log(data.error)
+                    }
+
+                });
+            } else {
+                console.log("wrong password")
+            }
+        } else {
+            console.log(false)
+        }
         setPressNext(false)
         console.log('next pressed');
-        // navigation.navigate('SignUp')
-    }
-
-
-    const ChangePassword = (value) => {
-        console.log(message)
-        setMessage(value)
+        console.log(signUpEmail, signUpPasswordVerif, signUpPassword, signUpUsername)
+        //  navigation.navigate('Home')
     }
 
 
@@ -45,32 +69,30 @@ export default function App({ navigation }) {
                 <KeyboardAvoidingView
                     style={styles.container}
                     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                    keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 0}
+                    keyboardVerticalOffset={Platform.OS === 'ios' ? 280 : 0}
                 >
                     <View style={styles.inputs}>
+                        <Text style={styles.error}>Ceci est une erreur</Text>
                         <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                            <TextInput style={[styles.username, { textAlign: 'center' }]} placeholderTextColor="black" placeholder='username'
-                              
+                            <TextInput style={[styles.username, { textAlign: 'center' }]} onChangeText={(value) => setSignUpUsername(value)} value={signUpUsername} placeholderTextColor="black" placeholder='username'
+
                             ></TextInput>
                         </ImageBackground>
 
                         <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                            <TextInput style={[styles.email, { textAlign: 'center' }]} placeholderTextColor="black" placeholder='email'
-                           
+                            <TextInput style={[styles.email, { textAlign: 'center' }]} onChangeText={(value) => setSignUpEmail(value)} value={signUpEmail} placeholderTextColor="black" placeholder='email'
+
                             ></TextInput>
                         </ImageBackground>
 
                         <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                            <TextInput style={[styles.password, { textAlign: 'center' }]} placeholderTextColor="black" placeholder='password'
-                               
+                            <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setSignUpPassword(value)} value={signUpPassword} placeholderTextColor="black" placeholder='password'
+
                             ></TextInput>
                         </ImageBackground>
 
                         <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                            <TextInput style={[styles.passwordConfirm, { textAlign: 'center' }]} placeholderTextColor="black" placeholder='confirm password'
-                                onFocus={() => setFocusedField('confirmPassword')}
-                                onBlur={() => setFocusedField(null)}
-                                onChangeText={(value) => ChangePassword(value)}
+                            <TextInput style={[styles.passwordConfirm, { textAlign: 'center' }]} onChangeText={(value) => setSignUpPasswordVerif(value)} value={signUpPasswordVerif} placeholderTextColor="black" placeholder='confirm password'
                             ></TextInput>
                         </ImageBackground>
                         <TouchableOpacity
@@ -135,5 +157,9 @@ const styles = StyleSheet.create({
         width: 320,
         height: 70,
     },
+error: {
+    color: 'red',
+    fontFamily: 'Minecraft',
 
+}
 });
