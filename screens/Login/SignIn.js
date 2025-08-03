@@ -13,6 +13,7 @@ export default function App({ navigation }) {
     if (!fontsLoaded) {
         return null;
     }
+    
 
     const Next = () => {
         setPressNext(false)
