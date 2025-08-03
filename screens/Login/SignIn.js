@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         top: '133',
-        gap: 30,
+        gap: 10,
     },
     username: {
         //backgroundColor: 'rgba(138, 71, 255, 0.5)',
