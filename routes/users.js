@@ -45,16 +45,16 @@ router.post('/signup', (req, res) => {
           sound_music: 0,
           sound_effect: 0
         }
-     
-    });
 
-    newUser.save().then(data => {
-      res.json({ result: true, token: newToken });
-    });
-  } else {
-    // * Utilisateur déja inscrit * //
-    res.json({ result: false, error: 'User already registered' });
-  }
+      });
+
+      newUser.save().then(data => {
+        res.json({ result: true, token: newToken });
+      });
+    } else {
+      // * Utilisateur déja inscrit * //
+      res.json({ result: false, error: 'User already registered' });
+    }
   });
 });
 
@@ -62,21 +62,29 @@ router.post('/signup', (req, res) => {
 /* POST SignIn */
 
 router.post('/signin', (req, res) => {
+  const newToken = uid2(32);
   if (!checkBody(req.body, ['username', 'password'])) {
     res.json({ result: false, error: 'Missing or empty fields' });
     return;
   }
-  User.findOne({ 
+  User.findOne({
     $or: [
-      { username: req.body.username }, 
+      { username: req.body.username },
       { email: req.body.username }
     ]
   }).then(data => {
-    if (data && bcrypt.compareSync(req.body.password, data.password)) {
-      res.json({ result: true });
-    } else {
-      res.json({ result: false, error: 'User not found' });
-    }
+    User.updateOne(
+      { username: req.body.username },
+      { token: newToken }
+    ).then(() => {
+        if (data && bcrypt.compareSync(req.body.password, data.password)) {
+          res.json({ result: true, token: newToken });
+        }
+    });
+if (!data) {
+          res.json({ result: false, error: 'User not found' });
+          console.log('ff')
+        }
   });
 });
 
