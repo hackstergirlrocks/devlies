@@ -34,17 +34,20 @@ export default function App({ navigation }) {
             }).then(response => response.json())
                 .then(data => {
                     if (data.result) {
-                        console.log(data)
+                        setError('')
+                        console.log(data.token)
+                        //navigation.navigate('Home')
                     }else {
                         console.log(data.error)
+                        setError(data.error)
                     }
 
                 });
             } else {
-                console.log("wrong password")
+                setError("Wrong password")
             }
         } else {
-            console.log(false)
+            setError("Email not valid")
         }
         setPressNext(false)
         console.log('next pressed');
@@ -72,7 +75,7 @@ export default function App({ navigation }) {
                     keyboardVerticalOffset={Platform.OS === 'ios' ? 280 : 0}
                 >
                     <View style={styles.inputs}>
-                        <Text style={styles.error}>Ceci est une erreur</Text>
+                        <Text style={styles.error}>{error}</Text>
                         <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
                             <TextInput style={[styles.username, { textAlign: 'center' }]} onChangeText={(value) => setSignUpUsername(value)} value={signUpUsername} placeholderTextColor="black" placeholder='username'
 
