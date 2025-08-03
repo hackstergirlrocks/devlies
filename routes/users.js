@@ -21,8 +21,9 @@ router.post('/signup', (req, res) => {
   User.findOne({ username: req.body.username } || { email: req.body.email }).then(data => {
     if (data === null) {
       const hash = bcrypt.hashSync(req.body.password, 10);
+      const newToken = uid2(32);
       const newUser = new User({
-        token: uid2(32),
+        token: newToken,
         username: req.body.username,
         email: req.body.email,
         password: hash,
@@ -48,7 +49,7 @@ router.post('/signup', (req, res) => {
     });
 
     newUser.save().then(data => {
-      res.json({ result: true, data: data });
+      res.json({ result: true, token: newToken });
     });
   } else {
     // * Utilisateur déja inscrit * //
