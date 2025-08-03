@@ -45,7 +45,7 @@ export default function App({ navigation }) {
                 <KeyboardAvoidingView
                     style={styles.container}
                     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                    keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}
+                    keyboardVerticalOffset={Platform.OS === 'ios' ? 180 : 0}
                 >
                     <View style={styles.inputs}>
                         <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
@@ -84,18 +84,6 @@ export default function App({ navigation }) {
                             }
                         </TouchableOpacity>
                     </View>
-                    {focusedField === 'password' || focusedField === 'confirmPassword' ? (
-                        <View style={styles.messageBar}>
-                            <TextInput
-                                style={styles.messageInput}
-                                placeholder="Votre password"
-                                value={message}
-                                onChangeText={setMessage}
-                            />
-
-                        </View>
-                    ) : null}
-
                 </KeyboardAvoidingView>
             </TouchableWithoutFeedback>
         </ImageBackground>
@@ -147,32 +135,5 @@ const styles = StyleSheet.create({
         width: 320,
         height: 70,
     },
-
-    messageBar: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 10,
-        top: -45,
-        borderTopWidth: 1,
-        borderColor: '#ddd',
-        backgroundColor: '#fff',
-
-    },
-    messageInput: {
-        flex: 1,
-        backgroundColor: '#f0f0f0',
-        borderRadius: 20,
-        paddingVertical: 10,
-        paddingHorizontal: 15,
-        fontSize: 16,
-        marginRight: 10,
-    },
-    sendButton: {
-        backgroundColor: '#4caf50',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        borderRadius: 20,
-    },
-
 
 });
