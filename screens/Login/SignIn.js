@@ -5,6 +5,8 @@ import { useFonts } from 'expo-font'
 export default function App({ navigation }) {
 
  const [pressNext, setPressNext] = useState(false);
+     const [signInUsername, setSignInUsername] = useState('');
+    const [signInPassword, setSignInPassword] = useState('');
 
     const [fontsLoaded] = useFonts({
         'Minecraft': require('../../assets/fonts/Minecraft.ttf'),
@@ -16,9 +18,24 @@ export default function App({ navigation }) {
     
 
     const Next = () => {
+             fetch('http://192.168.1.2:3000/users/signin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: signInUsername, password: signInPassword }),
+        }).then(response => response.json())
+            .then(data => {
+                if (data.result) {
+                    setSignInUsername('');
+                    setSignInPassword('');
+                    console.log(signInUsername)
+                    console.log(data.token)
+                    // navigation.navigate('SignUp')
+                } else {
+                    console.log(data.error)
+                }
+            });
         setPressNext(false)
         console.log('next pressed');
-        // navigation.navigate('SignUp')
     }
 
 
@@ -36,11 +53,11 @@ export default function App({ navigation }) {
 
                 <View style={styles.inputs}>
                     <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                        <TextInput style={[styles.username, { textAlign: 'center' }]} placeholderTextColor="black" placeholder='email/username'></TextInput>
+                        <TextInput style={[styles.username, { textAlign: 'center' }]} onChangeText={(value) => setSignInUsername(value)} value={signInUsername} placeholderTextColor="black" placeholder='email/username'></TextInput>
                     </ImageBackground>
 
                     <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                        <TextInput style={[styles.password, { textAlign: 'center' }]} placeholderTextColor="black" placeholder='password'></TextInput>
+                        <TextInput style={[styles.password, { textAlign: 'center' }]} placeholderTextColor="black" onChangeText={(value) => setSignInPassword(value)} value={signInPassword} placeholder='password'></TextInput>
                     </ImageBackground>
                     <TouchableOpacity
                                                     activeOpacity={1}
