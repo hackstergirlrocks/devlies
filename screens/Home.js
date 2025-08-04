@@ -130,11 +130,7 @@ export default function App({ navigation }) {
             : <Image style={styles.btn} source={require('../assets/btn/shop-btn.png')} />
           }
         </TouchableOpacity>
-
-
-
       </View>
-
       <View style={styles.Mainskin}>
         <Image style={styles.skin} source={skinUser} />
       </View>

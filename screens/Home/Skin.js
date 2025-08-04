@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 export default function App({ navigation }) {
     const [pressSave, setPressSave] = useState(false)
 
+
     // Recup le token du joueur via redux ici
     const user = useSelector((state) => state.user.value);
 
@@ -34,8 +35,41 @@ export default function App({ navigation }) {
         // "other.png": require("../assets/Skin/other.png"),
     };
 
-    const [skinPlayer, setSkinPlayer] = useState(user.skin);
-    const [skinUser, setSkinUser] = useState(skins[skinPlayer]);
+    const [skinPlayerBdd, setSkinPlayerBdd] = useState([])
+    const [countSkin, setCountSkin] = useState(0);
+
+    useEffect(() => {
+        fetch("http://192.168.100.206:3000/users/getskin/" + user.token)
+            .then((response) => response.json())
+            .then((data) => {
+                setSkinPlayerBdd(data.skin);
+            });
+    }, [user.token]);
+
+
+    const combinedSkins = skinPlayerBdd.map((skinKey) => ({
+        name: skinKey,
+        image: skins[skinKey] || null,
+    }))
+        .filter((s) => s.image !== null);
+
+
+    const listItems = combinedSkins.map((user) =>
+        <Image style={styles.skin} source={user.image} />
+
+    );
+
+    const PlusSkin = () => {
+        console.log((combinedSkins.length - 1), countSkin)
+        if ((combinedSkins.length - 1) === countSkin) {
+            setCountSkin(0)
+
+
+        } else {
+            setCountSkin(countSkin + 1)
+        }
+    }
+
 
     return (
         <ImageBackground style={styles.container} source={require('../../assets/SkinPage/background-blue-clair.png')}>
@@ -43,19 +77,17 @@ export default function App({ navigation }) {
                 <TouchableOpacity
                     style={styles.btn}
                     activeOpacity={1}
+
                 >
                     <Image style={styles.fleche} source={require('../../assets/btn/fleche-gauche.png')} />
-
-
                 </TouchableOpacity>
-                <Image style={styles.skin} source={skinUser} />
-
+                {listItems[0 + countSkin]}
                 <TouchableOpacity
                     style={styles.btn}
                     activeOpacity={1}
+                    onPress={PlusSkin}
                 >
                     <Image style={styles.fleche} source={require('../../assets/btn/fleche-droite.png')} />
-
                 </TouchableOpacity>
 
             </View>
