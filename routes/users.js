@@ -27,7 +27,7 @@ router.post('/signup', (req, res) => {
         username: req.body.username,
         email: req.body.email,
         password: hash,
-        skin_use: "skin-basic",
+        skin_use: "basic",
         level: 1,
         experience: 0,
         group: 0,
@@ -49,7 +49,7 @@ router.post('/signup', (req, res) => {
       });
 
       newUser.save().then(data => {
-        res.json({ result: true, token: newToken });
+        res.json({ result: true, token: newToken, skin: data.skin_use, username: data.username });
       });
     } else {
       // * Utilisateur déja inscrit * //
@@ -78,7 +78,7 @@ router.post('/signin', (req, res) => {
       { token: newToken }
     ).then(() => {
         if (data && bcrypt.compareSync(req.body.password, data.password)) {
-          res.json({ result: true, token: newToken });
+          res.json({ result: true, token: newToken, skin: data.skin_use, username: data.username });
         }
     });
 if (!data) {
@@ -120,6 +120,70 @@ router.put('/changeusername/:token', (req, res) => {
     res.json({ result: false, error: 'Database error' });
   });
 });
+
+
+/* PUT update email */
+router.put('/changeemail/:token', (req, res) => {
+  if (!checkBody(req.body, ['email'])) {
+    res.json({ result: false, error: 'Missing or empty email field' });
+    return;
+  }
+
+  const { email } = req.body;
+
+  // Vérifier si le nouvel email n'est pas déjà utilisé
+  User.findOne({ email: email }).then(existingUser => {
+    if (existingUser) {
+      res.json({ result: false, error: 'Email already taken' });
+      return;
+    }
+
+    // Mettre à jour l'email
+    User.updateOne(
+      { token: req.params.token },
+      { $set: { email: email } }
+    ).then(result => {
+      if (result.modifiedCount > 0) {
+        res.json({ result: true, message: 'Email updated successfully' });
+      } else {
+        res.json({ result: false, error: 'User not found' });
+      }
+    }).catch(error => {
+      res.json({ result: false, error: 'Database error' });
+    });
+  }).catch(error => {
+    res.json({ result: false, error: 'Database error' });
+  });
+});
+
+/* PUT update password */
+router.put('/changepassword/:token', (req, res) => {
+  if (!checkBody(req.body, ['password'])) {
+    res.json({ result: false, error: 'Missing or empty password field' });
+    return;
+  }
+
+  const { password } = req.body;
+  const bcrypt = require('bcrypt');
+  
+  // Crypter le nouveau mot de passe
+  const hash = bcrypt.hashSync(password, 10);
+
+  // Mettre à jour le mot de passe crypté
+  User.updateOne(
+    { token: req.params.token },
+    { $set: { password: hash } }
+  ).then(result => {
+    if (result.modifiedCount > 0) {
+      res.json({ result: true, message: 'Password updated successfully' });
+    } else {
+      res.json({ result: false, error: 'User not found' });
+    }
+  }).catch(error => {
+    res.json({ result: false, error: 'Database error' });
+  });
+});
+
 
 
 module.exports = router;
