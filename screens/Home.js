@@ -31,8 +31,15 @@ export default function App({ navigation }) {
     // "other.png": require("../assets/Skin/other.png"),
   };
 
-  const [skinPlayer, setSkinPlayer] = useState(user.skin);
-  const [skinUser, setSkinUser] = useState(skins[skinPlayer]);
+  const [skinPlayer, setSkinPlayer] = useState('');
+  const [skinUser, setSkinUser] = useState(skins[user.skin]);
+
+  useEffect(() => {
+    if (user.skin) {
+      setSkinPlayer(user.skin);
+      setSkinUser(skins[user.skin]);
+    }
+  }, [user.skin]);
 
   // Gestion des animation des buttons 
   const [pressPlay, setPressPlay] = useState(false);

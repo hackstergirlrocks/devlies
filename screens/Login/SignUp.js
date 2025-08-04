@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, TextI
 import { useEffect, useState } from 'react';
 import { useFonts } from 'expo-font'
 import { useDispatch } from 'react-redux';
-import { login } from '../../reducers/user';
+import { login, setSkin } from '../../reducers/user';
 
 
 export default function App({ navigation }) {
@@ -30,22 +30,24 @@ export default function App({ navigation }) {
             if (signUpPassword === signUpPasswordVerif) {
                 console.log(true)
                 fetch('http://192.168.100.206:3000/users/signup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: signUpUsername, email: signUpEmail, password: signUpPassword }),
-            }).then(response => response.json())
-                .then(data => {
-                    if (data.result) {
-                        dispatch(login({ token: data.token }));
-                        setError('')
-                        console.log(data.token)
-                        navigation.navigate('Home')
-                    } else {
-                        console.log(data.error)
-                        setError(data.error)
-                    }
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: signUpUsername, email: signUpEmail, password: signUpPassword }),
+                }).then(response => response.json())
+                    .then(data => {
+                        if (data.result) {
+                            dispatch(login({ token: data.token }));
+                            dispatch(setSkin({ skin: data.skin }));
 
-                });
+                            setError('')
+                            console.log(data.token)
+                            navigation.navigate('Home')
+                        } else {
+                            console.log(data.error)
+                            setError(data.error)
+                        }
+
+                    });
             } else {
                 setError("Wrong password")
             }
@@ -138,28 +140,28 @@ const styles = StyleSheet.create({
         fontFamily: 'Minecraft',
         fontSize: '20',
         paddingTop: 25,
-            marginLeft: 20,
+        marginLeft: 20,
         width: 280,
 
     },
     password: {
-    //backgroundColor: 'rgba(138, 71, 255, 0.5)',
+        //backgroundColor: 'rgba(138, 71, 255, 0.5)',
         fontFamily: 'Minecraft',
         fontSize: '20',
         paddingTop: 25,
-            marginLeft: 20,
+        marginLeft: 20,
         width: 280,
     },
     email: {
-       // backgroundColor: 'rgba(138, 71, 255, 0.5)',
+        // backgroundColor: 'rgba(138, 71, 255, 0.5)',
         fontFamily: 'Minecraft',
         fontSize: '20',
         paddingTop: 25,
-            marginLeft: 20,
+        marginLeft: 20,
         width: 280,
     },
     passwordConfirm: {
-       // backgroundColor: 'rgba(138, 71, 255, 0.5)',
+        // backgroundColor: 'rgba(138, 71, 255, 0.5)',
         fontFamily: 'Minecraft',
         fontSize: '20',
         paddingTop: 25,
@@ -171,9 +173,9 @@ const styles = StyleSheet.create({
         width: 320,
         height: 70,
     },
-error: {
-    color: 'red',
-    fontFamily: 'Minecraft',
+    error: {
+        color: 'red',
+        fontFamily: 'Minecraft',
 
-}
+    }
 });
