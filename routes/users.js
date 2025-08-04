@@ -39,7 +39,7 @@ router.post('/signup', (req, res) => {
           lose: 0,
           game: 0
         },
-        skins: [],
+        skins: ['basic'],
         friends: [],
         settings: {
           sound_music: 0,
@@ -59,6 +59,69 @@ router.post('/signup', (req, res) => {
 });
 
 
+//* Skin *//
+router.get('/getskin/:token', (req, res) => {
+  User.findOne({ token: req.params.token })
+    .then(data => {
+      console.log(data.skins);
+      res.json({ result: true, skin: data.skins });
+      // Aq0RVXB_ttBJFK85hXaZ4FjDgaIfUDWg
+    });
+
+});
+
+
+router.post('/sakeSkin', (req, res) => {
+  User.findOne({ token: req.body.token })
+    .then(data => {
+      if (data) {
+        User.updateOne(
+          { token: req.body.token },
+          { skin_use: req.body.skin }
+        ).then(() => {
+
+          User.find().then(data => {
+       res.json({ result: true, skin: req.body.skin });
+
+          });
+
+        });
+      } else {
+      res.json({ result: false });
+
+      }
+
+    });
+});
+
+router.post('/addskin', (req, res) => {
+
+  if (!checkBody(req.body, ['skin', 'token'])) {
+    res.json({ result: false, error: 'Missing or empty fields' });
+    return;
+  }
+
+  User.updateOne(
+    { token: req.body.token },
+    {
+      $addToSet: { skins: req.body.skin }
+    }
+  ).then(data => {
+    if (data != 0) {
+      User.findOne({ token: req.body.token })
+        .then(data => {
+          if (data) {
+            res.json({ result: true, skin: data.skins });
+          } else {
+            res.json({ result: false });
+          }
+          // Aq0RVXB_ttBJFK85hXaZ4FjDgaIfUDWg
+        });
+    } else {
+      res.json({ result: false });
+    }
+  });
+});
 /* POST SignIn */
 
 router.post('/signin', (req, res) => {
@@ -77,14 +140,14 @@ router.post('/signin', (req, res) => {
       { username: req.body.username },
       { token: newToken }
     ).then(() => {
-        if (data && bcrypt.compareSync(req.body.password, data.password)) {
-          res.json({ result: true, token: newToken, skin: data.skin_use, username: data.username });
-        }
+      if (data && bcrypt.compareSync(req.body.password, data.password)) {
+        res.json({ result: true, token: newToken, skin: data.skin_use, username: data.username });
+      }
     });
-if (!data) {
-          res.json({ result: false, error: 'User not found' });
-          console.log('ff')
-        }
+    if (!data) {
+      res.json({ result: false, error: 'User not found' });
+      console.log('ff')
+    }
   });
 });
 
@@ -165,7 +228,7 @@ router.put('/changepassword/:token', (req, res) => {
 
   const { password } = req.body;
   const bcrypt = require('bcrypt');
-  
+
   // Crypter le nouveau mot de passe
   const hash = bcrypt.hashSync(password, 10);
 

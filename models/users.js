@@ -17,7 +17,7 @@ const userSchema = mongoose.Schema({
     lose: Number,
     game: Number
   },
-  skins: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Skin' }],
+  skins: [],
   friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   settings: {
     sound_music: Number,
