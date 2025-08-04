@@ -5,7 +5,6 @@ export default function App({ navigation }) {
     // Recup le token du joueur via redux ici
     const token = 'MOIFF'
     // Recup le skin du joueur ici
-    const [skinUser, setSkinUser] = useState(require('../../assets/Skin/onlyguts.png'));
 
     // Gestion des animation des buttons 
     const [pressSignUP, setPressSignUP] = useState(false);
