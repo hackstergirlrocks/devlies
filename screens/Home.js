@@ -27,10 +27,11 @@ export default function App({ navigation }) {
     "robot": require("../assets/Skin/robot-big.png"),
     "roi": require("../assets/Skin/roi-big.png"),
     "wolf": require("../assets/Skin/wolf-big.png"),
+    "emo": require("../assets/Skin/emo-big.png"),
     // "other.png": require("../assets/Skin/other.png"),
   };
 
-  const [skinPlayer, setSkinPlayer] = useState("wolf");
+  const [skinPlayer, setSkinPlayer] = useState("guts");
   const [skinUser, setSkinUser] = useState(skins[skinPlayer]);
 
   // Gestion des animation des buttons 
@@ -155,9 +156,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   skin: {
-    width: 350,
-    height: 250,
-
+    width: 400,
+    height: 400,
   },
   top: {
     width: 55,

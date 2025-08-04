@@ -32,8 +32,8 @@ export default function App({ navigation }) {
         // if (token) {
         //     navigation.navigate('Home')
         // } else {
-            // navigation.navigate('PageSign')
-            navigation.navigate('Home')
+        // navigation.navigate('PageSign')
+        navigation.navigate('Home')
 
         // }
         setPress(!press)
@@ -63,15 +63,15 @@ export default function App({ navigation }) {
                     {
                         isPressed ? (
                             pressSound ? (
-                                <Image source={require('../assets/btn/sound-off-down.png')} />
+                                <Image style={styles.imagesound} source={require('../assets/btn/sound-off-down.png')} />
                             ) : (
-                                <Image source={require('../assets/btn/sound-off.png')} />
+                                <Image style={styles.imagesound} source={require('../assets/btn/sound-off.png')} />
                             )
                         ) : (
                             pressSound ? (
-                                <Image source={require('../assets/btn/sound-on-red-down.png')} />
+                                <Image style={styles.imagesound} source={require('../assets/btn/sound-on-red-down.png')} />
                             ) : (
-                                <Image source={require('../assets/btn/sound-on-red.png')} />
+                                <Image style={styles.imagesound} source={require('../assets/btn/sound-on-red.png')} />
                             )
                         )
                     }
@@ -115,12 +115,17 @@ const styles = StyleSheet.create({
     logo: {
         padding: 150,
         justifyContent: 'flex-end',
-        alignItems: 'center'
+        alignItems: 'center',
+        bottom: 50,
     },
 
     sound: {
         alignItems: 'flex-end',
         top: 50,
+        marginRight: 15,
     },
-
+    imagesound: {
+        width: 70,
+        height: 70,
+    }
 });
