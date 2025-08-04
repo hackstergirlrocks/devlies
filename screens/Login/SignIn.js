@@ -1,12 +1,17 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useFonts } from 'expo-font'
+import { useDispatch } from 'react-redux';
+import { login } from '../reducers/user';
+
 
 export default function App({ navigation }) {
 
- const [pressNext, setPressNext] = useState(false);
-     const [signInUsername, setSignInUsername] = useState('');
+    const dispatch = useDispatch();
+    const [pressNext, setPressNext] = useState(false);
+    const [signInUsername, setSignInUsername] = useState('');
     const [signInPassword, setSignInPassword] = useState('');
+    const [error, setError] = useState('');
 
     const [fontsLoaded] = useFonts({
         'Minecraft': require('../../assets/fonts/Minecraft.ttf'),
@@ -15,23 +20,24 @@ export default function App({ navigation }) {
     if (!fontsLoaded) {
         return null;
     }
-    
 
     const Next = () => {
-             fetch('http://192.168.1.2:3000/users/signin', {
+        fetch('http://192.168.100.87:3000/users/signin', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username: signInUsername, password: signInPassword }),
         }).then(response => response.json())
             .then(data => {
                 if (data.result) {
+                    dispatch(login({ token: data.token }));
                     setSignInUsername('');
                     setSignInPassword('');
                     console.log(signInUsername)
                     console.log(data.token)
-                    // navigation.navigate('SignUp')
+                    navigation.navigate('Home')
                 } else {
                     console.log(data.error)
+                    setError(data.error)
                 }
             });
         setPressNext(false)
@@ -52,6 +58,7 @@ export default function App({ navigation }) {
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
                 <View style={styles.inputs}>
+                    <Text style={styles.error}>{error}</Text>
                     <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
                         <TextInput style={[styles.username, { textAlign: 'center' }]} onChangeText={(value) => setSignInUsername(value)} value={signInUsername} placeholderTextColor="black" placeholder='email/username'></TextInput>
                     </ImageBackground>
@@ -60,15 +67,15 @@ export default function App({ navigation }) {
                         <TextInput style={[styles.password, { textAlign: 'center' }]} placeholderTextColor="black" onChangeText={(value) => setSignInPassword(value)} value={signInPassword} placeholder='password'></TextInput>
                     </ImageBackground>
                     <TouchableOpacity
-                                                    activeOpacity={1}
-                                                    onPressIn={() => setPressNext(true)}
-                                                    onPressOut={() => Next()}
-                                                >
-                                                    {pressNext
-                                                        ? <Image style={styles.btn} source={require('../../assets/btn/btn-next-down.png')} />
-                                                        : <Image style={styles.btn} source={require('../../assets/btn/btn-next.png')} />
-                                                    }
-                                                </TouchableOpacity>
+                        activeOpacity={1}
+                        onPressIn={() => setPressNext(true)}
+                        onPressOut={() => Next()}
+                    >
+                        {pressNext
+                            ? <Image style={styles.btn} source={require('../../assets/btn/btn-next-down.png')} />
+                            : <Image style={styles.btn} source={require('../../assets/btn/btn-next.png')} />
+                        }
+                    </TouchableOpacity>
                 </View>
             </TouchableWithoutFeedback>
         </ImageBackground>
@@ -108,5 +115,8 @@ const styles = StyleSheet.create({
         width: 320,
         height: 70,
     },
-
+    error: {
+        color: 'red',
+        fontFamily: 'Minecraft',
+    },
 });

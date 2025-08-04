@@ -1,11 +1,16 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useFonts } from 'expo-font'
+import { useDispatch } from 'react-redux';
+import { login } from '../reducers/user';
+
 
 export default function App({ navigation }) {
 
-    const [pressNext, setPressNext] = useState(false);
+    
+    const dispatch = useDispatch();
 
+    const [pressNext, setPressNext] = useState(false);
     const [signUpUsername, setSignUpUsername] = useState('');
     const [signUpPassword, setSignUpPassword] = useState('');
     const [signUpPasswordVerif, setSignUpPasswordVerif] = useState('');
@@ -27,17 +32,18 @@ export default function App({ navigation }) {
         if (EMAIL_REGEX.test(signUpEmail)) {
             if (signUpPassword === signUpPasswordVerif) {
                 console.log(true)
-                fetch('http://192.168.1.2:3000/users/signup', {
+                fetch('http://192.168.100.87:3000/users/signup', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: signUpUsername, email: signUpEmail, password: signUpPassword }),
             }).then(response => response.json())
                 .then(data => {
                     if (data.result) {
+                        dispatch(login({ token: data.token }));
                         setError('')
                         console.log(data.token)
-                        //navigation.navigate('Home')
-                    }else {
+                        navigation.navigate('Home')
+                    } else {
                         console.log(data.error)
                         setError(data.error)
                     }

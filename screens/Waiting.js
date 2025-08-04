@@ -85,7 +85,7 @@ export default function App({ navigation }) {
             </TouchableOpacity>
         </ImageBackground>
     );
-}
+} 
 
 const styles = StyleSheet.create({
     container: {

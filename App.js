@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -10,6 +11,11 @@ import PageSign from './screens/Login/PageSign';
 import SignUp from './screens/Login/SignUp';
 import SignIn from './screens/Login/SignIn';
 
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
+import user from './reducers/user';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from './src/store';
 
 
 
@@ -19,6 +25,8 @@ const Stack = createNativeStackNavigator();
 // options={{gestureEnabled: false}}
 export default function App() {
   return (
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Waiting" component={Waiting} />
@@ -32,5 +40,7 @@ export default function App() {
         {/*<Stack.Screen name="TabNavigator" component={TabNavigator} />  */}
       </Stack.Navigator>
     </NavigationContainer>
+    </PersistGate>
+    </Provider>
   );
 }
