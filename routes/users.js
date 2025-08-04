@@ -88,5 +88,38 @@ if (!data) {
   });
 });
 
+router.put('/changeusername/:token', (req, res) => {
+  if (!checkBody(req.body, ['username'])) {
+    res.json({ result: false, error: 'Missing or empty username field' });
+    return;
+  }
+
+  const { username } = req.body;
+
+  // Vérifier si le nouveau username n'est pas déjà utilisé
+  User.findOne({ username: username }).then(existingUser => {
+    if (existingUser) {
+      res.json({ result: false, error: 'Username already taken' });
+      return;
+    }
+
+    // Mettre à jour le username
+    User.updateOne(
+      { token: req.params.token },
+      { $set: { username: username } }
+    ).then(result => {
+      if (result.modifiedCount > 0) {
+        res.json({ result: true, message: 'Username updated successfully' });
+      } else {
+        res.json({ result: false, error: 'User not found' });
+      }
+    }).catch(error => {
+      res.json({ result: false, error: 'Database error' });
+    });
+  }).catch(error => {
+    res.json({ result: false, error: 'Database error' });
+  });
+});
+
 
 module.exports = router;
