@@ -103,13 +103,16 @@ const styles = StyleSheet.create({
         fontFamily: 'Minecraft',
         fontSize: '20',
         paddingTop: 25,
-
+        marginLeft: 20,
+        width: 280,
     },
     password: {
         //backgroundColor: 'rgba(138, 71, 255, 0.5)',
         fontFamily: 'Minecraft',
         fontSize: '20',
         paddingTop: 25,
+        marginLeft: 20,
+        width: 280,
     },
     inputImage: {
         // backgroundColor: 'rgba(255, 99, 71, 0.5)',
