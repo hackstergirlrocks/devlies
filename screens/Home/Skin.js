@@ -38,7 +38,7 @@ export default function App({ navigation }) {
     const [skinUser, setSkinUser] = useState(skins[skinPlayer]);
 
     return (
-        <ImageBackground style={styles.container} source={require('../../assets/HomePage/desk-home-page-bigger.png')}>
+        <ImageBackground style={styles.container} source={require('../../assets/SkinPage/background-blue-clair.png')}>
             <View style={styles.box}>
                 <TouchableOpacity
                     style={styles.btn}
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     },
 
     box: {
-        backgroundColor: 'grey',
+        // backgroundColor: 'grey',
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
