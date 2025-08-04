@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, TextI
 import { useEffect, useState } from 'react';
 import { useFonts } from 'expo-font'
 import { useDispatch } from 'react-redux';
-import { login } from '../reducers/user';
+import { login } from '../../reducers/user';
 
 
 export default function App({ navigation }) {
@@ -12,6 +12,8 @@ export default function App({ navigation }) {
     const [signInUsername, setSignInUsername] = useState('');
     const [signInPassword, setSignInPassword] = useState('');
     const [error, setError] = useState('');
+    
+    
 
     const [fontsLoaded] = useFonts({
         'Minecraft': require('../../assets/fonts/Minecraft.ttf'),
@@ -22,7 +24,7 @@ export default function App({ navigation }) {
     }
 
     const Next = () => {
-        fetch('http://192.168.100.87:3000/users/signin', {
+        fetch('http://192.168.100.206:3000/users/signin', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username: signInUsername, password: signInPassword }),
@@ -32,8 +34,6 @@ export default function App({ navigation }) {
                     dispatch(login({ token: data.token }));
                     setSignInUsername('');
                     setSignInPassword('');
-                    console.log(signInUsername)
-                    console.log(data.token)
                     navigation.navigate('Home')
                 } else {
                     console.log(data.error)

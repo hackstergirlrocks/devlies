@@ -2,12 +2,10 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, TextI
 import { useEffect, useState } from 'react';
 import { useFonts } from 'expo-font'
 import { useDispatch } from 'react-redux';
-import { login } from '../reducers/user';
+import { login } from '../../reducers/user';
 
 
 export default function App({ navigation }) {
-
-    
     const dispatch = useDispatch();
 
     const [pressNext, setPressNext] = useState(false);
@@ -18,7 +16,6 @@ export default function App({ navigation }) {
     const [error, setError] = useState('');
 
     const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
 
     const [fontsLoaded] = useFonts({
         'Minecraft': require('../../assets/fonts/Minecraft.ttf'),
@@ -32,7 +29,7 @@ export default function App({ navigation }) {
         if (EMAIL_REGEX.test(signUpEmail)) {
             if (signUpPassword === signUpPasswordVerif) {
                 console.log(true)
-                fetch('http://192.168.100.87:3000/users/signup', {
+                fetch('http://192.168.100.206:3000/users/signup', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: signUpUsername, email: signUpEmail, password: signUpPassword }),

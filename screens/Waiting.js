@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, Butto
 import { useEffect, useState } from 'react';
 
 import { useAudioPlayer } from 'expo-audio';
+import { useSelector } from 'react-redux';
 
 
 
@@ -9,6 +10,9 @@ export default function App({ navigation }) {
 
     const audioSource = require('../assets/Song/lonelytree.mp3');
     const player = useAudioPlayer(audioSource);
+
+    const user = useSelector((state) => state.user.value);
+    const token = user.token
 
     const [press, setPress] = useState(false)
     const [pressSound, setPressSound] = useState(false)
@@ -25,7 +29,11 @@ export default function App({ navigation }) {
 
 
     const NavigateToLogin = () => {
-        navigation.navigate('PageSign')
+        // if (token) {
+        //     navigation.navigate('Home')
+        // } else {
+            navigation.navigate('PageSign')
+        // }
         setPress(!press)
     }
 
@@ -85,7 +93,7 @@ export default function App({ navigation }) {
             </TouchableOpacity>
         </ImageBackground>
     );
-} 
+}
 
 const styles = StyleSheet.create({
     container: {
