@@ -5,9 +5,15 @@ import { useSelector } from 'react-redux';
 export default function App({ navigation }) {
   // Recup le token du joueur via redux ici
   const user = useSelector((state) => state.user.value);
-  const token = user.token
+  // const token = user.token
+
   // Recup le skin du joueur ici
-  const [skinUser, setSkinUser] = useState(require('../assets/Skin/onlyguts.png'));
+  const skins = {
+    "onlyguts.png": require("../assets/Skin/onlyguts.png"),
+    // "other.png": require("../assets/Skin/other.png"),
+  };
+  const [skinPlayer, setSkinPlayer] = useState("onlyguts.png");
+  const [skinUser, setSkinUser] = useState(skins[skinPlayer]);
 
   // Gestion des animation des buttons 
   const [pressPlay, setPressPlay] = useState(false);
@@ -20,7 +26,7 @@ export default function App({ navigation }) {
   // Sécurité si utilisateur pas connecte zebi
   useEffect(() => {
     // if (!token) {
-      navigation.navigate('Waiting')
+    // navigation.navigate('Waiting')
     // }
   }, [])
 

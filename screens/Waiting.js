@@ -32,7 +32,9 @@ export default function App({ navigation }) {
         // if (token) {
         //     navigation.navigate('Home')
         // } else {
-            navigation.navigate('PageSign')
+            // navigation.navigate('PageSign')
+            navigation.navigate('Home')
+
         // }
         setPress(!press)
     }
