@@ -44,7 +44,7 @@ export default function Parametres({ navigation }) {
     }
 
     const Next = () => {
-         fetch('http://192.168.100.206:3000/users/signin', {
+        fetch('http://192.168.100.206:3000/users/signin', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username: signInUsername, password: signInPassword }),
@@ -76,100 +76,100 @@ export default function Parametres({ navigation }) {
     return (
         <ImageBackground style={styles.container} source={require('../../assets/WaitingPage/animation-desk-bigger.gif')}>
 
-            <View style={[styles.topPart, {flexDirection: 'row'}]}>
+            <View style={[styles.topPart, { flexDirection: 'row' }]}>
                 <TouchableOpacity
                     style={styles.topMain}
-                    onPress={() => navigation.navigate('PageSign')}
+                    onPress={() => navigation.navigate('Home')}
                     activeOpacity={1}
                 >
                     <Image source={require('../../assets/btn/icone-fleche-retour.png')} />
                 </TouchableOpacity>
-                <View style={[styles.soundlogout, {flexDirection: 'row'}]}>
-                <TouchableOpacity
-                            activeOpacity={1}
-                            onPressIn={() => setPressSound(!pressSound)}
-                            onPressOut={() => ChangeSound()}
-                        >
-                            {
-                                isPressed ? (
-                                    pressSound ? (
-                                        <Image style={styles.imagesound} source={require('../../assets/btn/sound-off-down.png')} />
-                                    ) : (
-                                        <Image style={styles.imagesound} source={require('../../assets/btn/sound-off.png')} />
-                                    )
+                <View style={[styles.soundlogout, { flexDirection: 'row' }]}>
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        onPressIn={() => setPressSound(!pressSound)}
+                        onPressOut={() => ChangeSound()}
+                    >
+                        {
+                            isPressed ? (
+                                pressSound ? (
+                                    <Image style={styles.imagesound} source={require('../../assets/btn/sound-off-down.png')} />
                                 ) : (
-                                    pressSound ? (
-                                        <Image style={styles.imagesound} source={require('../../assets/btn/sound-on-red-down.png')} />
-                                    ) : (
-                                        <Image style={styles.imagesound} source={require('../../assets/btn/sound-on-red.png')} />
-                                    )
+                                    <Image style={styles.imagesound} source={require('../../assets/btn/sound-off.png')} />
                                 )
-                            }
-                        </TouchableOpacity>
-                <TouchableOpacity
-                    activeOpacity={1}
-                    onPressIn={() => setPressLogout(true)}
-                    onPressOut={() => Logout()}
-                >
-                    {pressLogout
-                        ? <Image style={styles.btnlogout} source={require('../../assets/btn/icone-logout-down.png')} />
-                        : <Image style={styles.btnlogout} source={require('../../assets/btn/icone-logout.png')} />
-                    }
-                </TouchableOpacity>
+                            ) : (
+                                pressSound ? (
+                                    <Image style={styles.imagesound} source={require('../../assets/btn/sound-on-red-down.png')} />
+                                ) : (
+                                    <Image style={styles.imagesound} source={require('../../assets/btn/sound-on-red.png')} />
+                                )
+                            )
+                        }
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        onPressIn={() => setPressLogout(true)}
+                        onPressOut={() => Logout()}
+                    >
+                        {pressLogout
+                            ? <Image style={styles.btnlogout} source={require('../../assets/btn/icone-logout-down.png')} />
+                            : <Image style={styles.btnlogout} source={require('../../assets/btn/icone-logout.png')} />
+                        }
+                    </TouchableOpacity>
                 </View>
             </View>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-<View style={styles.content}>
-                <View style={styles.inputs}>
-                    <Text style={styles.error}>{error}</Text>
-                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                        <TextInput style={[styles.username, { textAlign: 'center' }]} onChangeText={(value) => setChangeUsername(value)} value={changeUsername} placeholderTextColor="black" placeholder='change username'></TextInput>
-                    </ImageBackground>
-                    <TouchableOpacity
-                        activeOpacity={1}
-                        onPressIn={() => setPressNext(true)}
-                        onPressOut={() => Next()}
-                    >
-                        {pressNext
-                            ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
-                            : <Image style={styles.btn} source={require('../../assets/btn/btn-save.png')} />
-                        }
-                    </TouchableOpacity>
+            {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
+                <View style={styles.content}>
+                    <View style={styles.inputs}>
+                        <Text style={styles.error}>{error}</Text>
+                        <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                            <TextInput style={[styles.username, { textAlign: 'center' }]} onChangeText={(value) => setChangeUsername(value)} value={changeUsername} placeholderTextColor="black" placeholder='change username'></TextInput>
+                        </ImageBackground>
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            onPressIn={() => setPressNext(true)}
+                            onPressOut={() => Next()}
+                        >
+                            {pressNext
+                                ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
+                                : <Image style={styles.btn} source={require('../../assets/btn/btn-save.png')} />
+                            }
+                        </TouchableOpacity>
 
-                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                        <TextInput style={[styles.email, { textAlign: 'center' }]} placeholderTextColor="black" onChangeText={(value) => setChangeEmail(value)} value={changeEmail} placeholder='change email'></TextInput>
-                    </ImageBackground>
-                    <TouchableOpacity
-                        activeOpacity={1}
-                        onPressIn={() => setPressNext(true)}
-                        onPressOut={() => Next()}
-                    >
-                        {pressNext
-                            ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
-                            : <Image style={styles.btn} source={require('../../assets/btn/btn-save.png')} />
-                        }
-                    </TouchableOpacity>
+                        <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                            <TextInput style={[styles.email, { textAlign: 'center' }]} placeholderTextColor="black" onChangeText={(value) => setChangeEmail(value)} value={changeEmail} placeholder='change email'></TextInput>
+                        </ImageBackground>
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            onPressIn={() => setPressNext(true)}
+                            onPressOut={() => Next()}
+                        >
+                            {pressNext
+                                ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
+                                : <Image style={styles.btn} source={require('../../assets/btn/btn-save.png')} />
+                            }
+                        </TouchableOpacity>
 
-                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                        <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangePassword(value)} value={changePassword} placeholderTextColor="black" placeholder='original password'></TextInput>
-                    </ImageBackground>
+                        <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                            <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangePassword(value)} value={changePassword} placeholderTextColor="black" placeholder='original password'></TextInput>
+                        </ImageBackground>
 
-                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                        <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangeNewPassword(value)} value={changeNewPassword} placeholderTextColor="black" placeholder='new password'></TextInput>
-                    </ImageBackground>
-                    <TouchableOpacity
-                        activeOpacity={1}
-                        onPressIn={() => setPressNext(true)}
-                        onPressOut={() => Next()}
-                    >
-                        {pressNext
-                            ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
-                            : <Image style={styles.btn} source={require('../../assets/btn/btn-save.png')} />
-                        }
-                    </TouchableOpacity>
+                        <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                            <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangeNewPassword(value)} value={changeNewPassword} placeholderTextColor="black" placeholder='new password'></TextInput>
+                        </ImageBackground>
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            onPressIn={() => setPressNext(true)}
+                            onPressOut={() => Next()}
+                        >
+                            {pressNext
+                                ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
+                                : <Image style={styles.btn} source={require('../../assets/btn/btn-save.png')} />
+                            }
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                </View>
-            </TouchableWithoutFeedback>
+            {/* </TouchableWithoutFeedback> */}
         </ImageBackground>
     );
 }
@@ -179,6 +179,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     topMain: {
+        // backgroundColor: 'red',
         paddingTop: 50
     },
     inputs: {
@@ -240,7 +241,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    btn : {
+    btn: {
         //backgroundColor: 'rgba(255, 99, 71, 0.5)',
         width: 140,
         height: 60,

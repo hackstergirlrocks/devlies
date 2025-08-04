@@ -102,7 +102,14 @@ export default function App({ navigation }) {
       {/* Menu en haut a droite */}
       <View style={styles.MainTop}>
         <Image style={styles.top} source={require('../assets/btn/star.png')} />
-        <Image style={styles.top} source={require('../assets/btn/ecroue.png')} />
+        <TouchableOpacity
+          style={styles.switchPage}
+          activeOpacity={1}
+          onPress={() => navigation.navigate('Parametres')}
+        >
+          <Image style={styles.top} source={require('../assets/btn/ecroue.png')} />
+        </TouchableOpacity>
+
       </View>
 
       <View style={styles.mainBtn} >

@@ -61,7 +61,10 @@ export default function App({ navigation }) {
 
 
     const listItems = combinedSkins.map((user) =>
-        <Image style={styles.skin} source={user.image} />
+        <View>
+            <Image style={styles.skin} source={user.image} />
+            <Text style={styles.textSkin}>{user.name}</Text>
+        </View>
 
     );
 
@@ -200,6 +203,11 @@ const styles = StyleSheet.create({
     topMain: {
         left: -120,
         top: -90
+    },
+    textSkin: {
+        textAlign: 'center',
+        fontFamily: 'Minecraft',
+        fontSize: 25,
     }
 
 
