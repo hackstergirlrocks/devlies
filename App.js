@@ -7,9 +7,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Waiting from './screens/Waiting';
 import Home from './screens/Home';
+
 import PageSign from './screens/Login/PageSign';
 import SignUp from './screens/Login/SignUp';
 import SignIn from './screens/Login/SignIn';
+
+import Skin from './screens/Home/Skin';
+
 
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
@@ -34,6 +38,8 @@ export default function App() {
         <Stack.Screen name="PageSign" component={PageSign} />
         <Stack.Screen name="SignUp" component={SignUp} />
         <Stack.Screen name="SignIn" component={SignIn} />
+        <Stack.Screen name="Skin" component={Skin} />
+
 
 
 

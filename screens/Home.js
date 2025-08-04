@@ -49,6 +49,11 @@ export default function App({ navigation }) {
     // }
   }, [])
 
+  const Skin = () => {
+    setPressSkin(false)
+    navigation.navigate('Skin')
+  }
+
   return (
     <ImageBackground style={styles.container} source={require('../assets/HomePage/desk-home-page-bigger.png')}>
 
@@ -91,7 +96,7 @@ export default function App({ navigation }) {
           style={styles.switchPage}
           activeOpacity={1}
           onPressIn={() => setPressSkin(true)}
-          onPressOut={() => setPressSkin(false)}
+          onPressOut={() => Skin()}
         >
           {pressSkin
             ? <Image style={styles.btn} source={require('../assets/btn/skin-btn-down.png')} />
