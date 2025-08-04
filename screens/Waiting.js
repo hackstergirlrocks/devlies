@@ -29,14 +29,14 @@ export default function App({ navigation }) {
 
 
     const NavigateToLogin = () => {
-        // if (token) {
-        //     navigation.navigate('Home')
-        // } else {
-        // navigation.navigate('Parametres')
-        navigation.navigate('Parametres')
-        // navigation.navigate('Home')
+        if (token) {
+            navigation.navigate('Home')
+        } else {
+            // navigation.navigate('Parametres')
+            navigation.navigate('PageSign')
+            // navigation.navigate('Home')
 
-        // }
+        }
         setPress(!press)
     }
 
