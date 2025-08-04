@@ -31,7 +31,7 @@ export default function App({ navigation }) {
     // "other.png": require("../assets/Skin/other.png"),
   };
 
-  const [skinPlayer, setSkinPlayer] = useState("guts");
+  const [skinPlayer, setSkinPlayer] = useState(user.skin);
   const [skinUser, setSkinUser] = useState(skins[skinPlayer]);
 
   // Gestion des animation des buttons 
