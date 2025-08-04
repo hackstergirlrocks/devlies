@@ -12,8 +12,6 @@ export default function App({ navigation }) {
     const [signInUsername, setSignInUsername] = useState('');
     const [signInPassword, setSignInPassword] = useState('');
     const [error, setError] = useState('');
-    
-    
 
     const [fontsLoaded] = useFonts({
         'Minecraft': require('../../assets/fonts/Minecraft.ttf'),
