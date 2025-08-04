@@ -13,8 +13,10 @@ export default function Parametres({ navigation }) {
     const dispatch = useDispatch();
     const [pressNext, setPressNext] = useState(false);
     const [pressLogout, setPressLogout] = useState(false)
-    const [signInUsername, setSignInUsername] = useState('');
-    const [signInPassword, setSignInPassword] = useState('');
+    const [changeUsername, setChangeUsername] = useState('');
+    const [changePassword, setChangePassword] = useState('');
+    const [changeNewPassword, setChangeNewPassword] = useState('');
+    const [changeEmail, setChangeEmail] = useState('');
     const [error, setError] = useState('');
 
     const [pressSound, setPressSound] = useState(false)
@@ -42,23 +44,23 @@ export default function Parametres({ navigation }) {
     }
 
     const Next = () => {
-        // fetch('http://192.168.100.206:3000/users/signin', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify({ username: signInUsername, password: signInPassword }),
-        // }).then(response => response.json())
-        //     .then(data => {
-        //         if (data.result) {
-        //             dispatch(login({ token: data.token }));
-        //             dispatch(setSkin({ skin: data.skin }));
-        //             // setSignInUsername('');
-        //             // setSignInPassword('');
-        //             navigation.navigate('Home')
-        //         } else {
-        //             console.log(data.error)
-        //             setError(data.error)
-        //         }
-        //     });
+         fetch('http://192.168.100.206:3000/users/signin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: signInUsername, password: signInPassword }),
+        }).then(response => response.json())
+            .then(data => {
+                if (data.result) {
+                    dispatch(login({ token: data.token }));
+                    dispatch(setSkin({ skin: data.skin }));
+                    // setSignInUsername('');
+                    // setSignInPassword('');
+                    navigation.navigate('Home')
+                } else {
+                    console.log(data.error)
+                    setError(data.error)
+                }
+            });
         setPressNext(false)
         console.log('next pressed');
     }
@@ -67,6 +69,9 @@ export default function Parametres({ navigation }) {
         dispatch(logout({ token: null }));
         navigation.navigate('Waiting')
     }
+
+
+
 
     return (
         <ImageBackground style={styles.container} source={require('../../assets/WaitingPage/animation-desk-bigger.gif')}>
@@ -79,37 +84,8 @@ export default function Parametres({ navigation }) {
                 >
                     <Image source={require('../../assets/btn/icone-fleche-retour.png')} />
                 </TouchableOpacity>
+                <View style={[styles.soundlogout, {flexDirection: 'row'}]}>
                 <TouchableOpacity
-                    activeOpacity={1}
-                    onPressIn={() => setPressLogout(true)}
-                    onPressOut={() => Logout()}
-                >
-                    {pressLogout
-                        ? <Image style={styles.btnlogout} source={require('../../assets/btn/icone-logout-down.png')} />
-                        : <Image style={styles.btnlogout} source={require('../../assets/btn/icone-logout.png')} />
-                    }
-                </TouchableOpacity>
-            </View>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-
-                <View style={styles.inputs}>
-                    <Text style={styles.error}>{error}</Text>
-                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                        <TextInput style={[styles.username, { textAlign: 'center' }]} onChangeText={(value) => setSignInUsername(value)} value={signInUsername} placeholderTextColor="black" placeholder='change username'></TextInput>
-                    </ImageBackground>
-
-                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                        <TextInput style={[styles.email, { textAlign: 'center' }]} placeholderTextColor="black" onChangeText={(value) => setSignInPassword(value)} value={signInPassword} placeholder='change email'></TextInput>
-                    </ImageBackground>
-
-                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                        <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setSignInUsername(value)} value={signInUsername} placeholderTextColor="black" placeholder='original password'></TextInput>
-                    </ImageBackground>
-                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                        <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setSignInUsername(value)} value={signInUsername} placeholderTextColor="black" placeholder='new password'></TextInput>
-                    </ImageBackground>
-                    <View style={styles.sound}>
-                        <TouchableOpacity
                             activeOpacity={1}
                             onPressIn={() => setPressSound(!pressSound)}
                             onPressOut={() => ChangeSound()}
@@ -130,7 +106,57 @@ export default function Parametres({ navigation }) {
                                 )
                             }
                         </TouchableOpacity>
-                    </View>
+                <TouchableOpacity
+                    activeOpacity={1}
+                    onPressIn={() => setPressLogout(true)}
+                    onPressOut={() => Logout()}
+                >
+                    {pressLogout
+                        ? <Image style={styles.btnlogout} source={require('../../assets/btn/icone-logout-down.png')} />
+                        : <Image style={styles.btnlogout} source={require('../../assets/btn/icone-logout.png')} />
+                    }
+                </TouchableOpacity>
+                </View>
+            </View>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+<View style={styles.content}>
+                <View style={styles.inputs}>
+                    <Text style={styles.error}>{error}</Text>
+                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                        <TextInput style={[styles.username, { textAlign: 'center' }]} onChangeText={(value) => setChangeUsername(value)} value={changeUsername} placeholderTextColor="black" placeholder='change username'></TextInput>
+                    </ImageBackground>
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        onPressIn={() => setPressNext(true)}
+                        onPressOut={() => Next()}
+                    >
+                        {pressNext
+                            ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
+                            : <Image style={styles.btn} source={require('../../assets/btn/btn-save.png')} />
+                        }
+                    </TouchableOpacity>
+
+                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                        <TextInput style={[styles.email, { textAlign: 'center' }]} placeholderTextColor="black" onChangeText={(value) => setChangeEmail(value)} value={changeEmail} placeholder='change email'></TextInput>
+                    </ImageBackground>
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        onPressIn={() => setPressNext(true)}
+                        onPressOut={() => Next()}
+                    >
+                        {pressNext
+                            ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
+                            : <Image style={styles.btn} source={require('../../assets/btn/btn-save.png')} />
+                        }
+                    </TouchableOpacity>
+
+                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                        <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangePassword(value)} value={changePassword} placeholderTextColor="black" placeholder='original password'></TextInput>
+                    </ImageBackground>
+
+                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                        <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangeNewPassword(value)} value={changeNewPassword} placeholderTextColor="black" placeholder='new password'></TextInput>
+                    </ImageBackground>
                     <TouchableOpacity
                         activeOpacity={1}
                         onPressIn={() => setPressNext(true)}
@@ -142,6 +168,7 @@ export default function Parametres({ navigation }) {
                         }
                     </TouchableOpacity>
                 </View>
+                </View>
             </TouchableWithoutFeedback>
         </ImageBackground>
     );
@@ -150,7 +177,6 @@ export default function Parametres({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-
     },
     topMain: {
         paddingTop: 50
@@ -196,19 +222,31 @@ const styles = StyleSheet.create({
         fontFamily: 'Minecraft',
     },
     btnlogout: {
-        //backgroundColor: 'rgba(255, 99, 71, 0.5)',
-
-        // width: 155,
-        // height: 55,
-        // top: 30,
-        // marginRight: 10,
         top: 30,
         width: 70,
         height: 70,
+        //backgroundColor: 'rgba(255, 99, 71, 0.5)',
+        right: 10,
+    },
+    imagesound: {
+        top: 30,
+        width: 70,
+        height: 70,
+        //backgroundColor: 'rgba(255, 99, 71, 0.5)',
+        right: 10,
     },
     topPart: {
         //backgroundColor: 'rgba(255, 99, 71, 0.5)',
         justifyContent: 'space-between',
         alignItems: 'center',
-    }
+    },
+    btn : {
+        //backgroundColor: 'rgba(255, 99, 71, 0.5)',
+        width: 140,
+        height: 60,
+    },
+    content: {
+        //backgroundColor: 'rgba(135, 71, 255, 0.5)',
+        bottom: 110,
+    },
 });

@@ -33,7 +33,7 @@ export default function App({ navigation }) {
         //     navigation.navigate('Home')
         // } else {
         // navigation.navigate('Parametres')
-        navigation.navigate('PageSign')
+        navigation.navigate('Parametres')
         // navigation.navigate('Home')
 
         // }
