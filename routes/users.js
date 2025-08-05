@@ -63,7 +63,7 @@ router.post('/signup', (req, res) => {
 router.get('/getskin/:token', (req, res) => {
   User.findOne({ token: req.params.token })
     .then(data => {
-      console.log(data.skins);
+      // console.log(data.skins);
       res.json({ result: true, skin: data.skins });
       // Aq0RVXB_ttBJFK85hXaZ4FjDgaIfUDWg
     });
