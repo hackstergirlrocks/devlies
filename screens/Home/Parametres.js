@@ -205,23 +205,8 @@ export default function Parametres({ navigation }) {
                     </TouchableOpacity>
                 </View>
             </View>
-                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                        <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangeNewPassword(value)} value={changeNewPassword} placeholderTextColor="black" placeholder='new password'></TextInput>
-                    </ImageBackground>
-                    <TouchableOpacity
-                        activeOpacity={1}
-                        onPressIn={() => setPressPassword(true)}
-                        onPressOut={() => functionPassword()}
-                    >
-                        {pressPassword
-                            ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
-                            : <Image style={styles.btn} source={require('../../assets/btn/btn-save.png')} />
-                        }
-                    </TouchableOpacity>
-                </View>
-            </View>
-            {/* </TouchableWithoutFeedback> */}
-        </ImageBackground>
+        {/* </TouchableWithoutFeedback> */ }
+        </ImageBackground >
     );
 }
 
