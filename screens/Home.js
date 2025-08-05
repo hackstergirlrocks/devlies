@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, Modal, Button } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, Modal } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useFonts } from 'expo-font'
@@ -12,8 +12,6 @@ export default function App({ navigation }) {
   // const token = user.token
 
   // Recup le skin du joueur ici
-
-
   const [skinPlayer, setSkinPlayer] = useState('');
   const [skinUser, setSkinUser] = useState(skins[user.skin]);
 
@@ -31,8 +29,11 @@ export default function App({ navigation }) {
   const [pressInfo, setPressInfo] = useState(false);
   const [pressShop, setPressShop] = useState(false);
 
+  // Modal en 3 steps (page)
   const [step, setStep] = useState(1)
 
+  // aller sur la page suivante
+  // si sur la page 3, retourne à la 1
   const changeStepPlus = () => {
     if (step === 3) {
       setStep(1)
@@ -41,6 +42,8 @@ export default function App({ navigation }) {
     }
   }
 
+  // revenir sur la page d'avant
+  // si sur la page 1, va à la page 3
   const changeStepMoins = () => {
     if (step === 1) {
       setStep(3)
@@ -49,14 +52,17 @@ export default function App({ navigation }) {
     }
   }
 
+  // modal (pop-up) visible ou non
   const [modalVisible, setModalVisible] = useState(false)
 
+  // quand quitte la modal, reviens sur la page 1 par défaut
   const openInfo = () => {
     setPressInfo(false)
     setModalVisible(!modalVisible)
     setStep(1)
   }
 
+  // écriture Minecraft
   const [fontsLoaded] = useFonts({
     'Minecraft': require('../assets/fonts/Minecraft.ttf'),
   });
@@ -146,6 +152,8 @@ export default function App({ navigation }) {
             : <Image style={styles.btn} source={require('../assets/btn/info-btn.png')} />
           }
         </TouchableOpacity>
+
+        {/* POP-UP DESCRIPTIF */}
         <Modal
           animationType="slide"
           transparent={true}
@@ -154,6 +162,8 @@ export default function App({ navigation }) {
             setModalVisible(!modalVisible);
           }}>
           <ImageBackground source={require('../assets/HomePage/pop-up-windows.png')} resizeMode='contain' style={styles.image}>
+
+            {/* PAGE 1, règle du jeu */}
             {step === 1 &&
               <View style={{ height: '50%', width: 350, paddingLeft: 50, bottom: 14 }}>
                 <View style={styles.modal}>
@@ -183,6 +193,8 @@ export default function App({ navigation }) {
                 </View>
               </View>
             }
+
+            {/* PAGE 2, description rôle hacker et dev junior */}
             {step === 2 &&
               <View style={{ height: '50%', width: 350, paddingLeft: 50, bottom: 10 }}>
                 <View style={styles.modal2}>
@@ -207,6 +219,8 @@ export default function App({ navigation }) {
                 </View>
               </View>
             }
+
+            {/* PAGE 3, description devops et chatgpt */}
             {step === 3 &&
               <View style={{ height: '50%', width: 350, paddingLeft: 50, bottom: 10 }}>
                 <View style={styles.modal2}>
@@ -229,9 +243,10 @@ export default function App({ navigation }) {
                     </View>
                   </View>
                 </View>
-
               </View>
             }
+
+            {/* Flèche pour changer de page */}
             <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 150 }}>
               <TouchableOpacity onPress={() => changeStepMoins()}>
                 <Image source={require('../assets/HomePage/fleche-bleu-gauche.png')} style={{ width: 40, height: 40 }} />
