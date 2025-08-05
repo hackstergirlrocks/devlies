@@ -208,6 +208,7 @@ export default function Parametres({ navigation }) {
 
                     {/* EMAIL */}
                     <Text style={styles.error}>{errorEmail}</Text>
+                    <Text style={styles.valid}>{valid}</Text>
                     <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
                         <TextInput style={[styles.email, { textAlign: 'center' }]} placeholderTextColor="black" onChangeText={(value) => setChangeEmail(value)} value={changeEmail} placeholder='change email'></TextInput>
                     </ImageBackground>
@@ -224,6 +225,7 @@ export default function Parametres({ navigation }) {
 
                     {/* PASSWORD CONFIRM ET NEW */}
                     <Text style={styles.error}>{errorPassword}</Text>
+                    <Text style={styles.valid}>{valid}</Text>
                     <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
                         <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangePassword(value)} value={changePassword} placeholderTextColor="black" placeholder='original password'></TextInput>
                     </ImageBackground>
