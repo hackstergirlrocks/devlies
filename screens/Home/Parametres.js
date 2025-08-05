@@ -29,9 +29,14 @@ export default function Parametres({ navigation }) {
     const [changeNewPassword, setChangeNewPassword] = useState('');
     const [changeEmail, setChangeEmail] = useState('');
 
-    const [errorUsername, setErrorusername] = useState('');
+    const [errorUsername, setErrorUsername] = useState('');
     const [errorEmail, setErrorEmail] = useState('');
     const [errorPassword, setErrorPassword] = useState('');
+
+    const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+
+    const [valid, setValid] = useState('');
 
     const [pressSound, setPressSound] = useState(false)
     const [isPressed, setPressed] = useState(true)
@@ -64,36 +69,66 @@ export default function Parametres({ navigation }) {
     }
 
     const functionUsername = () => {
-        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/changeusername/:token`, {
+        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/changeusername/${user.token}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: signInUsername }),
+            body: JSON.stringify({ username: changeUsername }),
         }).then(response => response.json())
             .then(data => {
                 if (data.result) {
-                    dispatch(login({ token: data.token }));
-                    dispatch(setSkin({ skin: data.skin }));
-                    // setSignInUsername('');
-                    // setSignInPassword('');
-                    navigation.navigate('Home')
+                    setChangeUsername('')
+                    setErrorUsername('')
+                    setValid('Username changed successfully !')
                 } else {
                     console.log(data.error)
                     setErrorUsername(data.error)
                 }
             });
-        setUsername(false)
-        console.log('next pressed');
     }
 
 
     const functionEmail = () => {
-
+        if (EMAIL_REGEX.test(changeEmail)) {
+            fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/changeemail/${user.token}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: changeEmail }),
+            }).then(response => response.json())
+                .then(data => {
+                    if (data.result) {
+                        setChangeEmail('')
+                        setValid('Email changed successfully !')
+                        setErrorEmail('')
+                    } else {
+                        console.log(data.error)
+                        setErrorEmail(data.error)
+                    }
+                });
+        } else {
+            setErrorEmail('Email not valid')
+        }
     }
 
 
     const functionPassword = () => {
-
+        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/changepassword/${user.token}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: changePassword, newpassword: changeNewPassword }),
+        }).then(response => response.json())
+            .then(data => {
+                if (data.result) {
+                    setChangeNewPassword('')
+                    setChangePassword('')
+                    setValid('Password changed successfully !')
+                    setErrorPassword('')
+                } else {
+                    console.log(data.error)
+                    setErrorPassword(data.error)
+                }
+            });
     }
+
 
     const Logout = () => {
         dispatch(logout({ token: null }));
@@ -104,6 +139,7 @@ export default function Parametres({ navigation }) {
 
 
     return (
+
         <ImageBackground style={styles.container} source={require('../../assets/WaitingPage/animation-desk-bigger.gif')}>
 
             <View style={[styles.topPart, { flexDirection: 'row' }]}>
@@ -154,6 +190,8 @@ export default function Parametres({ navigation }) {
 
                     {/* USERNAME */}
                     <Text style={styles.error}>{errorUsername}</Text>
+                    <Text style={styles.valid}>{valid}</Text>
+
                     <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
                         <TextInput style={[styles.username, { textAlign: 'center' }]} onChangeText={(value) => setChangeUsername(value)} value={changeUsername} placeholderTextColor="black" placeholder='change username'></TextInput>
                     </ImageBackground>
@@ -205,7 +243,7 @@ export default function Parametres({ navigation }) {
                     </TouchableOpacity>
                 </View>
             </View>
-        {/* </TouchableWithoutFeedback> */ }
+            {/* </TouchableWithoutFeedback> */}
         </ImageBackground >
     );
 }
@@ -258,6 +296,10 @@ const styles = StyleSheet.create({
     },
     error: {
         color: 'red',
+        fontFamily: 'Minecraft',
+    },
+    valid: {
+        color: 'rgb(29, 255, 104)',
         fontFamily: 'Minecraft',
     },
     btnlogout: {
