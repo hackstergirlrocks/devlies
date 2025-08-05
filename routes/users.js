@@ -262,7 +262,7 @@ router.put('/changepassword/:token', (req, res) => {
           res.json({ result: false, error: 'Database error' });
         });
       } else {
-        res.json({ result: false, message: 'Password not good ta mere' });
+        res.json({ result: false, error: 'Password not good ta mere' });
       }
 
     });
