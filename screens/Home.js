@@ -163,21 +163,21 @@ export default function App({ navigation }) {
                   </TouchableOpacity>
                   <View style={styles.modalView}>
                     <View style={styles.regles}>
-                      <Text style={{ fontFamily: 'Minecraft', fontSize: '25', textDecorationLine: 'underline', color: 'red' }}>Regles du jeu :</Text>
+                      <Text style={{ fontFamily: 'Minecraft', fontSize: '23', textDecorationLine: 'underline', color: 'red' }}>Regles du jeu :</Text>
                       <View>
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '23', textDecorationLine: 'underline' }}>Objectif</Text>
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '20' }}>Hackers : pirater tous les devs.</Text>
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '20' }}>Devs : proteger le projet en banissant les hackers.</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '20', textDecorationLine: 'underline' }}>Objectif</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '17' }}>Hackers : pirater tous les devs.</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '17' }}>Devs : proteger le projet en banissant les hackers.</Text>
                       </View>
                       <View>
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '23', textDecorationLine: 'underline' }}>Deroulement</Text>
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '20' }}>Nuit : Tout le monde "ferme les yeux". Les hackers choississent une victime (un dev). Les devs avec un role special jouent egalement.</Text>
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '20' }}>Jour : Tous les joueurs debattent dans le chat, un vote a lieu pour bannir un joueur suspect. Quand il meurt, il revele son role.</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '20', textDecorationLine: 'underline' }}>Deroulement</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '17' }}>Nuit : Tout le monde "ferme les yeux". Les hackers choississent une victime (un dev). Les devs avec un role special jouent egalement.</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '17' }}>Jour : Tous les joueurs debattent dans le chat, un vote a lieu pour bannir un joueur suspect. Quand il meurt, il revele son role.</Text>
                       </View>
                       <View>
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '23', textDecorationLine: 'underline' }}>Fin de partie</Text>
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '20' }}>Victoire des hackers : si les devs ne sont plus assez nombreux pour resister</Text>
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '20' }}>Victoires des devs : si tous les hackers ont ete bannis.</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '20', textDecorationLine: 'underline' }}>Fin de partie</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '17' }}>Victoire des hackers : si les devs ne sont plus assez nombreux pour resister</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '17' }}>Victoires des devs : si tous les hackers ont ete bannis.</Text>
                       </View>
                     </View>
                   </View>
@@ -192,16 +192,16 @@ export default function App({ navigation }) {
                   </TouchableOpacity>
                   <View style={styles.modalView}>
                     <View style={styles.regles}>
-                      <Text style={{ fontFamily: 'Minecraft', fontSize: '25', textDecorationLine: 'underline', color: 'red' }}>Explication roles :</Text>
+                      <Text style={{ fontFamily: 'Minecraft', fontSize: '23', textDecorationLine: 'underline', color: 'red' }}>Explication roles :</Text>
                       <View>
                         <Image source={require('../assets/HomePage/hacker.png')} style={styles.role} />
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '23', textDecorationLine: 'underline' }}>Hacker :</Text>
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '20' }}>Le Hacker est l’ennemi cache. Chaque nuit, il choisit un Dev a pirater avec les autres Hackers. Le jour, il tente de se faire passer pour un Dev Junior afin de ne pas etre decouvert.</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '20', textDecorationLine: 'underline' }}>Hacker :</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '17' }}>Le Hacker est l’ennemi cache. Chaque nuit, il choisit un Dev a pirater avec les autres Hackers. Le jour, il tente de se faire passer pour un Dev Junior afin de ne pas etre decouvert.</Text>
                       </View>
                       <View>
                         <Image source={require('../assets/HomePage/devjunior.png')} style={styles.role} />
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '23', textDecorationLine: 'underline' }}>Dev Junior :</Text>
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '20' }}>Le Dev Junior est un simple membre de l’equipe. Il n’a aucun pouvoir special, mais il participe aux discussions et aux votes pour essayer de demasquer les Hackers.</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '20', textDecorationLine: 'underline' }}>Dev Junior :</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '17' }}>Le Dev Junior est un simple membre de l’equipe. Il n’a aucun pouvoir special, mais il participe aux discussions et aux votes pour essayer de demasquer les Hackers.</Text>
                       </View>
                     </View>
                   </View>
@@ -216,16 +216,16 @@ export default function App({ navigation }) {
                   </TouchableOpacity>
                   <View style={styles.modalView}>
                     <View style={styles.regles}>
-                      <Text style={{ fontFamily: 'Minecraft', fontSize: '25', textDecorationLine: 'underline', color: 'red' }}>Explication roles :</Text>
+                      <Text style={{ fontFamily: 'Minecraft', fontSize: '23', textDecorationLine: 'underline', color: 'red' }}>Explication roles :</Text>
                       <View>
                         <Image source={require('../assets/HomePage/devops.png')} style={styles.role} />
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '23', textDecorationLine: 'underline' }}>Dev Ops :</Text>
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '20' }}>Le DevOps peut chaque nuit auditer un joueur pour savoir s’il est Hacker ou Dev. Son pouvoir est precieux, mais il doit rester discret pour eviter d’etre cible par les Hackers.</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '20', textDecorationLine: 'underline' }}>Dev Ops :</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '17' }}>Le DevOps peut chaque nuit auditer un joueur pour savoir s’il est Hacker ou Dev. Son pouvoir est precieux, mais il doit rester discret pour eviter d’etre cible par les Hackers.</Text>
                       </View>
                       <View>
                         <Image source={require('../assets/HomePage/chatgpt.png')} style={styles.role} />
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '23', textDecorationLine: 'underline' }}>ChatGPT :</Text>
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '20' }}>ChatGPT a deux actions speciales : il peut sauver un Dev pirate ou eliminer un joueur de son choix. Comme ses pouvoirs sont limites, il doit les utiliser au bon moment.</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '20', textDecorationLine: 'underline' }}>ChatGPT :</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '17' }}>ChatGPT a deux actions speciales : il peut sauver un Dev pirate ou eliminer un joueur de son choix. Comme ses pouvoirs sont limites, il doit les utiliser au bon moment.</Text>
                       </View>
                     </View>
                   </View>

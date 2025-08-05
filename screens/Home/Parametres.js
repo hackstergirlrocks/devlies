@@ -64,32 +64,34 @@ export default function Parametres({ navigation }) {
     }
 
     const functionUsername = () => {
-        // fetch('http://192.168.1.2:3000/users/signin', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify({ username: signInUsername, password: signInPassword }),
-        // }).then(response => response.json())
-        //     .then(data => {
-        //         if (data.result) {
-        //             dispatch(login({ token: data.token }));
-        //             dispatch(setSkin({ skin: data.skin }));
-        //             // setSignInUsername('');
-        //             // setSignInPassword('');
-        //             navigation.navigate('Home')
-        //         } else {
-        //             console.log(data.error)
-        //             setError(data.error)
-        //         }
-        //     });
-        // setUsername(false)
-        // console.log('next pressed');
+        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/changeusername/:token`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: signInUsername }),
+        }).then(response => response.json())
+            .then(data => {
+                if (data.result) {
+                    dispatch(login({ token: data.token }));
+                    dispatch(setSkin({ skin: data.skin }));
+                    // setSignInUsername('');
+                    // setSignInPassword('');
+                    navigation.navigate('Home')
+                } else {
+                    console.log(data.error)
+                    setErrorUsername(data.error)
+                }
+            });
+        setUsername(false)
+        console.log('next pressed');
     }
 
-    const functionPassword = () => {
-
-    }
 
     const functionEmail = () => {
+
+    }
+
+
+    const functionPassword = () => {
 
     }
 
@@ -149,6 +151,8 @@ export default function Parametres({ navigation }) {
             {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
             <View style={styles.content}>
                 <View style={styles.inputs}>
+
+                    {/* USERNAME */}
                     <Text style={styles.error}>{errorUsername}</Text>
                     <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
                         <TextInput style={[styles.username, { textAlign: 'center' }]} onChangeText={(value) => setChangeUsername(value)} value={changeUsername} placeholderTextColor="black" placeholder='change username'></TextInput>
@@ -164,6 +168,7 @@ export default function Parametres({ navigation }) {
                         }
                     </TouchableOpacity>
 
+                    {/* EMAIL */}
                     <Text style={styles.error}>{errorEmail}</Text>
                     <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
                         <TextInput style={[styles.email, { textAlign: 'center' }]} placeholderTextColor="black" onChangeText={(value) => setChangeEmail(value)} value={changeEmail} placeholder='change email'></TextInput>
@@ -179,6 +184,7 @@ export default function Parametres({ navigation }) {
                         }
                     </TouchableOpacity>
 
+                    {/* PASSWORD CONFIRM ET NEW */}
                     <Text style={styles.error}>{errorPassword}</Text>
                     <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
                         <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangePassword(value)} value={changePassword} placeholderTextColor="black" placeholder='original password'></TextInput>
@@ -199,10 +205,12 @@ export default function Parametres({ navigation }) {
                     </TouchableOpacity>
                 </View>
             </View>
-            {/* </TouchableWithoutFeedback> */}
-        </ImageBackground>
+        {/* </TouchableWithoutFeedback> */ }
+        </ImageBackground >
     );
 }
+
+
 
 const styles = StyleSheet.create({
     container: {
