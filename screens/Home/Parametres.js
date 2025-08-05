@@ -34,7 +34,7 @@ export default function Parametres({ navigation }) {
     const [errorPassword, setErrorPassword] = useState('');
 
     const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
+    const PSEUDO_REGEX = /^[A-Za-z0-9]+$/;
 
     const [valid, setValid] = useState('');
 
@@ -69,21 +69,25 @@ export default function Parametres({ navigation }) {
     }
 
     const functionUsername = () => {
-        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/changeusername/${user.token}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: changeUsername }),
-        }).then(response => response.json())
-            .then(data => {
-                if (data.result) {
-                    setChangeUsername('')
-                    setErrorUsername('')
-                    setValid('Username changed successfully !')
-                } else {
-                    console.log(data.error)
-                    setErrorUsername(data.error)
-                }
-            });
+        if (PSEUDO_REGEX.test(changeUsername)) {
+            fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/changeusername/${user.token}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: changeUsername }),
+            }).then(response => response.json())
+                .then(data => {
+                    if (data.result) {
+                        setChangeUsername('')
+                        setErrorUsername('')
+                        setValid('Username changed successfully !')
+                    } else {
+                        console.log(data.error)
+                        setErrorUsername(data.error)
+                    }
+                });
+        } else {
+            setErrorUsername('Username not valid, no special characters')
+        }
     }
 
 
@@ -198,7 +202,8 @@ export default function Parametres({ navigation }) {
                     <TouchableOpacity
                         activeOpacity={1}
                         onPressIn={() => setPressUsername(true)}
-                        onPressOut={() => functionUsername()}
+                        onPress={() => functionUsername()}
+                        onPressOut={() => setPressUsername(false)}
                     >
                         {pressUsername
                             ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
@@ -208,13 +213,15 @@ export default function Parametres({ navigation }) {
 
                     {/* EMAIL */}
                     <Text style={styles.error}>{errorEmail}</Text>
+                    <Text style={styles.valid}>{valid}</Text>
                     <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
                         <TextInput style={[styles.email, { textAlign: 'center' }]} placeholderTextColor="black" onChangeText={(value) => setChangeEmail(value)} value={changeEmail} placeholder='change email'></TextInput>
                     </ImageBackground>
                     <TouchableOpacity
                         activeOpacity={1}
                         onPressIn={() => setPressEmail(true)}
-                        onPressOut={() => functionEmail()}
+                        onPress={() => functionEmail()}
+                        onPressOut={() => setPressEmail(false)}
                     >
                         {pressEmail
                             ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
@@ -224,6 +231,7 @@ export default function Parametres({ navigation }) {
 
                     {/* PASSWORD CONFIRM ET NEW */}
                     <Text style={styles.error}>{errorPassword}</Text>
+                    <Text style={styles.valid}>{valid}</Text>
                     <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
                         <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangePassword(value)} value={changePassword} placeholderTextColor="black" placeholder='original password'></TextInput>
                     </ImageBackground>
@@ -234,7 +242,8 @@ export default function Parametres({ navigation }) {
                     <TouchableOpacity
                         activeOpacity={1}
                         onPressIn={() => setPressPassword(true)}
-                        onPressOut={() => functionPassword()}
+                        onPress={() => functionPassword()}
+                        onPressOut={() => setPressPassword(false)}
                     >
                         {pressPassword
                             ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />

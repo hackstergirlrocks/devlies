@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground } from 'react-native';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 export default function App({ navigation }) {
     // Recup le token du joueur via redux ici
-    const token = 'MOIFF'
-    // Recup le skin du joueur ici
+    const user = useSelector((state) => state.user.value);
+    const token = user.token
 
     // Gestion des animation des buttons 
     const [pressSignUP, setPressSignUP] = useState(false);
@@ -12,11 +13,11 @@ export default function App({ navigation }) {
 
 
     // Sécurité si utilisateur pas connecte zebi
-    useEffect(() => {
-        if (!token) {
-            navigation.navigate('Waiting')
-        }
-    }, [])
+    // useEffect(() => {
+    //     if (!token) {
+    //         navigation.navigate('Waiting')
+    //     }
+    // }, [])
 
     const SignUP = () => {
         setPressSignUP(false)
@@ -39,6 +40,7 @@ export default function App({ navigation }) {
                     ? <Image style={styles.btn} source={require('../../assets/btn/btn-sign-up-down.png')} />
                     : <Image style={styles.btn} source={require('../../assets/btn/btn-sign-up.png')} />
                 }
+                
             </TouchableOpacity>
             <TouchableOpacity
 
