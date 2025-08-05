@@ -81,13 +81,13 @@ router.post('/sakeSkin', (req, res) => {
         ).then(() => {
 
           User.find().then(data => {
-       res.json({ result: true, skin: req.body.skin });
+            res.json({ result: true, skin: req.body.skin });
 
           });
 
         });
       } else {
-      res.json({ result: false });
+        res.json({ result: false });
 
       }
 
@@ -137,7 +137,12 @@ router.post('/signin', (req, res) => {
     ]
   }).then(data => {
     User.updateOne(
-      { username: req.body.username },
+      {
+        $or: [
+          { username: req.body.username },
+          { email: req.body.username }
+        ]
+      },
       { token: newToken }
     ).then(() => {
       if (data && bcrypt.compareSync(req.body.password, data.password)) {
