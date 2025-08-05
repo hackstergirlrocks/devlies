@@ -62,7 +62,7 @@ export default function App({ navigation }) {
                     </ImageBackground>
 
                     <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                        <TextInput style={[styles.password, { textAlign: 'center' }]} placeholderTextColor="black" onChangeText={(value) => setSignInPassword(value)} value={signInPassword} placeholder='password'></TextInput>
+                        <TextInput style={[styles.password, { textAlign: 'center' }]} secureTextEntry={true} placeholderTextColor="black" onChangeText={(value) => setSignInPassword(value)} value={signInPassword} placeholder='password'></TextInput>
                     </ImageBackground>
                     <TouchableOpacity
                         activeOpacity={1}

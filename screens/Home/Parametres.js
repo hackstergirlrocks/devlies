@@ -4,11 +4,18 @@ import { useFonts } from 'expo-font'
 import { useDispatch } from 'react-redux';
 import { login, logout, setSkin } from '../../reducers/user';
 import { useAudioPlayer } from 'expo-audio';
+import { playMusic, pauseMusic, toggleMusic } from "../../constants/music";
+import { useSelector } from 'react-redux';
+import { setMusic } from '../../reducers/user';
+
 
 export default function Parametres({ navigation }) {
 
     const audioSource = require('../../assets/Song/lonelytree.mp3');
     const player = useAudioPlayer(audioSource);
+
+    const user = useSelector((state) => state.user.value);
+
 
     const dispatch = useDispatch();
 
@@ -27,12 +34,14 @@ export default function Parametres({ navigation }) {
     const [errorPassword, setErrorPassword] = useState('');
 
     const [pressSound, setPressSound] = useState(false)
-    const [isPressed, setPressed] = useState(false)
+    const [isPressed, setPressed] = useState(true)
 
 
     const [fontsLoaded] = useFonts({
         'Minecraft': require('../../assets/fonts/Minecraft.ttf'),
     });
+
+
 
     if (!fontsLoaded) {
         return null;
@@ -43,10 +52,14 @@ export default function Parametres({ navigation }) {
         setPressed(!isPressed)
         if (isPressed) {
             // player.seekTo(0);
-            player.play();
+            playMusic()
+            dispatch(setMusic(true));
+
         } else {
             // player.seekTo(0);
-            player.pause();
+            pauseMusic()
+            dispatch(setMusic(false));
+
         }
     }
 
@@ -108,7 +121,7 @@ export default function Parametres({ navigation }) {
                         onPressOut={() => ChangeSound()}
                     >
                         {
-                            isPressed ? (
+                            !user.music ? (
                                 pressSound ? (
                                     <Image style={styles.imagesound} source={require('../../assets/btn/sound-off-down.png')} />
                                 ) : (
@@ -177,6 +190,21 @@ export default function Parametres({ navigation }) {
                         <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangePassword(value)} value={changePassword} placeholderTextColor="black" placeholder='original password'></TextInput>
                     </ImageBackground>
 
+                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                        <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangeNewPassword(value)} value={changeNewPassword} placeholderTextColor="black" placeholder='new password'></TextInput>
+                    </ImageBackground>
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        onPressIn={() => setPressPassword(true)}
+                        onPressOut={() => functionPassword()}
+                    >
+                        {pressPassword
+                            ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
+                            : <Image style={styles.btn} source={require('../../assets/btn/btn-save.png')} />
+                        }
+                    </TouchableOpacity>
+                </View>
+            </View>
                     <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
                         <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangeNewPassword(value)} value={changeNewPassword} placeholderTextColor="black" placeholder='new password'></TextInput>
                     </ImageBackground>

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  value: { token: null, skin: null },
+  value: { token: null, skin: null, music: true },
 };
 
 export const userSlice = createSlice({
@@ -14,11 +14,14 @@ export const userSlice = createSlice({
     setSkin: (state, action) => {
       state.value.skin = action.payload.skin;
     },
+    setMusic: (state, action) => {
+      state.value.music = action.payload;
+    },
     logout: (state) => {
       state.value.token = null;
     },
   },
 });
 
-export const { login, logout, setSkin } = userSlice.actions;
+export const { login, logout, setSkin, setMusic } = userSlice.actions;
 export default userSlice.reducer;

@@ -94,13 +94,13 @@ export default function App({ navigation }) {
                         </ImageBackground>
 
                         <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                            <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setSignUpPassword(value)} value={signUpPassword} placeholderTextColor="black" placeholder='password'
+                            <TextInput style={[styles.password, { textAlign: 'center' }]} secureTextEntry={true} onChangeText={(value) => setSignUpPassword(value)} value={signUpPassword} placeholderTextColor="black" placeholder='password'
 
                             ></TextInput>
                         </ImageBackground>
 
                         <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                            <TextInput style={[styles.passwordConfirm, { textAlign: 'center' }]} onChangeText={(value) => setSignUpPasswordVerif(value)} value={signUpPasswordVerif} placeholderTextColor="black" placeholder='confirm password'
+                            <TextInput style={[styles.passwordConfirm, { textAlign: 'center' }]} secureTextEntry={true} onChangeText={(value) => setSignUpPasswordVerif(value)} value={signUpPasswordVerif} placeholderTextColor="black" placeholder='confirm password'
                             ></TextInput>
                         </ImageBackground>
                         <TouchableOpacity
