@@ -39,7 +39,7 @@ router.post('/signup', (req, res) => {
           lose: 0,
           game: 0
         },
-        skins: ['basic'],
+        skins: ['basic', 'cat'],
         friends: [],
         settings: {
           sound_music: 0,
