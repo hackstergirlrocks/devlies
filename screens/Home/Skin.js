@@ -27,6 +27,7 @@ export default function App({ navigation }) {
             .then((response) => response.json())
             .then((data) => {
                 setSkinPlayerBdd(data.skin);
+                console.log(data.skin)
             });
     }, [user.token]);
 
