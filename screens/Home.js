@@ -79,7 +79,6 @@ export default function App({ navigation }) {
 
   return (
     <ImageBackground style={styles.container} source={require('../assets/HomePage/desk-home-page-bigger.png')}>
-
       {/* Menu en haut a droite */}
       <View style={styles.MainTop}>
         <Image style={styles.top} source={require('../assets/btn/star.png')} />
