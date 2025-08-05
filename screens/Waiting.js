@@ -34,7 +34,7 @@ export default function App({ navigation }) {
         } else {
             // navigation.navigate('Parametres')
             // navigation.navigate('PageSign')
-            navigation.navigate('Home')
+            navigation.navigate('PageSign')
 
         }
         setPress(!press)
