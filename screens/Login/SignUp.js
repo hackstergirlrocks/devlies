@@ -100,7 +100,7 @@ export default function App({ navigation }) {
                         </ImageBackground>
 
                         <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                            <TextInput style={[styles.passwordConfirm, { textAlign: 'center' }]} secureTextEntry={true} onChangeText={(value) => setSignUpPasswordVerif(value)} value={signUpPasswordVerif} placeholderTextColor="black" placeholder='confirm password'
+                            <TextInput style={[styles.passwordConfirm, { textAlign: 'center' }]} secureTextEntry={true} textContentType="oneTimeCode" autoComplete="off" autoCorrect={false} spellCheck={false} onChangeText={(value) => setSignUpPasswordVerif(value)} value={signUpPasswordVerif} placeholderTextColor="black" placeholder='confirm password'
                             ></TextInput>
                         </ImageBackground>
                         <TouchableOpacity
