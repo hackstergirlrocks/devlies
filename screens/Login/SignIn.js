@@ -22,7 +22,7 @@ export default function App({ navigation }) {
     }
 
     const Next = () => {
-        fetch('http://192.168.100.206:3000/users/signin', {
+        fetch('http://192.168.1.2:3000/users/signin', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username: signInUsername, password: signInPassword }),

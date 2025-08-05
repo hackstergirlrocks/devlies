@@ -46,7 +46,7 @@ export default function App({ navigation }) {
     const [countSkin, setCountSkin] = useState(0);
 
     useEffect(() => {
-        fetch("http://192.168.100.206:3000/users/getskin/" + user.token)
+        fetch("http://192.168.1.2:3000/users/getskin/" + user.token)
             .then((response) => response.json())
             .then((data) => {
                 setSkinPlayerBdd(data.skin);
@@ -86,7 +86,7 @@ export default function App({ navigation }) {
 
 
     const SaveSkin = () => {
-        fetch("http://192.168.100.206:3000/users/sakeSkin", {
+        fetch("http://192.168.1.2:3000/users/sakeSkin", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
