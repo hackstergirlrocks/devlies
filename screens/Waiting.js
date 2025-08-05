@@ -4,27 +4,34 @@ import { useEffect, useState } from 'react';
 import { useAudioPlayer } from 'expo-audio';
 import { useSelector } from 'react-redux';
 
+import { useDispatch } from 'react-redux';
 
+
+import { initMusic } from "../constants/music";
+import { playMusic, pauseMusic } from "../constants/music";
+
+
+import { setMusic } from '../reducers/user';
 
 export default function App({ navigation }) {
 
     const audioSource = require('../assets/Song/lonelytree.mp3');
     const player = useAudioPlayer(audioSource);
 
+    const dispatch = useDispatch();
+
+
     const user = useSelector((state) => state.user.value);
     const token = user.token
 
+
     const [press, setPress] = useState(false)
     const [pressSound, setPressSound] = useState(false)
-    const [isPressed, setPressed] = useState(false)
+    const [isPressed, setPressed] = useState(true)
 
     // Function qui lance la musique 
-    const SongStart = () => {
-        player.seekTo(0);
-        player.play();
-    }
     useEffect(() => {
-        SongStart()
+        initMusic(require("../assets/Song/lonelytree.mp3"));
     }, [])
 
 
@@ -46,10 +53,14 @@ export default function App({ navigation }) {
         setPressed(!isPressed)
         if (isPressed) {
             // player.seekTo(0);
-            player.play();
+            playMusic()
+            dispatch(setMusic(true));
+
         } else {
             // player.seekTo(0);
-            player.pause();
+            pauseMusic()
+            dispatch(setMusic(false));
+
         }
     }
 
@@ -62,7 +73,7 @@ export default function App({ navigation }) {
                     onPressOut={() => ChangeSound()}
                 >
                     {
-                        isPressed ? (
+                        !user.music ? (
                             pressSound ? (
                                 <Image style={styles.imagesound} source={require('../assets/btn/sound-off-down.png')} />
                             ) : (

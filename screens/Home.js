@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useFonts } from 'expo-font'
 
+
 import skins from "../constants/skins";;
 
 export default function App({ navigation }) {
