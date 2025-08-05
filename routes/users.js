@@ -156,6 +156,7 @@ router.post('/signin', (req, res) => {
   });
 });
 
+
 router.put('/changeusername/:token', (req, res) => {
   if (!checkBody(req.body, ['username'])) {
     res.json({ result: false, error: 'Missing or empty username field' });
@@ -231,25 +232,42 @@ router.put('/changepassword/:token', (req, res) => {
     return;
   }
 
-  const { password } = req.body;
+  const { newpassword } = req.body;
   const bcrypt = require('bcrypt');
 
   // Crypter le nouveau mot de passe
-  const hash = bcrypt.hashSync(password, 10);
+  const hash = bcrypt.hashSync(newpassword, 10);
 
   // Mettre à jour le mot de passe crypté
-  User.updateOne(
-    { token: req.params.token },
-    { $set: { password: hash } }
-  ).then(result => {
-    if (result.modifiedCount > 0) {
-      res.json({ result: true, message: 'Password updated successfully' });
-    } else {
-      res.json({ result: false, error: 'User not found' });
-    }
-  }).catch(error => {
-    res.json({ result: false, error: 'Database error' });
-  });
+
+  console.log(req.body.password)
+  console.log(req.body.newpassword)
+
+  // res.json({ pute: 'ntm la pute '});
+
+  User.findOne({ token: req.params.token })
+    .then(data => {
+     
+      if (data && bcrypt.compareSync(req.body.password, data.password)) {
+        User.updateOne(
+          { token: req.params.token },
+          { $set: { password: hash } }
+        ).then(result => {
+          if (result.modifiedCount > 0) {
+            res.json({ result: true, message: 'Password updated successfully' });
+          } else {
+            res.json({ result: false, error: 'User not found' });
+          }
+        }).catch(error => {
+          res.json({ result: false, error: 'Database error' });
+        });
+      } else {
+        res.json({ result: false, message: 'Password not good ta mere' });
+      }
+
+    });
+
+
 });
 
 
