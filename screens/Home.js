@@ -7,30 +7,22 @@ import { useFonts } from 'expo-font'
 import skins from "../constants/skins";;
 
 export default function App({ navigation }) {
-  // Redux
+  // Recup le token du joueur via redux ici
   const user = useSelector((state) => state.user.value);
+  // const token = user.token
 
-  // Fonts 
-  const [fontsLoaded] = useFonts({
-    'Minecraft': require('../assets/fonts/Minecraft.ttf'),
-  });
+  // Recup le skin du joueur ici
 
-  if (!fontsLoaded) {
-    return null;
-  }
 
-  // State pour les skins
   const [skinPlayer, setSkinPlayer] = useState('');
   const [skinUser, setSkinUser] = useState(skins[user.skin]);
 
-  // Fonction pour changer le skin du joueur
   useEffect(() => {
     if (user.skin) {
       setSkinPlayer(user.skin);
       setSkinUser(skins[user.skin]);
     }
   }, [user.skin]);
-
 
   // Gestion des animation des buttons 
   const [pressPlay, setPressPlay] = useState(false);
@@ -39,9 +31,8 @@ export default function App({ navigation }) {
   const [pressInfo, setPressInfo] = useState(false);
   const [pressShop, setPressShop] = useState(false);
 
-
-  // State pour le modal (info)
   const [step, setStep] = useState(1)
+
   const changeStepPlus = () => {
     if (step === 3) {
       setStep(1)
@@ -66,16 +57,21 @@ export default function App({ navigation }) {
     setStep(1)
   }
 
+  const [fontsLoaded] = useFonts({
+    'Minecraft': require('../assets/fonts/Minecraft.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   // Sécurité si utilisateur pas connecte zebi
-
   // useEffect(() => {
   //   // if (!token) {
   //   // navigation.navigate('Waiting')
   //   // }
   // }, [])
 
-  // Fonction pour aller sur la page de skin
   const Skin = () => {
     setPressSkin(false)
     navigation.navigate('Skin')

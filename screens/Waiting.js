@@ -47,6 +47,9 @@ export default function App({ navigation }) {
     // Function pour changer de page
     // Si token existe, on va sur la page Home, sinon on va sur la page de connexion 
     const NavigateToLogin = () => {
+        console.log('token', token)
+        
+        
         if (token) {
             navigation.navigate('Home')
         } else {

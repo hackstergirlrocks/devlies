@@ -13,11 +13,11 @@ export default function App({ navigation }) {
 
 
     // Sécurité si utilisateur pas connecte zebi
-    useEffect(() => {
-        if (!token) {
-            navigation.navigate('Waiting')
-        }
-    }, [])
+    // useEffect(() => {
+    //     if (!token) {
+    //         navigation.navigate('Waiting')
+    //     }
+    // }, [])
 
     const SignUP = () => {
         setPressSignUP(false)
@@ -40,6 +40,7 @@ export default function App({ navigation }) {
                     ? <Image style={styles.btn} source={require('../../assets/btn/btn-sign-up-down.png')} />
                     : <Image style={styles.btn} source={require('../../assets/btn/btn-sign-up.png')} />
                 }
+                
             </TouchableOpacity>
             <TouchableOpacity
 
