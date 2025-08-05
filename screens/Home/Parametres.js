@@ -198,7 +198,8 @@ export default function Parametres({ navigation }) {
                     <TouchableOpacity
                         activeOpacity={1}
                         onPressIn={() => setPressUsername(true)}
-                        onPressOut={() => functionUsername()}
+                        onPress={() => functionUsername()}
+                        onPressOut={() => setPressUsername(false)}
                     >
                         {pressUsername
                             ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
@@ -215,7 +216,8 @@ export default function Parametres({ navigation }) {
                     <TouchableOpacity
                         activeOpacity={1}
                         onPressIn={() => setPressEmail(true)}
-                        onPressOut={() => functionEmail()}
+                        onPress={() => functionEmail()}
+                        onPressOut={() => setPressEmail(false)}
                     >
                         {pressEmail
                             ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
@@ -236,7 +238,8 @@ export default function Parametres({ navigation }) {
                     <TouchableOpacity
                         activeOpacity={1}
                         onPressIn={() => setPressPassword(true)}
-                        onPressOut={() => functionPassword()}
+                        onPress={() => functionPassword()}
+                        onPressOut={() => setPressPassword(false)}
                     >
                         {pressPassword
                             ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
