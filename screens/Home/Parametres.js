@@ -51,32 +51,34 @@ export default function Parametres({ navigation }) {
     }
 
     const functionUsername = () => {
-        // fetch('http://192.168.1.2:3000/users/signin', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify({ username: signInUsername, password: signInPassword }),
-        // }).then(response => response.json())
-        //     .then(data => {
-        //         if (data.result) {
-        //             dispatch(login({ token: data.token }));
-        //             dispatch(setSkin({ skin: data.skin }));
-        //             // setSignInUsername('');
-        //             // setSignInPassword('');
-        //             navigation.navigate('Home')
-        //         } else {
-        //             console.log(data.error)
-        //             setError(data.error)
-        //         }
-        //     });
-        // setUsername(false)
-        // console.log('next pressed');
+        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/changeusername/:token`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: signInUsername }),
+        }).then(response => response.json())
+            .then(data => {
+                if (data.result) {
+                    dispatch(login({ token: data.token }));
+                    dispatch(setSkin({ skin: data.skin }));
+                    // setSignInUsername('');
+                    // setSignInPassword('');
+                    navigation.navigate('Home')
+                } else {
+                    console.log(data.error)
+                    setErrorUsername(data.error)
+                }
+            });
+        setUsername(false)
+        console.log('next pressed');
     }
 
-    const functionPassword = () => {
-
-    }
 
     const functionEmail = () => {
+
+    }
+
+
+    const functionPassword = () => {
 
     }
 
@@ -134,62 +136,68 @@ export default function Parametres({ navigation }) {
                 </View>
             </View>
             {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
-                <View style={styles.content}>
-                    <View style={styles.inputs}>
-                        <Text style={styles.error}>{errorUsername}</Text>
-                        <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                            <TextInput style={[styles.username, { textAlign: 'center' }]} onChangeText={(value) => setChangeUsername(value)} value={changeUsername} placeholderTextColor="black" placeholder='change username'></TextInput>
-                        </ImageBackground>
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            onPressIn={() => setPressUsername(true)}
-                            onPressOut={() => functionUsername()}
-                        >
-                            {pressUsername
-                                ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
-                                : <Image style={styles.btn} source={require('../../assets/btn/btn-save.png')} />
-                            }
-                        </TouchableOpacity>
+            <View style={styles.content}>
+                <View style={styles.inputs}>
 
-                            <Text style={styles.error}>{errorEmail}</Text>
-                        <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                            <TextInput style={[styles.email, { textAlign: 'center' }]} placeholderTextColor="black" onChangeText={(value) => setChangeEmail(value)} value={changeEmail} placeholder='change email'></TextInput>
-                        </ImageBackground>
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            onPressIn={() => setPressEmail(true)}
-                            onPressOut={() => functionEmail()}
-                        >
-                            {pressEmail
-                                ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
-                                : <Image style={styles.btn} source={require('../../assets/btn/btn-save.png')} />
-                            }
-                        </TouchableOpacity>
+                    {/* USERNAME */}
+                    <Text style={styles.error}>{errorUsername}</Text>
+                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                        <TextInput style={[styles.username, { textAlign: 'center' }]} onChangeText={(value) => setChangeUsername(value)} value={changeUsername} placeholderTextColor="black" placeholder='change username'></TextInput>
+                    </ImageBackground>
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        onPressIn={() => setPressUsername(true)}
+                        onPressOut={() => functionUsername()}
+                    >
+                        {pressUsername
+                            ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
+                            : <Image style={styles.btn} source={require('../../assets/btn/btn-save.png')} />
+                        }
+                    </TouchableOpacity>
 
-                            <Text style={styles.error}>{errorPassword}</Text>
-                        <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                            <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangePassword(value)} value={changePassword} placeholderTextColor="black" placeholder='original password'></TextInput>
-                        </ImageBackground>
+                    {/* EMAIL */}
+                    <Text style={styles.error}>{errorEmail}</Text>
+                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                        <TextInput style={[styles.email, { textAlign: 'center' }]} placeholderTextColor="black" onChangeText={(value) => setChangeEmail(value)} value={changeEmail} placeholder='change email'></TextInput>
+                    </ImageBackground>
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        onPressIn={() => setPressEmail(true)}
+                        onPressOut={() => functionEmail()}
+                    >
+                        {pressEmail
+                            ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
+                            : <Image style={styles.btn} source={require('../../assets/btn/btn-save.png')} />
+                        }
+                    </TouchableOpacity>
 
-                        <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                            <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangeNewPassword(value)} value={changeNewPassword} placeholderTextColor="black" placeholder='new password'></TextInput>
-                        </ImageBackground>
-                        <TouchableOpacity
-                            activeOpacity={1}
-                            onPressIn={() => setPressPassword(true)}
-                            onPressOut={() => functionPassword()}
-                        >
-                            {pressPassword
-                                ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
-                                : <Image style={styles.btn} source={require('../../assets/btn/btn-save.png')} />
-                            }
-                        </TouchableOpacity>
-                    </View>
+                    {/* PASSWORD CONFIRM ET NEW */}
+                    <Text style={styles.error}>{errorPassword}</Text>
+                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                        <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangePassword(value)} value={changePassword} placeholderTextColor="black" placeholder='original password'></TextInput>
+                    </ImageBackground>
+
+                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                        <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangeNewPassword(value)} value={changeNewPassword} placeholderTextColor="black" placeholder='new password'></TextInput>
+                    </ImageBackground>
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        onPressIn={() => setPressPassword(true)}
+                        onPressOut={() => functionPassword()}
+                    >
+                        {pressPassword
+                            ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
+                            : <Image style={styles.btn} source={require('../../assets/btn/btn-save.png')} />
+                        }
+                    </TouchableOpacity>
                 </View>
+            </View>
             {/* </TouchableWithoutFeedback> */}
         </ImageBackground>
     );
 }
+
+
 
 const styles = StyleSheet.create({
     container: {
