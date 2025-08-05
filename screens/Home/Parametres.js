@@ -33,7 +33,7 @@ export default function Parametres({ navigation }) {
     const [errorEmail, setErrorEmail] = useState('');
     const [errorPassword, setErrorPassword] = useState('');
 
-    const EMAIL_REGEX = /^((([A-Za-z0-9._%+-]+)(\.[A-Za-z0-9._%+-]+)*)|(".+"))@((\[[0-9]{1,3}(\.[0-9]{1,3}){3}])|(([A-Za-z0-9-]+\.)+[A-Za-z]{2,}))$/;
+    const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 
     const [valid, setValid] = useState('');
@@ -105,7 +105,7 @@ export default function Parametres({ navigation }) {
                     }
                 });
         } else {
-            setErrorEmail('Email not valid, special character detected !')
+            setErrorEmail('Email not valid')
         }
     }
 
