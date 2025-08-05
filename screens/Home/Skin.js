@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground } from 'react-native';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch} from 'react-redux';
 import { useFonts } from 'expo-font'
 import { login, setSkin } from '../../reducers/user'
 import skins from "../../constants/skins";;
@@ -9,19 +8,24 @@ import skins from "../../constants/skins";;
 export default function App({ navigation }) {
     const dispatch = useDispatch();
 
+    // Fonts 
+    const [fontsLoaded] = useFonts({
+        'Minecraft': require('../../assets/fonts/Minecraft.ttf'),
+    });
 
+    if (!fontsLoaded) {
+        return null;
+    }
+
+    // State pour les boutons 
     const [pressSave, setPressSave] = useState(false)
-
-    // Recup le token du joueur via redux ici
-    const user = useSelector((state) => state.user.value);
-
-    // const token = user.token
-
-    // Recup le skin du joueur ici
-   
     const [skinPlayerBdd, setSkinPlayerBdd] = useState([])
     const [countSkin, setCountSkin] = useState(0);
 
+    // Redux
+    const user = useSelector((state) => state.user.value);
+
+    // Récupération des skins de l'utilisateur
     useEffect(() => {
         fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/getskin/` + user.token)
             .then((response) => response.json())
@@ -31,13 +35,13 @@ export default function App({ navigation }) {
             });
     }, [user.token]);
 
-
+    // Transformation des skins de l'utilisateur en tableau d'objets
     const combinedSkins = skinPlayerBdd.map((skinKey) => ({
         name: skinKey,
         image: skins[skinKey] || null,
     })).filter((s) => s.image !== null);
 
-
+    // Filtre pour ne pas afficher les skins qui n'existent pas dans le tableau skins
     const listItems = combinedSkins.map((user, id) =>
         <View key={id}>
             <Image style={styles.skin} source={user.image} />
@@ -46,6 +50,7 @@ export default function App({ navigation }) {
 
     );
 
+    // Fonction pour changer de skin avec fleches
     const PlusSkin = () => {
         if ((combinedSkins.length - 1) === countSkin) {
             setCountSkin(0)
@@ -62,7 +67,7 @@ export default function App({ navigation }) {
         }
     }
 
-
+    // Fonction pour sauvegarder le skin dans la BDD
     const SaveSkin = () => {
         fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/sakeSkin`, {
             method: "POST",
@@ -80,15 +85,8 @@ export default function App({ navigation }) {
             });
     }
 
+    // State pour le message de confirmation 
     const [message, setMessage] = useState("");
-
-    const [fontsLoaded] = useFonts({
-        'Minecraft': require('../../assets/fonts/Minecraft.ttf'),
-    });
-
-    if (!fontsLoaded) {
-        return null;
-    }
 
     const showMessage = () => {
         setMessage("Ton skin a bien ete change !");

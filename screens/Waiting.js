@@ -1,30 +1,21 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, Button } from 'react-native';
 import { useEffect, useState } from 'react';
 
-import { useAudioPlayer } from 'expo-audio';
-import { useSelector } from 'react-redux';
-
-import { useDispatch } from 'react-redux';
-
+import { useSelector, useDispatch } from 'react-redux';
 
 import { initMusic } from "../constants/music";
 import { playMusic, pauseMusic } from "../constants/music";
 
-
 import { setMusic } from '../reducers/user';
 
 export default function App({ navigation }) {
-
-    const audioSource = require('../assets/Song/lonelytree.mp3');
-    const player = useAudioPlayer(audioSource);
-
     const dispatch = useDispatch();
 
-
+    // Redux 
     const user = useSelector((state) => state.user.value);
     const token = user.token
 
-
+    // State pour les boutons
     const [press, setPress] = useState(false)
     const [pressSound, setPressSound] = useState(false)
     const [isPressed, setPressed] = useState(true)
@@ -35,19 +26,6 @@ export default function App({ navigation }) {
             initMusic(require("../assets/Song/lonelytree.mp3"));
         }
     }, [user.music])
-
-
-    const NavigateToLogin = () => {
-        if (token) {
-            navigation.navigate('Home')
-        } else {
-            // navigation.navigate('Parametres')
-            // navigation.navigate('PageSign')
-            navigation.navigate('PageSign')
-
-        }
-        setPress(!press)
-    }
 
     // Function stop ou pas la musique via le button
     const ChangeSound = () => {
@@ -64,6 +42,19 @@ export default function App({ navigation }) {
             dispatch(setMusic(false));
 
         }
+    }
+
+    // Function pour changer de page
+    // Si token existe, on va sur la page Home, sinon on va sur la page de connexion 
+    const NavigateToLogin = () => {
+        if (token) {
+            navigation.navigate('Home')
+        } else {
+            // navigation.navigate('Parametres')
+            // navigation.navigate('PageSign')
+            navigation.navigate('PageSign')
+        }
+        setPress(!press)
     }
 
     return (
