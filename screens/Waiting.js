@@ -31,8 +31,10 @@ export default function App({ navigation }) {
 
     // Function qui lance la musique 
     useEffect(() => {
-        initMusic(require("../assets/Song/lonelytree.mp3"));
-    }, [])
+        if (user.music) {
+            initMusic(require("../assets/Song/lonelytree.mp3"));
+        }
+    }, [user.music])
 
 
     const NavigateToLogin = () => {

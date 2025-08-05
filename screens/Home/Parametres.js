@@ -53,13 +53,13 @@ export default function Parametres({ navigation }) {
         if (isPressed) {
             // player.seekTo(0);
             playMusic()
-                        dispatch(setMusic(true));
-            
+            dispatch(setMusic(true));
+
         } else {
             // player.seekTo(0);
             pauseMusic()
-                        dispatch(setMusic(false));
-            
+            dispatch(setMusic(false));
+
         }
     }
 
