@@ -6,7 +6,6 @@ import { login, setSkin } from '../../reducers/user';
 
 
 export default function App({ navigation }) {
-
     const dispatch = useDispatch();
     const [pressNext, setPressNext] = useState(false);
     const [signInUsername, setSignInUsername] = useState('');
@@ -22,7 +21,7 @@ export default function App({ navigation }) {
     }
 
     const Next = () => {
-        fetch('http://192.168.100.206:3000/users/signin', {
+        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/signin`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username: signInUsername, password: signInPassword }),

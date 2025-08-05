@@ -5,13 +5,11 @@ import { useDispatch } from 'react-redux';
 import { useFonts } from 'expo-font'
 import { login, setSkin } from '../../reducers/user';
 
-
 export default function App({ navigation }) {
     const dispatch = useDispatch();
 
 
     const [pressSave, setPressSave] = useState(false)
-
 
     // Recup le token du joueur via redux ici
     const user = useSelector((state) => state.user.value);
@@ -46,7 +44,7 @@ export default function App({ navigation }) {
     const [countSkin, setCountSkin] = useState(0);
 
     useEffect(() => {
-        fetch("http://192.168.100.206:3000/users/getskin/" + user.token)
+        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/getskin/` + user.token)
             .then((response) => response.json())
             .then((data) => {
                 setSkinPlayerBdd(data.skin);
@@ -60,8 +58,8 @@ export default function App({ navigation }) {
     })).filter((s) => s.image !== null);
 
 
-    const listItems = combinedSkins.map((user) =>
-        <View>
+    const listItems = combinedSkins.map((user, id) =>
+        <View key={id}>
             <Image style={styles.skin} source={user.image} />
             <Text style={styles.textSkin}>{user.name}</Text>
         </View>
@@ -86,7 +84,7 @@ export default function App({ navigation }) {
 
 
     const SaveSkin = () => {
-        fetch("http://192.168.100.206:3000/users/sakeSkin", {
+        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/sakeSkin`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -150,7 +148,7 @@ export default function App({ navigation }) {
 
             </View>
             <TouchableOpacity
-                style={styles.switchPage}
+                style={styles.savebtn}
                 activeOpacity={1}
                 onPressIn={() => setPressSave(true)}
                 onPressOut={() => setPressSave(false)}
@@ -179,6 +177,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
+        top: -50
     },
 
 
@@ -208,6 +207,9 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'Minecraft',
         fontSize: 25,
+    },
+    savebtn: {
+        top: 25
     }
 
 

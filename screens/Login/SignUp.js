@@ -29,7 +29,7 @@ export default function App({ navigation }) {
         if (EMAIL_REGEX.test(signUpEmail)) {
             if (signUpPassword === signUpPasswordVerif) {
                 console.log(true)
-                fetch('http://192.168.100.206:3000/users/signup', {
+                fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/signup`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: signUpUsername, email: signUpEmail, password: signUpPassword }),
