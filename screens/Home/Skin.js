@@ -91,7 +91,7 @@ export default function App({ navigation }) {
     }
 
     const showMessage = () => {
-        setMessage("Ton skin a bien été changé !");
+        setMessage("Ton skin a bien ete change !");
         setTimeout(() => {
             setMessage('');
         }, 3000);

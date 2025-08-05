@@ -105,7 +105,7 @@ export default function Parametres({ navigation }) {
                     }
                 });
         } else {
-            setErrorEmail('Email not valid')
+            setErrorEmail('Email not valid !')
         }
     }
 
