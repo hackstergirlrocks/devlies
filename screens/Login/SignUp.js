@@ -57,7 +57,6 @@ export default function App({ navigation }) {
         setPressNext(false)
         console.log('next pressed');
         console.log(signUpEmail, signUpPasswordVerif, signUpPassword, signUpUsername)
-         navigation.navigate('Home')
     }
 
 

@@ -18,6 +18,17 @@ const skins = {
     "roi": require("../assets/Skin/roi-big.png"),
     "wolf": require("../assets/Skin/wolf-big.png"),
     "emo": require("../assets/Skin/emo-big.png"),
+
+    "kotaro": require("../assets/Skin/kotaro-big.png"),
+    "puck": require("../assets/Skin/puck-big.png"),
+    "requin": require("../assets/Skin/requin-big.png"),
+    "titan": require("../assets/Skin/titan-colossal-big.png"),
+    "toto-en-fumence": require("../assets/Skin/toto-en-fumence-big.png"),
+
+
+
+
+
     // "other.png": require("../assets/Skin/other.png"),
 };
 
