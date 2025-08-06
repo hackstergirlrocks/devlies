@@ -36,7 +36,7 @@ export default function App({ navigation }) {
     // quand appuie sur next
     const Next = () => {
         // si email et username sont corrects d'après le regex
-        if (EMAIL_REGEX.test(signUpEmail) || (PSEUDO_REGEX.test(signUpUsername))) {
+        if (EMAIL_REGEX.test(signUpEmail) && (PSEUDO_REGEX.test(signUpUsername))) {
             // si mdp1 et mdp2 sont égaux
             if (signUpPassword === signUpPasswordVerif) {
                 console.log(true)

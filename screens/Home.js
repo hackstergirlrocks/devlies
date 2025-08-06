@@ -55,18 +55,36 @@ export default function App({ navigation }) {
   // modal (pop-up) visible ou non
   const [modalVisibleInfo, setModalVisibleInfo] = useState(false)
   const [modalVisibleProfile, setModalVisibleProfile] = useState(false)
+  const [infoPlayer, setInfoPlayer] = useState([])
+  const [infoGame, setInfoGame] = useState(0)
+  const [infoWin, setInfoWin] = useState(0)
+  const [infoLose, setInfoLose] = useState(0)
+  const [datePlayer, setDatePlayer] = useState()
 
-  // quand quitte la modal, reviens sur la page 1 par défaut
+  // useEffect, récupère toutes infos de l'user grâce à son token. Rappelle à chaque ouverture du modal Profile
+  useEffect(() => {
+    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/` + user.token)
+      .then((response) => response.json())
+      .then((data) => {
+        setInfoPlayer(data.info)
+        setInfoGame(data.info.stats.game)
+        setInfoWin(data.info.stats.win)
+        setInfoLose(data.info.stats.lose)
+        setDatePlayer(data.info.created)
+      });
+  }, [modalVisibleProfile]);
+
+  // quand ouvre la modal, reviens sur la page 1 par défaut
   const openInfo = () => {
     setPressInfo(false)
     setModalVisibleInfo(!modalVisibleInfo)
     setStep(1)
   }
 
+  // ouvre la modal
   const openProfile = () => {
     setPressProfile(false)
     setModalVisibleProfile(!modalVisibleProfile)
-    console.log('profile')
   }
 
   // écriture Minecraft
@@ -99,8 +117,6 @@ export default function App({ navigation }) {
           style={styles.switchPage}
           activeOpacity={1}
           onPress={() => navigation.navigate('Parametres')}
-
-
         >
           <Image style={styles.top} source={require('../assets/btn/ecroue.png')} />
         </TouchableOpacity>
@@ -136,6 +152,7 @@ export default function App({ navigation }) {
           }
         </TouchableOpacity>
 
+        {/* POP-UP PROFIL */}
         <Modal
           animationType="slide"
           transparent={true}
@@ -143,7 +160,53 @@ export default function App({ navigation }) {
           onRequestClose={() => {
             setModalVisibleProfile(!modalVisibleProfile);
           }}>
-          <ImageBackground source={require('../assets/HomePage/pop-up-perso.png')} resizeMode='contain' style={styles.image}>
+          <ImageBackground source={require('../assets/HomePage/pop-up-windows-final.png')} resizeMode='contain' style={styles.image}>
+            <View>
+              <TouchableOpacity onPress={() => openProfile()} style={{ width: 330, bottom: 12, left: 27 }}>
+                <Image source={require('../assets/HomePage/croix-bleu-pop-up.png')} style={{ left: 10, height: 22, width: 22 }} />
+              </TouchableOpacity>
+            </View>
+            <View style={{ width: 330, height: 515, justifyContent: 'center', left: 30 }}>
+              <View>
+                <View style={[styles.infoUser, { flexDirection: 'row', height: 170 }]}>
+                  <ImageBackground source={require('../assets/HomePage/icone-pop-up-windows-final.png')}>
+                    <Image style={styles.skinuser} source={skinUser} />
+                  </ImageBackground>
+                  <View style={{ alignItems: 'center', justifyContent: 'center', width: 125, height: 150 }}>
+                    <Text style={{ fontFamily: 'Minecraft', fontSize: '25' }}>{infoPlayer.username}</Text>
+                    <Text style={{ fontFamily: 'Minecraft', fontSize: '20' }}>level {infoPlayer.level}</Text>
+                    <Text style={{ fontFamily: 'Minecraft', fontSize: '20' }}>{infoPlayer.experience} xp</Text>
+                  </View>
+                </View>
+              </View>
+              <View style={{ width: 330, height: 345, justifyContent: 'center', gap: 10 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Image source={require('../assets/HomePage/icone-coin.png')} style={styles.icone} />
+                  <Text style={{ fontFamily: 'Minecraft', fontSize: '20', left: 30 }}>{infoPlayer.coins <= 1 ? `${infoPlayer.coins} coin` : `${infoPlayer.coins} coins`}</Text>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Image source={require('../assets/HomePage/icone-manette.png')} style={styles.icone} />
+                  <Text style={{ fontFamily: 'Minecraft', fontSize: '20', left: 30 }}>{infoGame <= 1 ? `${infoGame} game` : `${infoGame} games`}</Text>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Image source={require('../assets/HomePage/icone-coupe.png')} style={styles.icone} />
+                  <Text style={{ fontFamily: 'Minecraft', fontSize: '20', left: 30 }}>{infoWin <= 1 ? `${infoWin} win` : `${infoWin} wins`}</Text>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Image source={require('../assets/HomePage/icone-crane.png')} style={styles.icone} />
+                  <Text style={{ fontFamily: 'Minecraft', fontSize: '20', left: 30 }}>{infoLose <= 1 ? `${infoLose} lose` : `${infoLose} loses`}</Text>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Image source={require('../assets/HomePage/icone-horloge.png')} style={styles.icone} />
+                  <Text style={{ fontFamily: 'Minecraft', fontSize: '20', left: 30 }}>
+                    {(() => {
+                      const date = new Date(datePlayer);
+                      return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+                    })()}
+                  </Text>
+                </View>
+              </View>
+            </View>
           </ImageBackground>
         </Modal>
 
@@ -332,6 +395,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end'
   },
+
+  // CSS MODAL PROFILE
+  infoUser: {
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+  },
+  skinuser: {
+    height: 150,
+    width: 150,
+  },
+  icone: {
+    height: 40,
+    width: 40,
+    left: 20
+  },
+
+  // CSS MODAL INFO
   regles: {
     gap: 10,
   },
