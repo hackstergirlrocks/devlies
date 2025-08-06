@@ -33,6 +33,7 @@ router.post('/signup', (req, res) => {
         experience: 0,
         group: 0,
         vip: 0,
+        coins: 0,
         banned: 0,
         created: new Date(),
         stats: {
