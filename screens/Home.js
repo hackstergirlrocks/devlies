@@ -53,13 +53,20 @@ export default function App({ navigation }) {
   }
 
   // modal (pop-up) visible ou non
-  const [modalVisible, setModalVisible] = useState(false)
+  const [modalVisibleInfo, setModalVisibleInfo] = useState(false)
+  const [modalVisibleProfile, setModalVisibleProfile] = useState(false)
 
   // quand quitte la modal, reviens sur la page 1 par défaut
   const openInfo = () => {
     setPressInfo(false)
-    setModalVisible(!modalVisible)
+    setModalVisibleInfo(!modalVisibleInfo)
     setStep(1)
+  }
+
+  const openProfile = () => {
+    setPressProfile(false)
+    setModalVisibleProfile(!modalVisibleProfile)
+    console.log('profile')
   }
 
   // écriture Minecraft
@@ -92,7 +99,7 @@ export default function App({ navigation }) {
           style={styles.switchPage}
           activeOpacity={1}
           onPress={() => navigation.navigate('Parametres')}
-        
+
 
         >
           <Image style={styles.top} source={require('../assets/btn/ecroue.png')} />
@@ -108,7 +115,7 @@ export default function App({ navigation }) {
           activeOpacity={1}
           onPressIn={() => setPressPlay(true)}
           onPressOut={() => setPressPlay(false)}
-            onPress={() => navigation.navigate('Play')}
+          onPress={() => navigation.navigate('Play')}
         >
           {pressPlay
             ? <Image style={styles.btn} source={require('../assets/btn/play-btn-down.png')} />
@@ -121,13 +128,24 @@ export default function App({ navigation }) {
           style={styles.switchPage}
           activeOpacity={1}
           onPressIn={() => setPressProfile(true)}
-          onPressOut={() => setPressProfile(false)}
+          onPressOut={() => openProfile()}
         >
           {pressProfile
             ? <Image style={styles.btn} source={require('../assets/btn/profile-btn-down.png')} />
             : <Image style={styles.btn} source={require('../assets/btn/profile-btn.png')} />
           }
         </TouchableOpacity>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisibleProfile}
+          onRequestClose={() => {
+            setModalVisibleProfile(!modalVisibleProfile);
+          }}>
+          <ImageBackground source={require('../assets/HomePage/pop-up-perso.png')} resizeMode='contain' style={styles.image}>
+          </ImageBackground>
+        </Modal>
 
         {/* SKIN BUTTON */}
         <TouchableOpacity
@@ -160,9 +178,9 @@ export default function App({ navigation }) {
         <Modal
           animationType="slide"
           transparent={true}
-          visible={modalVisible}
+          visible={modalVisibleInfo}
           onRequestClose={() => {
-            setModalVisible(!modalVisible);
+            setModalVisibleInfo(!modalVisibleInfo);
           }}>
           <ImageBackground source={require('../assets/HomePage/pop-up-windows.png')} resizeMode='contain' style={styles.image}>
 
