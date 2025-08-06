@@ -17,47 +17,70 @@ router.post('/signup', (req, res) => {
     return;
   }
 
-  // * Si l'utilisateur n'est pas déja inscrit, ajout à la BDD * //
-  User.findOne({ username: req.body.username } || { email: req.body.email }).then(data => {
-    if (data === null) {
-      const hash = bcrypt.hashSync(req.body.password, 10);
-      const newToken = uid2(32);
-      const newUser = new User({
-        token: newToken,
-        username: req.body.username,
-        email: req.body.email,
-        password: hash,
-        skin_use: "basic",
-        level: 1,
+  // regex pour email + username (pas de caractère spéciaux)
+  const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const PSEUDO_REGEX = /^[A-Za-z0-9]+$/;
 
-        experience: 0,
-        group: 0,
-        vip: 0,
-        coins: 0,
-        banned: 0,
-        created: new Date(),
-        stats: {
-          win: 0,
-          lose: 0,
-          game: 0
-        },
-        skins: ['basic', 'cat'],
-        friends: [],
-        settings: {
-          sound_music: 0,
-          sound_effect: 0
-        }
+  if (EMAIL_REGEX.test(req.body.email)) {
+    if (PSEUDO_REGEX.test(req.body.username)) {
+      if (req.body.password === req.body.passwordverif) {
 
-      });
+        // * Si l'utilisateur n'est pas déja inscrit, ajout à la BDD * //
+        User.findOne({ username: req.body.username } || { email: req.body.email }).then(data => {
+          if (data === null) {
+            const hash = bcrypt.hashSync(req.body.password, 10);
+            const newToken = uid2(32);
+            const newUser = new User({
+              token: newToken,
+              username: req.body.username,
+              email: req.body.email,
+              password: hash,
+              skin_use: "basic",
+              level: 1,
 
-      newUser.save().then(data => {
-        res.json({ result: true, token: newToken, skin: data.skin_use, username: data.username });
-      });
+              experience: 0,
+              group: 0,
+              vip: 0,
+              coins: 0,
+              banned: 0,
+              created: new Date(),
+              stats: {
+                win: 0,
+                lose: 0,
+                game: 0
+              },
+              skins: ['basic', 'cat'],
+              friends: [],
+              settings: {
+                sound_music: 0,
+                sound_effect: 0
+              }
+
+            });
+
+            newUser.save().then(data => {
+              res.json({ result: true, token: newToken, skin: data.skin_use, username: data.username });
+            });
+
+          } else {
+            // * Utilisateur déja inscrit * //
+            res.json({ result: false, error: 'User already registered' });
+          }
+        });
+      } else {
+        res.json({ result: false, error: 'Password not valid' });
+
+      }
     } else {
-      // * Utilisateur déja inscrit * //
-      res.json({ result: false, error: 'User already registered' });
+      res.json({ result: false, error: 'Username not valid' });
+
     }
-  });
+
+  } else {
+    res.json({ result: false, error: 'Email not valid' });
+
+  }
+
 });
 
 

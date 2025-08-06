@@ -29,36 +29,97 @@ const { Server } = require("socket.io");
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*" } });
 
-let users = {}; // stocke les utilisateurs connectés
+
+let users = {
+    0: {
+        id: 0,
+        username: 'Bot_0',
+        skin: 'han',
+    },
+    1: {
+        id: 1,
+        username: 'Bot_1',
+        skin: 'han',
+    },
+    2: {
+        id: 2,
+        username: 'Bot_2',
+        skin: 'han',
+    }
+}; // stocke les utilisateurs connectés
 let chatHistory = [];
 
+let gameState = {
+    started: false,
+    timer: null,
+    countdown: 10, // durée avant lancement (en secondes)
+};
+
+// ✅ Fonction pour reset le jeu
+function resetGame(io) {
+    if (gameState.timer) {
+        clearInterval(gameState.timer);
+        gameState.timer = null;
+    }
+
+    gameState.started = false;
+    gameState.countdown = 10;
+
+    // ⚡ Option 1 : garder les bots
+    users = {
+        0: { id: 0, username: 'Bot_0', skin: 'han' },
+        1: { id: 1, username: 'Bot_1', skin: 'han' },
+        2: { id: 2, username: 'Bot_2', skin: 'han' },
+    };
+
+    chatHistory = [];
+
+    io.emit("gameReset", { users: Object.values(users) });
+    console.log("🔄 Partie réinitialisée !");
+}
 
 io.on("connection", (socket) => {
     console.log(`Nouvelle connexion: ${socket.id}`);
 
     socket.on("joinLobby", (player) => {
-        if (!player?.username) return;
-
-        // Vérifie si un utilisateur avec ce pseudo existe déjà
-        const alreadyExists = Object.values(users).some(
-            (u) => u.username === player.username
-        );
-
-        if (alreadyExists) {
-            console.log(`⚠️ ${player.username} déjà présent dans le lobby`);
+        if (gameState.started) {
+            socket.emit("gameError", { message: "La partie est déjà en cours !" });
             return;
         }
 
-        console.log("🟢 Nouveau joueur:", player);
+        // Vérifie si pseudo déjà présent
+        const alreadyExists = Object.values(users).some(
+            (u) => u.username === player.username
+        );
+        if (alreadyExists) return;
 
-        const user = { id: socket.id, username: player.username, skin: player.skin, role: null };
-        users[socket.id] = user;
+        users[socket.id] = {
+            id: socket.id,
+            username: player.username,
+            skin: player.skin,
+        };
 
         io.emit("updateUsers", Object.values(users));
 
+        // ✅ Lancer le timer si assez de joueurs et pas encore démarré
+        if (Object.keys(users).length >= 3 && !gameState.timer) {
+            let countdown = gameState.countdown;
+            console.log("⏳ La partie démarre dans", countdown, "secondes");
 
+            gameState.timer = setInterval(() => {
+                countdown--;
+                io.emit("countdown", countdown);
+
+                if (countdown <= 0) {
+                    clearInterval(gameState.timer);
+                    gameState.timer = null;
+                    gameState.started = true;
+                    io.emit("gameStarted");
+                    console.log("🚀 Partie lancée !");
+                }
+            }, 1000);
+        }
     });
-
 
     socket.on("leaveLobby", () => {
         console.log(`👋 ${users[socket.id]?.username || socket.id} a quitté le lobby`);
@@ -74,7 +135,12 @@ io.on("connection", (socket) => {
         io.emit('receive_message', data); // renvoyer à tous
     });
 
+    // ✅ Nouveau : stopper la partie
+    socket.on("stopGame", () => {
+        resetGame(io);
+    });
 });
+
 
 server.listen(3001, () => {
     console.log("✅ Serveur lancé sur http://localhost:3001");
