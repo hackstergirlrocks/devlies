@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, Button } from 'react-native';
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useFonts } from 'expo-font'
 import { login, setSkin } from '../../reducers/user'
 import skins from "../../constants/skins";;
@@ -95,6 +95,24 @@ export default function App({ navigation }) {
         }, 3000);
     };
 
+    const addAllSkins = () => {
+        const skinNames = Object.keys(skins); // récupère tous les noms
+
+        for (let i = 0; i < skinNames.length; i++) {
+            fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/addskin`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    token: user.token,
+                    skin: skinNames[i]
+                }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                });
+        }
+    }
+
     return (
         <ImageBackground style={styles.container} source={require('../../assets/SkinPage/background-blue-clair.png')}>
             <TouchableOpacity
@@ -104,6 +122,10 @@ export default function App({ navigation }) {
 
             >
                 <Image source={require('../../assets/btn/icone-fleche-retour.png')} />
+                <Button
+                    title={"Ajouter tous les skins"}
+                    onPress={addAllSkins}
+                />
             </TouchableOpacity>
 
             <Text style={styles.skinChange}>{message}</Text>
