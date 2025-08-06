@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, TextI
 import { useState } from 'react';
 import { useFonts } from 'expo-font'
 import { useDispatch } from 'react-redux';
-import { login, setSkin } from '../../reducers/user';
+import { login, setSkin, setUsername } from '../../reducers/user';
 
 
 export default function App({ navigation }) {
@@ -38,6 +38,8 @@ export default function App({ navigation }) {
                 if (data.result) {
                     dispatch(login({ token: data.token }));
                     dispatch(setSkin({ skin: data.skin }));
+                    dispatch(setUsername(data.username));
+
                     // setSignInUsername('');
                     // setSignInPassword('');
                     navigation.navigate('Home')

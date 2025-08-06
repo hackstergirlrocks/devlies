@@ -25,6 +25,32 @@ const skins = {
     "titan": require("../assets/Skin/titan-colossal-big.png"),
     "toto-en-fumence": require("../assets/Skin/toto-en-fumence-big.png"),
 
+    // "toto-dead": require("../assets/Skin/toto-dead-big.png"),
+    // "stitch": require("../assets/Skin/stitch-big.png"),
+    // "tanuki": require("../assets/Skin/tanuki-big.png"),
+    // "garfield": require("../assets/Skin/garfield-big.png"),
+    // "pichu": require("../assets/Skin/pichu-big.png"),
+    // "mcdo": require("../assets/Skin/employe-mcdo-big.png"),
+    // "steve": require("../assets/Skin/steve-retarded-big.png"),
+    // "slender": require("../assets/Skin/slender-big.png"),
+    // "zombie": require("../assets/Skin/zombie-big.png"),
+    // "moche": require("../assets/Skin/le-moche-big.png"),
+    // "han": require("../assets/Skin/haaaan-big.png"),
+    // "ghost": require("../assets/Skin/ghost-big.png"),
+    // "dealos": require("../assets/Skin/dealos-big.png"),
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

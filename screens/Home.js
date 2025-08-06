@@ -92,6 +92,8 @@ export default function App({ navigation }) {
           style={styles.switchPage}
           activeOpacity={1}
           onPress={() => navigation.navigate('Parametres')}
+        
+
         >
           <Image style={styles.top} source={require('../assets/btn/ecroue.png')} />
         </TouchableOpacity>
@@ -106,6 +108,7 @@ export default function App({ navigation }) {
           activeOpacity={1}
           onPressIn={() => setPressPlay(true)}
           onPressOut={() => setPressPlay(false)}
+            onPress={() => navigation.navigate('Play')}
         >
           {pressPlay
             ? <Image style={styles.btn} source={require('../assets/btn/play-btn-down.png')} />
