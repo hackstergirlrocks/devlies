@@ -10,6 +10,7 @@ const userSchema = mongoose.Schema({
   experience: Number,
   group: Number,
   vip: Number,
+  coins: Number,
   banned: Number,
   created: { type: Date, default: Date.now },
   stats: {

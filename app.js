@@ -30,29 +30,54 @@ const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*" } });
 
 let users = {}; // stocke les utilisateurs connectés
+let chatHistory = [];
+
 
 io.on("connection", (socket) => {
-  console.log(`Nouvelle connexion: ${socket.id}`);
+    console.log(`Nouvelle connexion: ${socket.id}`);
 
-  socket.on("joinLobby", (player) => {
-    if (!player?.username) return;
-    console.log("🟢", player);
+    socket.on("joinLobby", (player) => {
+        if (!player?.username) return;
 
-    const user = { id: socket.id, username: player.username, skin: player.skin };
-    users[socket.id] = user;
+        // Vérifie si un utilisateur avec ce pseudo existe déjà
+        const alreadyExists = Object.values(users).some(
+            (u) => u.username === player.username
+        );
 
-    io.emit("updateUsers", Object.values(users));
-  });
+        if (alreadyExists) {
+            console.log(`⚠️ ${player.username} déjà présent dans le lobby`);
+            return;
+        }
 
-  socket.on("disconnect", () => {
-    console.log(`🔴 Déconnexion: ${socket.id}`);
-    delete users[socket.id];
-    io.emit("updateUsers", Object.values(users));
-  });
+        console.log("🟢 Nouveau joueur:", player);
+
+        const user = { id: socket.id, username: player.username, skin: player.skin, role: null };
+        users[socket.id] = user;
+
+        io.emit("updateUsers", Object.values(users));
+
+
+    });
+
+
+    socket.on("leaveLobby", () => {
+        console.log(`👋 ${users[socket.id]?.username || socket.id} a quitté le lobby`);
+        delete users[socket.id];
+        io.emit("updateUsers", Object.values(users));
+    });
+
+    socket.emit('chat_history', chatHistory);
+
+    socket.on('send_message', (data) => {
+        console.log('📩 Data reçu :', data);
+        chatHistory.push(data);
+        io.emit('receive_message', data); // renvoyer à tous
+    });
+
 });
 
 server.listen(3001, () => {
-  console.log("✅ Serveur lancé sur http://localhost:3001");
+    console.log("✅ Serveur lancé sur http://localhost:3001");
 });
 
 
