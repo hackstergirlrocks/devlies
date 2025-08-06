@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useFonts } from 'expo-font'
 import { useDispatch } from 'react-redux';
 import { login, setSkin } from '../../reducers/user';
@@ -8,15 +8,23 @@ import { login, setSkin } from '../../reducers/user';
 export default function App({ navigation }) {
     const dispatch = useDispatch();
 
+    // bouton next si appuyé ou non
     const [pressNext, setPressNext] = useState(false);
+
+    // information user au moment de l'inscription
     const [signUpUsername, setSignUpUsername] = useState('');
     const [signUpPassword, setSignUpPassword] = useState('');
     const [signUpPasswordVerif, setSignUpPasswordVerif] = useState('');
     const [signUpEmail, setSignUpEmail] = useState('');
+
+    // affiche erreur
     const [error, setError] = useState('');
 
+    // regex pour email + username (pas de caractère spéciaux)
     const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const PSEUDO_REGEX = /^[A-Za-z0-9]+$/;
 
+    // écriture Minecraft
     const [fontsLoaded] = useFonts({
         'Minecraft': require('../../assets/fonts/Minecraft.ttf'),
     });
@@ -25,8 +33,11 @@ export default function App({ navigation }) {
         return null;
     }
 
+    // quand appuie sur next
     const Next = () => {
-        if (EMAIL_REGEX.test(signUpEmail)) {
+        // si email et username sont corrects d'après le regex
+        if (EMAIL_REGEX.test(signUpEmail) || (PSEUDO_REGEX.test(signUpUsername))) {
+            // si mdp1 et mdp2 sont égaux
             if (signUpPassword === signUpPasswordVerif) {
                 console.log(true)
                 fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/signup`, {
@@ -52,7 +63,7 @@ export default function App({ navigation }) {
                 setError("Wrong password")
             }
         } else {
-            setError("Email not valid")
+            setError("Email or username not valid")
         }
         setPressNext(false)
         console.log('next pressed');

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useFonts } from 'expo-font'
 import { useDispatch } from 'react-redux';
 import { login, setSkin } from '../../reducers/user';
@@ -7,11 +7,18 @@ import { login, setSkin } from '../../reducers/user';
 
 export default function App({ navigation }) {
     const dispatch = useDispatch();
+
+    // bouton next si appuyé ou non
     const [pressNext, setPressNext] = useState(false);
+
+    // infos user au moment de la connexion
     const [signInUsername, setSignInUsername] = useState('');
     const [signInPassword, setSignInPassword] = useState('');
+
+    // affiche erreur
     const [error, setError] = useState('');
 
+    // écriture Minecraft
     const [fontsLoaded] = useFonts({
         'Minecraft': require('../../assets/fonts/Minecraft.ttf'),
     });
@@ -20,6 +27,7 @@ export default function App({ navigation }) {
         return null;
     }
 
+    // quand appuie sur next
     const Next = () => {
         fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/signin`, {
             method: 'POST',
