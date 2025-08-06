@@ -81,6 +81,7 @@ export default function App({ navigation }) {
             .then((data) => {
                 console.log(data.skin);
                 dispatch(setSkin({ skin: data.skin }));
+                
                 showMessage()
             });
     }
