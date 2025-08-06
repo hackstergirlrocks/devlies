@@ -30,7 +30,7 @@ export default function App({ navigation }) {
     }
 
     return (
-        <ImageBackground style={styles.container} source={require('../../assets/WaitingPage/animation-desk-bigger.gif')}>
+        <ImageBackground style={styles.container} source={require('../../assets/WaitingPage/animation-desk-bigger2.gif')}>
             <TouchableOpacity
                 activeOpacity={1}
                 onPressIn={() => setPressSignUP(true)}
