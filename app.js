@@ -23,4 +23,37 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
+const http = require("http");
+const { Server } = require("socket.io");
+
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: "*" } });
+
+let users = {}; // stocke les utilisateurs connectés
+
+io.on("connection", (socket) => {
+  console.log(`Nouvelle connexion: ${socket.id}`);
+
+  socket.on("joinLobby", (player) => {
+    if (!player?.username) return;
+    console.log("🟢", player);
+
+    const user = { id: socket.id, username: player.username, skin: player.skin };
+    users[socket.id] = user;
+
+    io.emit("updateUsers", Object.values(users));
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`🔴 Déconnexion: ${socket.id}`);
+    delete users[socket.id];
+    io.emit("updateUsers", Object.values(users));
+  });
+});
+
+server.listen(3001, () => {
+  console.log("✅ Serveur lancé sur http://localhost:3001");
+});
+
+
 module.exports = app;
