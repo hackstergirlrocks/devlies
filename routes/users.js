@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 
 /* GET users listing. */
-
 require('../models/connection');
 const User = require('../models/users');
 const { checkBody } = require('../modules/users')
@@ -10,7 +9,8 @@ const { checkBody } = require('../modules/users')
 const uid2 = require('uid2');
 const bcrypt = require('bcrypt');
 
-//* Route SignUp *//
+// ROUTE CONNEXION-INSCRIPTION
+/* Route SignUp/Inscription */
 router.post('/signup', (req, res) => {
   if (!checkBody(req.body, ['email', 'username', 'password'])) {
     res.json({ result: false, error: 'Missing or empty fields' });
@@ -29,6 +29,7 @@ router.post('/signup', (req, res) => {
         password: hash,
         skin_use: "basic",
         level: 1,
+
         experience: 0,
         group: 0,
         vip: 0,
@@ -59,71 +60,7 @@ router.post('/signup', (req, res) => {
 });
 
 
-//* Skin *//
-router.get('/getskin/:token', (req, res) => {
-  User.findOne({ token: req.params.token })
-    .then(data => {
-      // console.log(data.skins);
-      res.json({ result: true, skin: data.skins });
-      // Aq0RVXB_ttBJFK85hXaZ4FjDgaIfUDWg
-    });
-
-});
-
-
-router.post('/sakeSkin', (req, res) => {
-  User.findOne({ token: req.body.token })
-    .then(data => {
-      if (data) {
-        User.updateOne(
-          { token: req.body.token },
-          { skin_use: req.body.skin }
-        ).then(() => {
-
-          User.find().then(data => {
-            res.json({ result: true, skin: req.body.skin });
-
-          });
-
-        });
-      } else {
-        res.json({ result: false });
-
-      }
-
-    });
-});
-
-router.post('/addskin', (req, res) => {
-
-  if (!checkBody(req.body, ['skin', 'token'])) {
-    res.json({ result: false, error: 'Missing or empty fields' });
-    return;
-  }
-
-  User.updateOne(
-    { token: req.body.token },
-    {
-      $addToSet: { skins: req.body.skin }
-    }
-  ).then(data => {
-    if (data != 0) {
-      User.findOne({ token: req.body.token })
-        .then(data => {
-          if (data) {
-            res.json({ result: true, skin: data.skins });
-          } else {
-            res.json({ result: false });
-          }
-          // Aq0RVXB_ttBJFK85hXaZ4FjDgaIfUDWg
-        });
-    } else {
-      res.json({ result: false });
-    }
-  });
-});
-/* POST SignIn */
-
+/* Route SignIn/Connexion */
 router.post('/signin', (req, res) => {
   const newToken = uid2(32);
   if (!checkBody(req.body, ['username', 'password'])) {
@@ -156,17 +93,81 @@ router.post('/signin', (req, res) => {
   });
 });
 
+// ROUTE SKIN
+/* route récupère le Skin */
+router.get('/getskin/:token', (req, res) => {
+  User.findOne({ token: req.params.token })
+    .then(data => {
+      // console.log(data.skins);
+      res.json({ result: true, skin: data.skins });
+      // Aq0RVXB_ttBJFK85hXaZ4FjDgaIfUDWg
+    });
 
+});
+
+/* route skin */
+router.post('/sakeSkin', (req, res) => {
+  User.findOne({ token: req.body.token })
+    .then(data => {
+      if (data) {
+        User.updateOne(
+          { token: req.body.token },
+          { skin_use: req.body.skin }
+        ).then(() => {
+
+          User.find().then(data => {
+            res.json({ result: true, skin: req.body.skin });
+
+          });
+
+        });
+      } else {
+        res.json({ result: false });
+
+      }
+
+    });
+});
+
+/* route skin */
+router.post('/addskin', (req, res) => {
+  if (!checkBody(req.body, ['skin', 'token'])) {
+    res.json({ result: false, error: 'Missing or empty fields' });
+    return;
+  }
+
+  User.updateOne(
+    { token: req.body.token },
+    {
+      $addToSet: { skins: req.body.skin }
+    }
+  ).then(data => {
+    if (data != 0) {
+      User.findOne({ token: req.body.token })
+        .then(data => {
+          if (data) {
+            res.json({ result: true, skin: data.skins });
+          } else {
+            res.json({ result: false });
+          }
+          // Aq0RVXB_ttBJFK85hXaZ4FjDgaIfUDWg
+        });
+    } else {
+      res.json({ result: false });
+    }
+  });
+});
+
+// ROUTES CHANGEMENT
+/* route changement Username */
 router.put('/changeusername/:token', (req, res) => {
   if (!checkBody(req.body, ['username'])) {
     res.json({ result: false, error: 'Missing or empty username field' });
     return;
   }
 
-  const { username } = req.body;
-
   // Vérifier si le nouveau username n'est pas déjà utilisé
-  User.findOne({ username: username }).then(existingUser => {
+  User.findOne({ username: req.body.username }).then(existingUser => {
     if (existingUser) {
       res.json({ result: false, error: 'Username already taken' });
       return;
@@ -175,7 +176,7 @@ router.put('/changeusername/:token', (req, res) => {
     // Mettre à jour le username
     User.updateOne(
       { token: req.params.token },
-      { $set: { username: username } }
+      { $set: { username: req.body.username } }
     ).then(result => {
       if (result.modifiedCount > 0) {
         res.json({ result: true, message: 'Username updated successfully' });
@@ -183,26 +184,24 @@ router.put('/changeusername/:token', (req, res) => {
         res.json({ result: false, error: 'User not found' });
       }
     }).catch(error => {
-      res.json({ result: false, error: 'Database error' });
+      res.json({ result: false, error: error });
     });
   }).catch(error => {
-    res.json({ result: false, error: 'Database error' });
+    res.json({ result: false, error: error });
   });
 });
 
 
-/* PUT update email */
+/* Route changement e-mail */
 router.put('/changeemail/:token', (req, res) => {
   if (!checkBody(req.body, ['email'])) {
     res.json({ result: false, error: 'Missing or empty email field' });
     return;
   }
 
-  const { email } = req.body;
-
   // Vérifier si le nouvel email n'est pas déjà utilisé
-  User.findOne({ email: email }).then(existingUser => {
-    if (existingUser) {
+  User.findOne({ email: req.body.email }).then(existingEmail => {
+    if (existingEmail) {
       res.json({ result: false, error: 'Email already taken' });
       return;
     }
@@ -210,7 +209,7 @@ router.put('/changeemail/:token', (req, res) => {
     // Mettre à jour l'email
     User.updateOne(
       { token: req.params.token },
-      { $set: { email: email } }
+      { $set: { email: req.body.email } }
     ).then(result => {
       if (result.modifiedCount > 0) {
         res.json({ result: true, message: 'Email updated successfully' });
@@ -218,36 +217,30 @@ router.put('/changeemail/:token', (req, res) => {
         res.json({ result: false, error: 'User not found' });
       }
     }).catch(error => {
-      res.json({ result: false, error: 'Database error' });
+      res.json({ result: false, error: error });
     });
   }).catch(error => {
-    res.json({ result: false, error: 'Database error' });
+    res.json({ result: false, error: error });
   });
 });
 
-/* PUT update password */
+
+/* Route changement mot de passe */
 router.put('/changepassword/:token', (req, res) => {
   if (!checkBody(req.body, ['password'])) {
     res.json({ result: false, error: 'Missing or empty password field' });
     return;
   }
 
-  const { newpassword } = req.body;
   const bcrypt = require('bcrypt');
-
   // Crypter le nouveau mot de passe
-  const hash = bcrypt.hashSync(newpassword, 10);
+  const hash = bcrypt.hashSync(req.body.newpassword, 10);
 
   // Mettre à jour le mot de passe crypté
-
-  console.log(req.body.password)
-  console.log(req.body.newpassword)
-
-  // res.json({ pute: 'ntm la pute '});
-
   User.findOne({ token: req.params.token })
     .then(data => {
-     
+
+      // Vérifie si ancien mot de passe est égal à celui dans la bdd
       if (data && bcrypt.compareSync(req.body.password, data.password)) {
         User.updateOne(
           { token: req.params.token },
@@ -259,17 +252,23 @@ router.put('/changepassword/:token', (req, res) => {
             res.json({ result: false, error: 'User not found' });
           }
         }).catch(error => {
-          res.json({ result: false, error: 'Database error' });
+          res.json({ result: false, error: error });
         });
       } else {
-        res.json({ result: false, error: 'Password not good ta mere' });
+        res.json({ result: false, error: 'Password not good' });
       }
-
     });
-
-
 });
 
+// ROUTE USER
+/* récupère infos de l'user par rapport à son token */
+router.get('/:token', (req, res) => {
+  User.findOne({ token: req.params.token })
+    .then(data => {
+      console.log(data)
+      res.json({ result: true, info: data })
+    })
+})
 
 
 module.exports = router;
