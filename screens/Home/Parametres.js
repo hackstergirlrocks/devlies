@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     username: {
-        //backgroundColor: 'rgba(138, 71, 255, 0.5)',
+        //backgroundColor: 'rgba(53, 141, 147, 0.5)',
         fontFamily: 'Minecraft',
         fontSize: '20',
         paddingTop: 25,

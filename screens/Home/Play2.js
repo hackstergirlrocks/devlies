@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useFonts } from 'expo-font'
 import { useDispatch } from 'react-redux';
 import { login, setSkin } from '../../reducers/user';
+import Player from './Player'
 
 export default function Play2({ navigation }) {
     const dispatch = useDispatch();
@@ -18,49 +19,124 @@ export default function Play2({ navigation }) {
         return null;
     }
 
+
+    const users = [
+        {
+            username: 'alpha',
+            skin: require('../../assets/Skin/toto-dead-big.png'),
+        },
+        {
+            username: 'bravo',
+            skin: require('../../assets/Skin/toto-dead-big.png'),
+        },
+        {
+            username: 'charlie',
+            skin: require('../../assets/Skin/toto-dead-big.png'),
+        },
+        {
+            username: 'delta',
+            skin: require('../../assets/Skin/toto-dead-big.png'),
+        },
+        {
+            username: 'echo',
+            skin: require('../../assets/Skin/toto-dead-big.png'),
+        },
+        {
+            username: 'foxtrot',
+            skin: require('../../assets/Skin/toto-dead-big.png'),
+        },
+        {
+            username: 'golf',
+            skin: require('../../assets/Skin/toto-dead-big.png'),
+        },
+        {
+            username: 'hotel',
+            skin: require('../../assets/Skin/toto-dead-big.png'),
+        },
+        {
+            username: 'india',
+            skin: require('../../assets/Skin/toto-dead-big.png'),
+        },
+        {
+            username: 'juliet',
+            skin: require('../../assets/Skin/toto-dead-big.png'),
+        },
+        {
+            username: 'kilo',
+            skin: require('../../assets/Skin/toto-dead-big.png'),
+        },
+        {
+            username: 'lima',
+            skin: require('../../assets/Skin/toto-dead-big.png'),
+        },
+        {
+            username: 'mike',
+            skin: require('../../assets/Skin/toto-dead-big.png'),
+        },
+        {
+            username: 'november',
+            skin: require('../../assets/Skin/toto-dead-big.png'),
+        },
+        {
+            username: 'oscar',
+            skin: require('../../assets/Skin/toto-dead-big.png'),
+        },
+        {
+            username: 'suka',
+            skin: require('../../assets/Skin/toto-dead-big.png'),
+        },
+    ];
+
+    const listUser = users.map((user, i) =>
+        <Player key={i} username={user.username} skin={user.skin} />
+    );
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <ImageBackground style={styles.container} source={require('../../assets/game/in-game-page-bigger.png')}>
-                    <View style={styles.nav}>
+            <ImageBackground style={styles.container} source={require('../../assets/game/in-game-page-bigger.png')}>
+                <View style={styles.nav}>
+                    <TouchableOpacity>
+                        <Image style={styles.fleche} source={require('../../assets/btn/icone-fleche-retour.png')} />
+                    </TouchableOpacity>
+                    <View style={styles.iconeDroite}>
                         <TouchableOpacity>
-                            <Image style={styles.fleche} source={require('../../assets/btn/icone-fleche-retour.png')} />
+                            <Image style={styles.icone} source={require('../../assets/btn/icone-role.png')} />
                         </TouchableOpacity>
-                        <View style={styles.iconeDroite}>
-                            <TouchableOpacity>
-                                <Image style={styles.icone} source={require('../../assets/btn/icone-role.png')} />
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Image style={styles.icone} source={require('../../assets/btn/icone-friends.png')} />
-                            </TouchableOpacity>
-                        </View>
+                        <TouchableOpacity>
+                            <Image style={styles.icone} source={require('../../assets/btn/icone-friends.png')} />
+                        </TouchableOpacity>
                     </View>
-<KeyboardAvoidingView
-                style={{ flex: 1 }}
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
-            >
+                </View>
+                <View style={styles.middle}>
+                    {listUser}
+                </View>
+                <KeyboardAvoidingView
+                    style={{ flex: 1 }}
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+                >
                     <View style={styles.divChat}>
                         <View style={styles.chat}>
                             <ImageBackground style={styles.imageChat} source={require('../../assets/game/chat-div.png')}>
-                            <View style={styles.carreChat}></View>
-                            <ImageBackground style={styles.input} source={require('../../assets/btn/input-long.png')}>
-                                <TextInput
-                                    style={styles.inputchat}
-                                    placeholder='chat'
-                                    placeholderTextColor={'black'}
-                                    value={MessageChat}
-                                    onChangeText={setMessageChat}
-                                    onSubmitEditing={Keyboard.dismiss}
-                                />
-                                <TouchableOpacity>
-                                    <Image style={styles.envoie} source={require('../../assets/btn/envoyer-chat.png')} />
-                                </TouchableOpacity>
-                            </ImageBackground>
+                                <View style={styles.carreChat}></View>
+                                <ImageBackground style={styles.input} source={require('../../assets/btn/input-long.png')}>
+                                    <TextInput
+                                        style={styles.inputchat}
+                                        placeholder='chat'
+                                        placeholderTextColor={'black'}
+                                        value={MessageChat}
+                                        onChangeText={setMessageChat}
+                                        onSubmitEditing={Keyboard.dismiss}
+                                    />
+                                    <TouchableOpacity>
+                                        <Image style={styles.envoie} source={require('../../assets/btn/envoyer-chat.png')} />
+                                    </TouchableOpacity>
+                                </ImageBackground>
                             </ImageBackground>
                         </View>
                     </View>
-</KeyboardAvoidingView>
-                </ImageBackground>
+                </KeyboardAvoidingView>
+            </ImageBackground>
         </TouchableWithoutFeedback>
     );
 }
@@ -121,7 +197,7 @@ const styles = StyleSheet.create({
         fontSize: 17,
     },
     carreChat: {
-       // backgroundColor: 'rgba(242, 44, 44, 0.56)',
+        // backgroundColor: 'rgba(242, 44, 44, 0.56)',
         width: 350,
         height: 250,
         marginTop: 10,
@@ -131,5 +207,19 @@ const styles = StyleSheet.create({
         width: 390,
         height: 340,
         alignItems: 'center',
-    }
+    },
+    chara: {
+        width: 100,
+        height: 90,
+        // backgroundColor: 'rgba(74, 44, 242, 0.56)',
+        padding: 0,
+        margin: 0,
+    },
+    middle: {
+        //   backgroundColor: 'rgba(242, 44, 44, 0.56)',
+        flexDirection: 'row',
+        height: 360,
+        flexWrap: 'wrap',
+        top: 74,
+    },
 });
