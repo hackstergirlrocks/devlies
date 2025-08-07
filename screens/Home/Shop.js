@@ -49,21 +49,20 @@ export default function Shop({ navigation }) {
 
     return (
         <ImageBackground style={styles.container} source={require('../../assets/SkinPage/background-blue-clair.png')}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', backgroundColor: 'rgba(120, 56, 87, 0.5)', width: '100%' }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%', height: 100, top: 20 }}>
                 <TouchableOpacity
                     onPress={() => navigation.navigate('Home')}
                     activeOpacity={1}
                 >
                     <Image source={require('../../assets/btn/icone-fleche-retour.png')} style={{ width: 75, height: 60, marginLeft: 20 }} />
                 </TouchableOpacity>
-                <Text>Shop</Text>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(170, 56, 87, 0.5)', width: '100%', height: 50 }}>
-                <Text style={{ fontFamily: 'Minecraft', fontSize: '20' }}>Total coins : {infoCoin}</Text>
-                <Image source={require('../../assets/HomePage/icone-coin.png')} style={styles.coin} />
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', right: 10 }}>
+                    <Text style={{ fontFamily: 'Minecraft', fontSize: '20' }}>Total coins : {infoCoin}</Text>
+                    <Image source={require('../../assets/HomePage/icone-coin.png')} style={styles.coin} />
+                </View>
             </View>
             <ScrollView>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center' }}>
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', top: 20 }}>
                     {Object.entries(skins).map(([key, image]) => (
                         <ImageBackground source={require('../../assets/HomePage/icone-pop-up-windows-final.png')} key={key} style={{ width: 120, height: 120, justifyContent: 'center', alignItems: 'center' }}>
                             <TouchableOpacity onPress={() => openModal(image)}>
@@ -74,8 +73,6 @@ export default function Shop({ navigation }) {
                                 </View>
                             </TouchableOpacity>
                         </ImageBackground>
-
-
                     ))}
                     <Modal
                         animationType="slide"
@@ -84,29 +81,29 @@ export default function Shop({ navigation }) {
                         onRequestClose={() => {
                             setModalVisible(!modalVisible);
                         }}>
-                        <ImageBackground source={require('../../assets/HomePage/pop-up-windows.png')} resizeMode='contain' style={styles.image}>
+                        <ImageBackground source={require('../../assets/HomePage/pop-up-windows-final2.png')} resizeMode='contain' style={styles.image}>
                             <View>
-                                <TouchableOpacity onPress={() => setModalVisible(!modalVisible)} style={{ width: 330, bottom: 12, left: 27 }}>
-                                    <Image source={require('../../assets/HomePage/croix-bleu-pop-up.png')} style={{ left: 10, height: 22, width: 22 }} />
+                                <TouchableOpacity onPress={() => setModalVisible(!modalVisible)} style={{ width: 330, bottom: 44}}>
+                                    <Image source={require('../../assets/HomePage/croix-bleu-pop-up.png')} style={{ left: 8, height: 22, width: 22,  }} />
                                 </TouchableOpacity>
                             </View>
                             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                <Text style={{ fontFamily: 'Minecraft', textTransform: 'uppercase', height: 20, width: 220, textAlign: 'center', fontSize: 25, top: 10 }}>{modalImage.name}</Text>
-                                <ImageBackground source={require('../../assets/HomePage/icone-pop-up-windows-final.png')} style={{ height: 300, width: 300, }}>
-                                    <View style={{ justifyContent: 'center', alignItems: 'center', height: 300 }}>
-                                        <Image source={modalImage.require} style={{ width: 200, height: 200 }} />
-                                        <Text style={{ fontFamily: 'Minecraft', height: 30, width: 220, textAlign: 'center' }}>{modalImage.description}</Text>
-                                    </View>
-                                </ImageBackground>
-                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                <Text style={{ fontFamily: 'Minecraft', textTransform: 'uppercase', height: 20, width: 220, textAlign: 'center', fontSize: 25, bottom: 10 }}>{modalImage.name}</Text>
+                                {/* <ImageBackground source={require('../../assets/HomePage/icone-pop-up-windows-final.png')} style={{ height: 300, width: 300, }}> */}
+                                <View style={{ justifyContent: 'center', alignItems: 'center', height: 230, width: 230, left: 5 }}>
+                                    <Image source={modalImage.require} style={{ width: 200, height: 200 }} />
+                                    <Text style={{ fontFamily: 'Minecraft', height: 30, width: 220, textAlign: 'center' }}>{modalImage.description}</Text>
+                                </View>
+                                {/* </ImageBackground> */}
+                                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', top: 13 }}>
                                     <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>{modalImage.price}</Text>
                                     <Image source={require('../../assets/HomePage/icone-coin.png')} style={{ width: 30, height: 30 }} />
                                 </View>
-                                <View style={{ height: 145, width: 320, alignItems: 'center', justifyContent: 'center', gap: 20 }}>
+                                <View style={{ height: 172, width: 325, top: 30, alignItems: 'center', justifyContent: 'center', gap: 20 }}>
                                     <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Voulez-vous acheter ce skin?</Text>
                                     <View style={{ flexDirection: 'row', gap: 20 }}>
                                         <Image source={require('../../assets/btn/btn-check.png')} style={{ height: 50, width: 50 }} />
-                                        <Image source={require('../../assets/btn/btn-check.png')} style={{ height: 50, width: 50 }} />
+                                        <Image source={require('../../assets/btn/btn-croix.png')} style={{ height: 50, width: 50 }} />
                                     </View>
                                 </View>
                             </View>
