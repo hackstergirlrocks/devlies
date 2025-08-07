@@ -83,7 +83,7 @@ export default function Shop({ navigation }) {
                         }}>
                         <ImageBackground source={require('../../assets/HomePage/pop-up-windows.png')} resizeMode='contain' style={styles.image}>
                             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                <Image source={modalImage} style={{ width: 200, height: 200 }} />
+                                <Image source={modalImage.require} style={{ width: 200, height: 200 }} />
                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                                     <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>300</Text>
                                     <Image source={require('../../assets/HomePage/icone-coin.png')} style={{ width: 30, height: 30 }} />
