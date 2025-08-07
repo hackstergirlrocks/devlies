@@ -108,6 +108,11 @@ export default function App({ navigation }) {
     navigation.navigate('Skin')
   }
 
+  const Shop = () => {
+    setPressShop(false)
+    navigation.navigate('Shop')
+  }
+
   return (
     <ImageBackground style={styles.container} source={require('../assets/HomePage/desk-home-page-bigger.png')}>
       {/* Menu en haut a droite */}
@@ -169,7 +174,7 @@ export default function App({ navigation }) {
             <View style={{ width: 330, height: 515, justifyContent: 'center', left: 30 }}>
               <View>
                 <View style={[styles.infoUser, { flexDirection: 'row', height: 170 }]}>
-                  <ImageBackground source={require('../assets/HomePage/icone-pop-up-windows-final.png')}>
+                  <ImageBackground source={require('../assets/HomePage/icone-pop-up-windows-final.png')} style={styles.encardskin}>
                     <Image style={styles.skinuser} source={skinUser} />
                   </ImageBackground>
                   <View style={{ alignItems: 'center', justifyContent: 'center', width: 125, height: 150 }}>
@@ -347,7 +352,7 @@ export default function App({ navigation }) {
         <TouchableOpacity
           style={styles.switchPage}
           activeOpacity={1}
-          onPressIn={() => setPressShop(true)}
+          onPressIn={() => Shop()}
           onPressOut={() => setPressShop(false)}
         >
           {pressShop
@@ -402,8 +407,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   skinuser: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 130,
+    width: 118,
+    top: 10,
+  },
+  encardskin: {
     height: 150,
-    width: 150,
+    width: 150, 
+    alignItems: 'center', 
+    justifyContent: 'center'
   },
   icone: {
     height: 40,
