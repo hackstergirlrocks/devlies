@@ -116,19 +116,21 @@ export default function App({ navigation }) {
     }
 
     return (
-        <ImageBackground style={styles.container} source={require('../../assets/SkinPage/background-blue-clair.png')}>
+        <ImageBackground style={styles.container} source={require('../../assets/SkinPage/page-skin-background-big.png')}>
+            <View style={[styles.topPart, { flexDirection: 'row' }]}>
             <TouchableOpacity
                 style={styles.topMain}
                 onPress={() => navigation.navigate('Home')}
                 activeOpacity={1}
 
             >
-                <Image source={require('../../assets/btn/icone-fleche-retour.png')} />
+                <Image style={styles.flecheHaut} source={require('../../assets/btn/icone-fleche-retour.png')} />
                 <Button
                     title={"Ajouter tous les skins"}
                     onPress={addAllSkins}
                 />
             </TouchableOpacity>
+            </View>
 
             <Text style={styles.skinChange}>{message}</Text>
             <View style={styles.box}>
@@ -175,11 +177,11 @@ const styles = StyleSheet.create({
     },
 
     box: {
-        // backgroundColor: 'grey',
+        //backgroundColor: 'grey',
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
-        top: -50
+        top: -70
     },
 
 
@@ -199,11 +201,14 @@ const styles = StyleSheet.create({
         fontSize: 25,
         color: 'white',
         fontFamily: 'Minecraft',
+        bottom: 45,
 
     },
     topMain: {
-        left: -120,
-        top: -90
+        // left: -110,
+        // top: -90,
+               // paddingTop: 50,
+        backgroundColor: 'rgba(22, 22, 22, 0.5)',
     },
     textSkin: {
         textAlign: 'center',
@@ -211,8 +216,18 @@ const styles = StyleSheet.create({
         fontSize: 25,
     },
     savebtn: {
-        top: 25
-    }
+        bottom: 50,
+    },
+    flecheHaut: {
+        width: 75,
+        height: 60,
+        marginLeft: 20,
+    },
+       topPart: {
+        //backgroundColor: 'rgba(255, 99, 71, 0.5)',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
 
 
 
