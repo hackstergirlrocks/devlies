@@ -13,6 +13,7 @@ import SignUp from './screens/Login/SignUp';
 import SignIn from './screens/Login/SignIn';
 import Parametres from './screens/Home/Parametres';
 import Play from './screens/Home/Play';
+import Shop from './screens/Home/Shop'
 
 
 import Skin from './screens/Home/Skin';
@@ -34,24 +35,25 @@ export default function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Waiting" component={Waiting} />
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="PageSign" component={PageSign} />
-        <Stack.Screen name="SignUp" component={SignUp} />
-        <Stack.Screen name="SignIn" component={SignIn} />
-        <Stack.Screen name="Skin" component={Skin} />
-        <Stack.Screen name="Parametres" component={Parametres} />
-        <Stack.Screen name="Play" component={Play} />
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Waiting" component={Waiting} />
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="PageSign" component={PageSign} />
+            <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen name="SignIn" component={SignIn} />
+            <Stack.Screen name="Skin" component={Skin} />
+            <Stack.Screen name="Parametres" component={Parametres} />
+            <Stack.Screen name="Play" component={Play} />
+            <Stack.Screen name="Shop" component={Shop} />
 
 
 
 
-        {/*<Stack.Screen name="TabNavigator" component={TabNavigator} />  */}
-      </Stack.Navigator>
-    </NavigationContainer>
-    </PersistGate>
+            {/*<Stack.Screen name="TabNavigator" component={TabNavigator} />  */}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </PersistGate>
     </Provider>
   );
 }
