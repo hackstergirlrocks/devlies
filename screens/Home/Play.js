@@ -31,15 +31,15 @@ export default function App() {
             setPhase(phase);
             setPhaseTime(timeLeft);
             setHasVoted(false);
-            console.log(phase);
+            // console.log(phase);
 
-            if (phase === 'night') {
-                socket.emit("send_message", { username: 'Système', message: `La nuit commence`, color: 'blue' });
-            } else if (phase === 'day') {
-                socket.emit("send_message", { username: 'Système', message: `Le jour commence`, color: 'orange' });
-            } else if (phase === 'night-vote') {
-                socket.emit("send_message", { username: 'Système', message: `Vote nocturne en cours...`, color: 'purple' });
-            }
+            // if (phase === 'night') {
+            //     socket.emit("send_message", { username: 'Système', message: `La nuit commence`, color: 'blue' });
+            // } else if (phase === 'day') {
+            //     socket.emit("send_message", { username: 'Système', message: `Le jour commence`, color: 'orange' });
+            // } else if (phase === 'night-vote') {
+            //     socket.emit("send_message", { username: 'Système', message: `Vote nocturne en cours...`, color: 'purple' });
+            // }
         });
 
         socket.on("phaseUpdate", ({ phase, timeLeft }) => {
@@ -48,7 +48,7 @@ export default function App() {
         });
 
         socket.on("votingStart", ({ time }) => {
-            socket.emit("send_message", { username: 'Système', message: `Les votes commencent`, color: 'grey' });
+            // socket.emit("send_message", { username: 'Système', message: `Les votes commencent`, color: 'grey' });
             setPhase("vote");
             setPhaseTime(time);
             setHasVoted(false);
@@ -59,22 +59,22 @@ export default function App() {
         socket.on("nightVoteUpdate", (newVotes) => setVotes(newVotes));
 
         socket.on("playerEliminated", (username) => {
-            socket.emit("send_message", { username: 'Système', message: `${username} a été éliminé !`, color: 'red' });
+            // socket.emit("send_message", { username: 'Système', message: `${username} a été éliminé !`, color: 'red' });
             setVotes({});
         });
 
         socket.on("playerEliminatedNight", (username) => {
-            socket.emit("send_message", { username: 'Système', message: `${username} a été éliminé cette nuit !`, color: 'red' });
+            // socket.emit("send_message", { username: 'Système', message: `${username} a été éliminé cette nuit !`, color: 'red' });
             setVotes({});
         });
 
         socket.on("noElimination", () => {
-            socket.emit("send_message", { username: 'Système', message: `Égalité, personne n'est éliminé.`, color: 'red' });
+            // socket.emit("send_message", { username: 'Système', message: `Égalité, personne n'est éliminé.`, color: 'red' });
             setVotes({});
         });
 
         socket.on("noEliminationNight", () => {
-            socket.emit("send_message", { username: 'Système', message: `Égalité nocturne, aucun joueur éliminé.`, color: 'red' });
+            // socket.emit("send_message", { username: 'Système', message: `Égalité nocturne, aucun joueur éliminé.`, color: 'red' });
             setVotes({});
         });
 
@@ -168,7 +168,7 @@ export default function App() {
                             {phase === "day" && "🌞 Jour"}
                             {phase === "night" && "🌙 Nuit"}
                             {phase === "vote" && "🗳️ Vote"}
-                            {phase === "night-vote" && "🌒 Vote nocturne"} ({phaseTime} s)
+                            {phase === "night-vote" && "🌒 Nuit"} ({phaseTime} s)
                         </Text>
                     )}
 
@@ -200,7 +200,7 @@ export default function App() {
                                 }
                             >
                                 <View style={styles.userBox}>
-                                    <Image style={styles.skin} source={skins[item.skin]} />
+                                    <Image style={styles.skin} source={skins[item.skin].require} />
                                     <Text style={styles.user}>{item.username}</Text>
                                     {item.token === user.token && <Text style={styles.user}>{item.role}</Text>}
                                 </View>

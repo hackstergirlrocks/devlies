@@ -29,6 +29,7 @@ export default function Shop({ navigation }) {
     useEffect(() => {
         setListSkin(Object.entries(skins))
     }, [])
+    
     const [fontsLoaded] = useFonts({
         'Minecraft': require('../../assets/fonts/Minecraft.ttf'),
     });
@@ -64,7 +65,7 @@ export default function Shop({ navigation }) {
                     {Object.entries(skins).map(([key, image]) => (
                         <ImageBackground source={require('../../assets/HomePage/icone-pop-up-windows-final.png')} key={key} style={{ width: 120, height: 120, justifyContent: 'center', alignItems: 'center' }}>
                             <TouchableOpacity onPress={() => openModal(image)}>
-                                <Image source={image} style={{ width: 60, height: 60 }} />
+                                <Image source={image.require} style={{ width: 60, height: 60 }} />
                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                                     <Text style={{ fontFamily: 'Minecraft' }}>300</Text>
                                     <Image source={require('../../assets/HomePage/icone-coin.png')} style={{ width: 20, height: 20, bottom: 2 }} />
@@ -83,7 +84,7 @@ export default function Shop({ navigation }) {
                         }}>
                         <ImageBackground source={require('../../assets/HomePage/pop-up-windows.png')} resizeMode='contain' style={styles.image}>
                             <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                                <Image source={modalImage} style={{ width: 200, height: 200 }} />
+                                <Image source={modalImage.require} style={{ width: 200, height: 200 }} />
                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                                     <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>300</Text>
                                     <Image source={require('../../assets/HomePage/icone-coin.png')} style={{ width: 30, height: 30 }} />
