@@ -150,7 +150,7 @@ export default function Parametres({ navigation }) {
                     onPress={() => navigation.navigate('Home')}
                     activeOpacity={1}
                 >
-                    <Image source={require('../../assets/btn/icone-fleche-retour.png')} />
+                    <Image style={styles.fleche} source={require('../../assets/btn/icone-fleche-retour.png')} />
                 </TouchableOpacity>
                 <View style={[styles.soundlogout, { flexDirection: 'row' }]}>
                     <TouchableOpacity
@@ -356,5 +356,10 @@ const styles = StyleSheet.create({
     inputPass: {
         flexDirection: 'row',
         alignItems: 'center'
+    },
+    fleche: {
+        width: 75,
+        height: 60,
+        marginLeft: 20,
     }
 });

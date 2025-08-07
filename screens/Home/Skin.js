@@ -35,19 +35,20 @@ export default function App({ navigation }) {
             });
     }, [user.token]);
 
-    // Transformation des skins de l'utilisateur en tableau d'objets
-    const combinedSkins = skinPlayerBdd.map((skinKey) => ({
-        name: skinKey,
-        image: skins[skinKey] || null,
-    })).filter((s) => s.image !== null);
+    // Étape 1 : Filtrer et combiner les skins du joueur
+    const combinedSkins = skinPlayerBdd
+        .filter((skinKey) => skins[skinKey]) // Ne garde que les skins existants
+        .map((skinKey) => ({
+            key: skinKey,
+            name: skins[skinKey].name,
+            image: skins[skinKey].require,
+        }));
 
-    // Filtre pour ne pas afficher les skins qui n'existent pas dans le tableau skins
-    const listItems = Object.values(skins).map((skin, id) => (
-        <View key={id}>
-            <Image style={styles.skin} source={skin.require} />
+    // Étape 2 : Affichage des skins valides
+    const listItems = combinedSkins.map((skin, index) => (
+        <View key={skin.key || index}>
+            <Image style={styles.skin} source={skin.image} />
             <Text style={styles.textSkin}>{skin.name}</Text>
-            {/* <Text style={styles.textSkin}>{skin.description}</Text> */}
-
         </View>
     ));
 
@@ -116,19 +117,21 @@ export default function App({ navigation }) {
     }
 
     return (
-        <ImageBackground style={styles.container} source={require('../../assets/SkinPage/background-blue-clair.png')}>
-            <TouchableOpacity
-                style={styles.topMain}
-                onPress={() => navigation.navigate('Home')}
-                activeOpacity={1}
+        <ImageBackground style={styles.container} source={require('../../assets/SkinPage/page-skin-background-big.png')}>
+            <View style={[styles.topPart, { flexDirection: 'row' }]}>
+                <TouchableOpacity
+                    style={styles.topMain}
+                    onPress={() => navigation.navigate('Home')}
+                    activeOpacity={1}
 
-            >
-                <Image source={require('../../assets/btn/icone-fleche-retour.png')} />
-                <Button
-                    title={"Ajouter tous les skins"}
-                    onPress={addAllSkins}
-                />
-            </TouchableOpacity>
+                >
+                    <Image style={styles.flecheHaut} source={require('../../assets/btn/icone-fleche-retour.png')} />
+                    <Button
+                        title={"Ajouter tous les skins"}
+                        onPress={addAllSkins}
+                    />
+                </TouchableOpacity>
+            </View>
 
             <Text style={styles.skinChange}>{message}</Text>
             <View style={styles.box}>
@@ -175,11 +178,11 @@ const styles = StyleSheet.create({
     },
 
     box: {
-        // backgroundColor: 'grey',
+        //backgroundColor: 'grey',
         justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'row',
-        top: -50
+        top: -70
     },
 
 
@@ -199,11 +202,14 @@ const styles = StyleSheet.create({
         fontSize: 25,
         color: 'white',
         fontFamily: 'Minecraft',
+        bottom: 45,
 
     },
     topMain: {
-        left: -120,
-        top: -90
+        left: -110,
+        top: -90,
+        // paddingTop: 50,
+        // backgroundColor: 'rgba(22, 22, 22, 0.5)',
     },
     textSkin: {
         textAlign: 'center',
@@ -211,8 +217,18 @@ const styles = StyleSheet.create({
         fontSize: 25,
     },
     savebtn: {
-        top: 25
-    }
+        bottom: 50,
+    },
+    flecheHaut: {
+        width: 75,
+        height: 60,
+        marginLeft: 20,
+    },
+    topPart: {
+        //backgroundColor: 'rgba(255, 99, 71, 0.5)',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
 
 
 

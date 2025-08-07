@@ -1,4 +1,10 @@
 const skins = {
+    "basic": {
+        name: "basic",
+        require: require("../assets/Skin/basic-big.png"),
+        price: 0,
+        description: "Le skin de base pour tous les joueurs."
+    },
     "ange": {
         name: "ange",
         require: require("../assets/Skin/ange-big.png"),
@@ -10,12 +16,6 @@ const skins = {
         require: require("../assets/Skin/astro-big.png"),
         price: 120,
         description: "Un explorateur de galaxies."
-    },
-    "basic": {
-        name: "basic",
-        require: require("../assets/Skin/basic-big.png"),
-        price: 0,
-        description: "Le skin de base pour tous les joueurs."
     },
     "cat": {
         name: "cat",
