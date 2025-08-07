@@ -14,8 +14,12 @@ export default function App() {
 
     const [connected, setConnected] = useState(false);
     const [users, setUsers] = useState([]);
+
     const [messages, setMessages] = useState([]);
+    const [messagesDevOps, setMessagesDevOps] = useState([]);
+
     const [message, setMessage] = useState("");
+
     const [countdown, setCountdown] = useState(null);
     const [gameStarted, setGameStarted] = useState(false);
     const [error, setError] = useState("");
@@ -26,11 +30,53 @@ export default function App() {
     const [votes, setVotes] = useState({});
     const [hasVoted, setHasVoted] = useState(false);
 
+    const [myRole, setMyRole] = useState(null);
+    const [isDead, setIsDead] = useState(false);
+    const [myName, setMyName] = useState(null);
+
+    const [hasInspected, setHasInspected] = useState(false);
+
+    useEffect(() => {
+        if (!gameStarted) return;
+
+        const aliveUsers = users.filter(user => !user.isDead);
+        const hackers = aliveUsers.filter(user => user.role === "hacker");
+        const others = aliveUsers.filter(user => user.role !== "hacker");
+
+        if (aliveUsers.length === 1) {
+            socket.emit("stopGame");
+            return;
+        }
+
+        if (hackers.length === 0) {
+            socket.emit("send_message", {
+                username: "Système",
+                message: "Les développeurs ont gagné !",
+                color: "green"
+            });
+            socket.emit("stopGame");
+        } else if (hackers.length >= others.length) {
+            socket.emit("send_message", {
+                username: "Système",
+                message: "Les hackers ont pris le contrôle !",
+                color: "red"
+            });
+            socket.emit("stopGame");
+        }
+    }, [users]);
+
+
+
+
     useEffect(() => {
         socket.on("phaseChange", ({ phase, timeLeft }) => {
             setPhase(phase);
             setPhaseTime(timeLeft);
             setHasVoted(false);
+            if (phase === 'night-vote') {
+                setHasInspected(false);
+            }
+
             // console.log(phase);
 
             // if (phase === 'night') {
@@ -78,7 +124,19 @@ export default function App() {
             setVotes({});
         });
 
-        socket.on("updateUsers", (usersList) => setUsers(usersList));
+        // socket.on("updateUsers", (usersList) => setUsers(usersList));
+
+        socket.on("updateUsers", (usersList) => {
+            setUsers(usersList);
+
+            const me = usersList.find(u => u.username === user.username);
+            if (me) {
+                setMyRole(me.role);
+                setIsDead(me.isDead);
+                setMyName(me.username);
+
+            }
+        });
 
         socket.on("chat_history", (history) => {
             setMessages(history.map(msg => ({
@@ -93,6 +151,22 @@ export default function App() {
                 color: msg.color || "#000"
             }]);
         });
+
+
+        socket.on("chat_history_devops", (history) => {
+            setMessagesDevOps(history.map(msg => ({
+                message: `${msg.username}: ${msg.message}`,
+                color: msg.color || "#000"
+            })));
+        });
+
+        socket.on("receive_message_devops", (msg) => {
+            setMessagesDevOps((prev) => [...prev, {
+                message: `${msg.username}: ${msg.message}`,
+                color: msg.color || "#000"
+            }]);
+        });
+
 
         socket.on("countdown", (timeLeft) => setCountdown(timeLeft));
         socket.on("gameStarted", () => {
@@ -109,7 +183,7 @@ export default function App() {
             setError("");
             setVotes({});
             setHasVoted(false);
-            Alert.alert("🔄 La partie a été réinitialisée !");
+            // Alert.alert("🔄 La partie a été réinitialisée !");
         });
 
         socket.on("gameError", ({ message }) => setError(message));
@@ -125,9 +199,19 @@ export default function App() {
     };
 
     const joinLobby = () => {
-        socket.emit("joinLobby", { token: user.token, username: user.username, skin: user.skin, role: 'hacker' });
+        const roles = ['hacker', 'devops'];
+        const randomRole = roles[Math.floor(Math.random() * roles.length)];
+
+        socket.emit("joinLobby", {
+            token: user.token,
+            username: user.username,
+            skin: user.skin,
+            role: randomRole,
+        });
+
         setConnected(true);
     };
+
 
     const leaveLobby = () => {
         socket.emit("leaveLobby");
@@ -162,7 +246,7 @@ export default function App() {
                             La partie commence dans {countdown} secondes ⏳
                         </Text>
                     )}
-
+                    <Text>ff - {myRole}</Text>
                     {gameStarted && (
                         <Text style={{ fontSize: 20, marginVertical: 10 }}>
                             {phase === "day" && "🌞 Jour"}
@@ -187,24 +271,59 @@ export default function App() {
                         {users.map((item) => (
                             <TouchableOpacity
                                 key={item.id}
-                                onPress={() => voteFor(item.username)}
+                                // onPress={() => voteFor(item.username)}
+
+                                // onPress={() => {
+                                //     if (isDead) return;
+                                //     console.log(phase)
+                                //     if (phase === "night-vote" && myRole === "devops") {
+                                //         socket.emit("send_message_devops", { username: 'Système', message: item.username + ' est ' + item.role, role: 'devops' });
+                                //         console.log('user', item.username, item.role)
+                                //     } else {
+                                //         voteFor(item.username)
+
+                                //     }
+                                // }}
+                                onPress={() => {
+                                    if (isDead) return;
+
+                                    if (phase === "night-vote") {
+                                        if (myRole === "devops" && !hasInspected) {
+                                            socket.emit("send_message_devops", {
+                                                username: 'Système',
+                                                message: `${item.username} est ${item.role}`,
+                                                role: 'devops',
+                                            });
+                                            setHasInspected(true);
+                                        } else if (myRole === "hacker" && !hasVoted) {
+                                            voteFor(item.username);
+                                        }
+                                    } else if (phase === "vote" && !hasVoted) {
+                                        voteFor(item.username);
+                                    }
+                                }}
+
                                 disabled={
+                                    isDead ||
                                     hasVoted ||
                                     (
-                                        phase === "vote" && false
-                                    ) ||
-                                    (
                                         phase === "night-vote" &&
-                                        item.role === "hacker"
+                                        myRole !== "devops" &&
+                                        myRole !== "hacker"
                                     )
                                 }
+
                             >
                                 <View style={styles.userBox}>
                                     <Image style={styles.skin} source={skins[item.skin].require} />
                                     <Text style={styles.user}>{item.username}</Text>
-                                    {item.token === user.token && <Text style={styles.user}>{item.role}</Text>}
+                                    {(item.token === user.token || item.isDead) && (
+                                        <Text style={styles.user}>{item.role}</Text>
+                                    )}
+
                                 </View>
                             </TouchableOpacity>
+
                         ))}
 
                     </ScrollView>
@@ -216,9 +335,18 @@ export default function App() {
                     >
                         {messages.map((msg, index) => (
                             <Text key={index} style={[styles.message, { color: msg.color }]}>
+
                                 {msg.message}
+
                             </Text>
                         ))}
+                        {myRole === 'devops' &&
+                            messagesDevOps.map((msg, index) => (
+                                <Text key={index} style={[styles.message, { color: msg.color }]}>
+                                    {msg.message}
+                                </Text>
+                            ))
+                        }
                     </ScrollView>
 
                     <TextInput
@@ -226,8 +354,9 @@ export default function App() {
                         value={message}
                         onChangeText={setMessage}
                         placeholder="Écris un message..."
+                        editable={!isDead}
                     />
-                    <Button title="Envoyer" onPress={sendMessage} />
+                    <Button title="Envoyer" onPress={sendMessage} disabled={isDead} />
                 </>
             )}
         </View>
