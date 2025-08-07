@@ -142,7 +142,7 @@ export default function Parametres({ navigation }) {
 
     return (
 
-        <ImageBackground style={styles.container} source={require('../../assets/SkinPage/background-blue-clair.png')}>
+        <ImageBackground style={styles.container} source={require('../../assets/SkinPage/background-blue-clair-bureau-big.png')}>
 
             <View style={[styles.topPart, { flexDirection: 'row' }]}>
                 <TouchableOpacity
@@ -191,61 +191,75 @@ export default function Parametres({ navigation }) {
                 <View style={styles.inputs}>
 
                     {/* USERNAME */}
-                    <Text style={styles.error}>{errorUsername}</Text>
-                    <Text style={styles.valid}>{valid}</Text>
+                       <Text style={styles.error}>{errorUsername}</Text>
+                        <Text style={styles.valid}>{valid}</Text>
+                    <View style={styles.inputMain}>
 
-                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                        <TextInput style={[styles.username, { textAlign: 'center' }]} onChangeText={(value) => setChangeUsername(value)} value={changeUsername} placeholderTextColor="black" placeholder='change username'></TextInput>
-                    </ImageBackground>
-                    <TouchableOpacity
-                        activeOpacity={1}
-                        onPressIn={() => setPressUsername(true)}
-                        onPress={() => functionUsername()}
-                        onPressOut={() => setPressUsername(false)}
-                    >
-                        {pressUsername
-                            ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
-                            : <Image style={styles.btn} source={require('../../assets/btn/btn-save.png')} />
-                        }
-                    </TouchableOpacity>
+                     
+
+                        <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                            <TextInput style={[styles.username, { textAlign: 'center' }]} onChangeText={(value) => setChangeUsername(value)} value={changeUsername} placeholderTextColor="black" placeholder='change username'></TextInput>
+                        </ImageBackground>
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            onPressIn={() => setPressUsername(true)}
+                            onPress={() => functionUsername()}
+                            onPressOut={() => setPressUsername(false)}
+                        >
+                            {pressUsername
+                                ? <Image style={styles.btn} source={require('../../assets/btn/btn-check-down.png')} />
+                                : <Image style={styles.btn} source={require('../../assets/btn/btn-check.png')} />
+                            }
+                        </TouchableOpacity>
+                    </View>
 
                     {/* EMAIL */}
-                    <Text style={styles.error}>{errorEmail}</Text>
-                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                        <TextInput style={[styles.email, { textAlign: 'center' }]} placeholderTextColor="black" onChangeText={(value) => setChangeEmail(value)} value={changeEmail} placeholder='change email'></TextInput>
-                    </ImageBackground>
-                    <TouchableOpacity
-                        activeOpacity={1}
-                        onPressIn={() => setPressEmail(true)}
-                        onPress={() => functionEmail()}
-                        onPressOut={() => setPressEmail(false)}
-                    >
-                        {pressEmail
-                            ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
-                            : <Image style={styles.btn} source={require('../../assets/btn/btn-save.png')} />
-                        }
-                    </TouchableOpacity>
+                        <Text style={styles.error}>{errorEmail}</Text>
+                    <View style={styles.inputMain}>
+
+
+                    
+                        <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                            <TextInput style={[styles.email, { textAlign: 'center' }]} placeholderTextColor="black" onChangeText={(value) => setChangeEmail(value)} value={changeEmail} placeholder='change email'></TextInput>
+                        </ImageBackground>
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            onPressIn={() => setPressEmail(true)}
+                            onPress={() => functionEmail()}
+                            onPressOut={() => setPressEmail(false)}
+                        >
+                            {pressEmail
+                                ? <Image style={styles.btn} source={require('../../assets/btn/btn-check-down.png')} />
+                                : <Image style={styles.btn} source={require('../../assets/btn/btn-check.png')} />
+                            }
+                        </TouchableOpacity>
+                    </View>
 
                     {/* PASSWORD CONFIRM ET NEW */}
-                    <Text style={styles.error}>{errorPassword}</Text>
-                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                        <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangePassword(value)} value={changePassword} placeholderTextColor="black" placeholder='original password'></TextInput>
-                    </ImageBackground>
+                            <Text style={styles.error}>{errorPassword}</Text>
 
-                    <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                        <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangeNewPassword(value)} value={changeNewPassword} placeholderTextColor="black" placeholder='new password'></TextInput>
-                    </ImageBackground>
-                    <TouchableOpacity
-                        activeOpacity={1}
-                        onPressIn={() => setPressPassword(true)}
-                        onPress={() => functionPassword()}
-                        onPressOut={() => setPressPassword(false)}
-                    >
-                        {pressPassword
-                            ? <Image style={styles.btn} source={require('../../assets/btn/btn-save-down.png')} />
-                            : <Image style={styles.btn} source={require('../../assets/btn/btn-save.png')} />
-                        }
-                    </TouchableOpacity>
+                    <View style={styles.inputPass} >
+                        <View >
+                            <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                                <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangePassword(value)} value={changePassword} placeholderTextColor="black" placeholder='original password'></TextInput>
+                            </ImageBackground>
+
+                            <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                                <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangeNewPassword(value)} value={changeNewPassword} placeholderTextColor="black" placeholder='new password'></TextInput>
+                            </ImageBackground>
+                        </View>
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            onPressIn={() => setPressPassword(true)}
+                            onPress={() => functionPassword()}
+                            onPressOut={() => setPressPassword(false)}
+                        >
+                            {pressPassword
+                                ? <Image style={styles.btn} source={require('../../assets/btn/btn-check-down.png')} />
+                                : <Image style={styles.btn} source={require('../../assets/btn/btn-check.png')} />
+                            }
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
             {/* </TouchableWithoutFeedback> */}
@@ -267,7 +281,7 @@ const styles = StyleSheet.create({
         //backgroundColor: 'rgba(145, 71, 255, 0.5)',
         justifyContent: 'center',
         alignItems: 'center',
-        top: '133',
+        top: '90',
         gap: 10,
     },
     username: {
@@ -328,11 +342,19 @@ const styles = StyleSheet.create({
     },
     btn: {
         //backgroundColor: 'rgba(255, 99, 71, 0.5)',
-        width: 140,
-        height: 60,
+        width: 50,
+        height: 50,
     },
     content: {
         //backgroundColor: 'rgba(135, 71, 255, 0.5)',
         bottom: 110,
     },
+    inputMain: {
+        alignItems: 'center',
+        flexDirection: 'row'
+    },
+    inputPass: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    }
 });

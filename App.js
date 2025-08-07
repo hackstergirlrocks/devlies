@@ -14,6 +14,7 @@ import SignIn from './screens/Login/SignIn';
 import Parametres from './screens/Home/Parametres';
 import Play from './screens/Home/Play';
 import Shop from './screens/Home/Shop'
+import Play2 from './screens/Home/Play2';
 
 
 import Skin from './screens/Home/Skin';
@@ -45,11 +46,8 @@ export default function App() {
             <Stack.Screen name="Skin" component={Skin} />
             <Stack.Screen name="Parametres" component={Parametres} />
             <Stack.Screen name="Play" component={Play} />
+            <Stack.Screen name="Play2" component={Play2} />
             <Stack.Screen name="Shop" component={Shop} />
-
-
-
-
             {/*<Stack.Screen name="TabNavigator" component={TabNavigator} />  */}
           </Stack.Navigator>
         </NavigationContainer>
