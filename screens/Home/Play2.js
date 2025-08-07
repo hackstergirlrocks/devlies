@@ -20,11 +20,6 @@ export default function Play2({ navigation }) {
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <KeyboardAvoidingView
-                style={{ flex: 1 }}
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
-            >
                 <ImageBackground style={styles.container} source={require('../../assets/game/in-game-page-bigger.png')}>
                     <View style={styles.nav}>
                         <TouchableOpacity>
@@ -39,9 +34,14 @@ export default function Play2({ navigation }) {
                             </TouchableOpacity>
                         </View>
                     </View>
-
+<KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+            >
                     <View style={styles.divChat}>
                         <View style={styles.chat}>
+                            <ImageBackground style={styles.imageChat} source={require('../../assets/game/chat-div.png')}>
                             <View style={styles.carreChat}></View>
                             <ImageBackground style={styles.input} source={require('../../assets/btn/input-long.png')}>
                                 <TextInput
@@ -56,10 +56,11 @@ export default function Play2({ navigation }) {
                                     <Image style={styles.envoie} source={require('../../assets/btn/envoyer-chat.png')} />
                                 </TouchableOpacity>
                             </ImageBackground>
+                            </ImageBackground>
                         </View>
                     </View>
+</KeyboardAvoidingView>
                 </ImageBackground>
-            </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
     );
 }
@@ -120,9 +121,15 @@ const styles = StyleSheet.create({
         fontSize: 17,
     },
     carreChat: {
-        //backgroundColor: 'rgba(242, 44, 44, 0.56)',
+       // backgroundColor: 'rgba(242, 44, 44, 0.56)',
         width: 350,
-        height: 230,
+        height: 250,
+        marginTop: 10,
         marginBottom: 10,
+    },
+    imageChat: {
+        width: 390,
+        height: 340,
+        alignItems: 'center',
     }
 });
