@@ -206,10 +206,10 @@ const styles = StyleSheet.create({
 
     },
     topMain: {
-        // left: -110,
-        // top: -90,
+        left: -110,
+        top: -90,
         // paddingTop: 50,
-        backgroundColor: 'rgba(22, 22, 22, 0.5)',
+        // backgroundColor: 'rgba(22, 22, 22, 0.5)',
     },
     textSkin: {
         textAlign: 'center',
