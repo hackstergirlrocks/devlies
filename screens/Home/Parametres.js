@@ -142,7 +142,7 @@ export default function Parametres({ navigation }) {
 
     return (
 
-        <ImageBackground style={styles.container} source={require('../../assets/SkinPage/background-blue-clair.png')}>
+        <ImageBackground style={styles.container} source={require('../../assets/SkinPage/background-blue-clair-bureau-big.png')}>
 
             <View style={[styles.topPart, { flexDirection: 'row' }]}>
                 <TouchableOpacity
