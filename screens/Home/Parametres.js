@@ -140,11 +140,9 @@ export default function Parametres({ navigation }) {
     }
 
 
-
-
     return (
 
-        <ImageBackground style={styles.container} source={require('../../assets/WaitingPage/animation-desk-bigger.gif')}>
+        <ImageBackground style={styles.container} source={require('../../assets/SkinPage/background-blue-clair.png')}>
 
             <View style={[styles.topPart, { flexDirection: 'row' }]}>
                 <TouchableOpacity

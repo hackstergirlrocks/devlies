@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, TextI
 import { useState } from 'react';
 import { useFonts } from 'expo-font'
 import { useDispatch } from 'react-redux';
-import { login, setSkin } from '../../reducers/user';
+import { login, setSkin, setUsername } from '../../reducers/user';
 
 
 export default function App({ navigation }) {
@@ -20,9 +20,6 @@ export default function App({ navigation }) {
     // affiche erreur
     const [error, setError] = useState('');
 
-    // regex pour email + username (pas de caractère spéciaux)
-    const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    const PSEUDO_REGEX = /^[A-Za-z0-9]+$/;
 
     // écriture Minecraft
     const [fontsLoaded] = useFonts({
@@ -35,36 +32,29 @@ export default function App({ navigation }) {
 
     // quand appuie sur next
     const Next = () => {
-        // si email et username sont corrects d'après le regex
-        if (EMAIL_REGEX.test(signUpEmail) || (PSEUDO_REGEX.test(signUpUsername))) {
-            // si mdp1 et mdp2 sont égaux
-            if (signUpPassword === signUpPasswordVerif) {
-                console.log(true)
-                fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/signup`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: signUpUsername, email: signUpEmail, password: signUpPassword }),
-                }).then(response => response.json())
-                    .then(data => {
-                        if (data.result) {
-                            dispatch(login({ token: data.token }));
-                            dispatch(setSkin({ skin: data.skin }));
 
-                            setError('')
-                            console.log(data.token)
-                            navigation.navigate('Home')
-                        } else {
-                            console.log(data.error)
-                            setError(data.error)
-                        }
+        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/signup`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: signUpUsername, email: signUpEmail, password: signUpPassword, passwordverif: signUpPasswordVerif }),
+        }).then(response => response.json())
+            .then(data => {
+                if (data.result) {
+                    dispatch(login({ token: data.token }));
+                    dispatch(setSkin({ skin: data.skin }));
+                    dispatch(setUsername(data.username));
+                    
+                    setError('')
+                    console.log(data.token)
+                    navigation.navigate('Home')
+                } else {
+                    console.log(data.error)
+                    setError(data.error)
+                }
 
-                    });
-            } else {
-                setError("Wrong password")
-            }
-        } else {
-            setError("Email or username not valid")
-        }
+            });
+
+
         setPressNext(false)
         console.log('next pressed');
         console.log(signUpEmail, signUpPasswordVerif, signUpPassword, signUpUsername)
