@@ -214,6 +214,12 @@ const skins = {
         require: require("../assets/Skin/dealos-big.png"),
         price: 110,
         description: "Un héros sans peur... ou presque."
+    },
+    "duck": {
+        name: "duck",
+        require: require("../assets/Skin/duck-big.png"),
+        price: 110,
+        description: "Un canard dans la mare."
     }
 };
 
