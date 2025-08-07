@@ -189,6 +189,27 @@ router.post('/addskin', (req, res) => {
   });
 });
 
+router.post('/buySkin/:token', (req, res) => {
+  User.findOne({ token: req.params.token })
+    .then(data => {
+      if (data.coins > req.body.coins) {
+        User.updateOne(
+          { token: req.params.token },
+          {
+            $set: { coins: data.coins -= req.body.coins },
+            $push: { skins: req.body.skin }
+          }
+        ).then(result => {
+          if (result.modifiedCount > 0) {
+            res.json({ result: true, message: 'Yes skin' });
+          } else {
+            res.json({ result: false, error: 'No skin' });
+          }
+        })
+      }
+    })
+})
+
 // ROUTES CHANGEMENT
 /* route changement Username */
 router.put('/changeusername/:token', (req, res) => {
