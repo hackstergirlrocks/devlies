@@ -13,6 +13,7 @@ import SignUp from './screens/Login/SignUp';
 import SignIn from './screens/Login/SignIn';
 import Parametres from './screens/Home/Parametres';
 import Play from './screens/Home/Play';
+import Play2 from './screens/Home/Play2';
 
 
 import Skin from './screens/Home/Skin';
@@ -44,6 +45,7 @@ export default function App() {
         <Stack.Screen name="Skin" component={Skin} />
         <Stack.Screen name="Parametres" component={Parametres} />
         <Stack.Screen name="Play" component={Play} />
+        <Stack.Screen name="Play2" component={Play2} />
 
 
 

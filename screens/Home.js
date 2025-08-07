@@ -108,7 +108,7 @@ export default function App({ navigation }) {
           activeOpacity={1}
           onPressIn={() => setPressPlay(true)}
           onPressOut={() => setPressPlay(false)}
-            onPress={() => navigation.navigate('Play')}
+            onPress={() => navigation.navigate('Play2')}
         >
           {pressPlay
             ? <Image style={styles.btn} source={require('../assets/btn/play-btn-down.png')} />
