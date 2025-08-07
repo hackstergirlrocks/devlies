@@ -14,6 +14,7 @@ export default function Shop({ navigation }) {
 
     const [modalVisible, setModalVisible] = useState(false)
     const [modalImage, setModalImage] = useState('');
+    const [msgBack, setMsgBack] = useState('')
 
     // récupère toutes les infos de l'user
     useEffect(() => {
@@ -56,23 +57,27 @@ export default function Shop({ navigation }) {
             .then((response) => response.json())
             .then((data) => {
                 console.log(data)
+                setMsgBack(data.message)
             })
         setModalVisible(!modalVisible)
     }
 
     return (
         <ImageBackground style={styles.container} source={require('../../assets/SkinPage/background-blue-clair.png')}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%', height: 100, top: 20 }}>
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('Home')}
-                    activeOpacity={1}
-                >
-                    <Image source={require('../../assets/btn/icone-fleche-retour.png')} style={{ width: 75, height: 60, marginLeft: 20 }} />
-                </TouchableOpacity>
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', right: 10 }}>
-                    <Text style={{ fontFamily: 'Minecraft', fontSize: '20' }}>Total coins : {infoCoin}</Text>
-                    <Image source={require('../../assets/HomePage/icone-coin.png')} style={styles.coin} />
+            <View>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%', height: 100, top: 20 }}>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('Home')}
+                        activeOpacity={1}
+                    >
+                        <Image source={require('../../assets/btn/icone-fleche-retour.png')} style={{ width: 75, height: 60, marginLeft: 20 }} />
+                    </TouchableOpacity>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', right: 10 }}>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '20' }}>Total coins : {infoCoin}</Text>
+                        <Image source={require('../../assets/HomePage/icone-coin.png')} style={styles.coin} />
+                    </View>
                 </View>
+                <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 15, color: 'rgb(29, 255, 104)' }}>{msgBack}</Text>
             </View>
             <ScrollView>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', marginTop: 10 }}>
