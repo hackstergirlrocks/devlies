@@ -42,13 +42,14 @@ export default function App({ navigation }) {
     })).filter((s) => s.image !== null);
 
     // Filtre pour ne pas afficher les skins qui n'existent pas dans le tableau skins
-    const listItems = combinedSkins.map((user, id) =>
+    const listItems = Object.values(skins).map((skin, id) => (
         <View key={id}>
-            <Image style={styles.skin} source={user.image} />
-            <Text style={styles.textSkin}>{user.name}</Text>
-        </View>
+            <Image style={styles.skin} source={skin.require} />
+            <Text style={styles.textSkin}>{skin.name}</Text>
+            {/* <Text style={styles.textSkin}>{skin.description}</Text> */}
 
-    );
+        </View>
+    ));
 
     // Fonction pour changer de skin avec fleches
     const PlusSkin = () => {
@@ -81,7 +82,7 @@ export default function App({ navigation }) {
             .then((data) => {
                 console.log(data.skin);
                 dispatch(setSkin({ skin: data.skin }));
-                
+
                 showMessage()
             });
     }
