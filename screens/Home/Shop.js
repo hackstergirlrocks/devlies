@@ -17,9 +17,8 @@ export default function Shop({ navigation }) {
     const [msgBack, setMsgBack] = useState('')
 
     const [refresh, setRefresh] = useState(true)
-
-
-    
+    const [pressValid, setPressValid] = useState('')
+    const [pressCroix, setPressCroix] = useState('')
 
     // récupère toutes les infos de l'user
     useEffect(() => {
@@ -31,10 +30,13 @@ export default function Shop({ navigation }) {
             });
     }, [refresh]);
 
+
     // récupère tous les noms des skins
     let skinList = Object.entries(skins).map(([key, skin]) => skin.name)
     // filtre pour créer un tableau des skins communs (entre l'user et le jeu)
     let skinCommun = infoSkin.filter(name => (skinList.includes(name)))
+
+    const filtreSkin = Object.entries(skins).filter(([key, image]) => !skinCommun.includes(image.name))
 
     const [fontsLoaded] = useFonts({
         'Minecraft': require('../../assets/fonts/Minecraft.ttf'),
@@ -61,15 +63,20 @@ export default function Shop({ navigation }) {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data)
-                setMsgBack(data.message)
-                setRefresh(!refresh)
+                if (data) {
+                    setMsgBack(data.message)
+                    setRefresh(!refresh)
+
+                    setTimeout(() => {
+                        setMsgBack('');
+                    }, 3000);
+                }
             })
         setModalVisible(!modalVisible)
     }
 
     return (
-        <ImageBackground style={styles.container} source={require('../../assets/SkinPage/background-blue-clair.png')}>
+        <ImageBackground style={styles.container} source={require('../../assets/HomePage/fond-bleu.png')}>
             <View>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%', height: 100, top: 20 }}>
                     <TouchableOpacity
@@ -87,10 +94,9 @@ export default function Shop({ navigation }) {
             </View>
             <ScrollView>
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', marginTop: 10 }}>
-                    {Object.entries(skins)
-                        .filter(([key, image]) => !skinCommun.includes(image.name))
-                        .map(([key, image]) => (
-                            <ImageBackground source={require('../../assets/HomePage/icone-pop-up-windows-final.png')} key={key} style={{ width: 120, height: 120, justifyContent: 'center', alignItems: 'center' }}>
+                    {filtreSkin.length > 0 ? (
+                        filtreSkin.map(([key, image]) => (
+                            <ImageBackground source={require('../../assets/HomePage/icone-pop-up-windows-final (2).png')} key={key} style={{ width: 120, height: 120, justifyContent: 'center', alignItems: 'center' }}>
                                 <TouchableOpacity onPress={() => openModal(image)}>
                                     <Image source={image.require} style={{ width: 60, height: 60 }} />
                                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
@@ -99,7 +105,13 @@ export default function Shop({ navigation }) {
                                     </View>
                                 </TouchableOpacity>
                             </ImageBackground>
-                        ))}
+
+                        ))
+                    ) : (
+                        <View style={{ height: 600, width: 250, alignItems: 'center', justifyContent: 'center'}}>
+                            <Text style={{ fontFamily: 'Minecraft', fontSize: 25, textAlign: 'center' }}>Boutique vide, vous avez tous les skins!</Text>
+                        </View>
+                    )}
                     <Modal
                         animationType="slide"
                         transparent={true}
@@ -118,7 +130,7 @@ export default function Shop({ navigation }) {
                                 {/* <ImageBackground source={require('../../assets/HomePage/icone-pop-up-windows-final.png')} style={{ height: 300, width: 300, }}> */}
                                 <View style={{ justifyContent: 'center', alignItems: 'center', height: 230, width: 230, left: 5 }}>
                                     <Image source={modalImage.require} style={{ width: 200, height: 200 }} />
-                                    <Text style={{ fontFamily: 'Minecraft', height: 30, width: 220, textAlign: 'center' }}>{modalImage.description}</Text>
+                                    <Text style={{ fontFamily: 'Minecraft', height: 30, width: 220, textAlign: 'center', bottom: 5 }}>{modalImage.description}</Text>
                                 </View>
                                 {/* </ImageBackground> */}
                                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', top: 13 }}>
@@ -133,11 +145,27 @@ export default function Shop({ navigation }) {
                                     <View style={{ height: 172, width: 325, top: 30, alignItems: 'center', justifyContent: 'center', gap: 20 }}>
                                         <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Voulez-vous acheter ce skin?</Text>
                                         <View style={{ flexDirection: 'row', gap: 20 }}>
-                                            <TouchableOpacity onPress={() => buySkin(modalImage.price, modalImage.name)}>
-                                                <Image source={require('../../assets/btn/btn-check.png')} style={{ height: 50, width: 50 }} />
+                                            <TouchableOpacity
+                                                activeOpacity={1}
+                                                onPressIn={() => setPressValid(true)}
+                                                onPress={() => buySkin(modalImage.price, modalImage.name)}
+                                                onPressOut={() => setPressValid(false)}
+                                            >
+                                                {pressValid
+                                                    ? <Image source={require('../../assets/btn/btn-check-down.png')} style={{ height: 50, width: 50 }} />
+                                                    : <Image source={require('../../assets/btn/btn-check.png')} style={{ height: 50, width: 50 }} />
+                                                }
                                             </TouchableOpacity>
-                                            <TouchableOpacity onPress={() => setModalVisible(!modalVisible)}>
-                                                <Image source={require('../../assets/btn/btn-croix.png')} style={{ height: 50, width: 50 }} />
+                                            <TouchableOpacity
+                                                activeOpacity={1}
+                                                onPressIn={() => setPressCroix(true)}
+                                                onPress={() => setModalVisible(!modalVisible)}
+                                                onPressOut={() => setPressCroix(false)}
+                                            >
+                                                {pressCroix
+                                                    ? <Image source={require('../../assets/btn/btn-croix-down.png')} style={{ height: 50, width: 50 }} />
+                                                    : <Image source={require('../../assets/btn/btn-croix.png')} style={{ height: 50, width: 50 }} />
+                                                }
                                             </TouchableOpacity>
                                         </View>
                                     </View>

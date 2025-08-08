@@ -22,7 +22,7 @@ export default function Parametres({ navigation }) {
     const [pressPassword, setPressPassword] = useState('');
     const [pressUsername, setPressUsername] = useState('');
     const [pressEmail, setPressEmail] = useState('');
-    const [pressLogout, setPressLogout] = useState(false)
+    const [pressLogout, setPressLogout] = useState(false);
 
     const [changeUsername, setChangeUsername] = useState('');
     const [changePassword, setChangePassword] = useState('');
@@ -80,13 +80,24 @@ export default function Parametres({ navigation }) {
                         setChangeUsername('')
                         setErrorUsername('')
                         setValid('Username changed successfully !')
+
+                        setTimeout(() => {
+                            setValid('');
+                            setErrorUsername('');
+                        }, 3000);
                     } else {
                         console.log(data.error)
                         setErrorUsername(data.error)
+                        setTimeout(() => {
+                            setErrorUsername('');
+                        }, 3000);
                     }
                 });
         } else {
             setErrorUsername('Username not valid, no special characters')
+            setTimeout(() => {
+                setErrorUsername('');
+            }, 3000);
         }
     }
 
@@ -103,13 +114,23 @@ export default function Parametres({ navigation }) {
                         setChangeEmail('')
                         setValid('Email changed successfully !')
                         setErrorEmail('')
+                        setTimeout(() => {
+                            setValid('')
+                            setErrorEmail('');
+                        }, 3000);
                     } else {
                         console.log(data.error)
                         setErrorEmail(data.error)
+                        setTimeout(() => {
+                            setErrorEmail('');
+                        }, 3000);
                     }
                 });
         } else {
             setErrorEmail('Email not valid')
+            setTimeout(() => {
+                setErrorEmail('');
+            }, 3000);
         }
     }
 
@@ -126,9 +147,16 @@ export default function Parametres({ navigation }) {
                     setChangePassword('')
                     setValid('Password changed successfully !')
                     setErrorPassword('')
+                    setTimeout(() => {
+                        setValid('');
+                        setErrorPassword('');
+                    }, 3000);
                 } else {
                     console.log(data.error)
                     setErrorPassword(data.error)
+                    setTimeout(() => {
+                        setErrorPassword('');
+                    }, 3000);
                 }
             });
     }
@@ -191,11 +219,11 @@ export default function Parametres({ navigation }) {
                 <View style={styles.inputs}>
 
                     {/* USERNAME */}
-                       <Text style={styles.error}>{errorUsername}</Text>
-                        <Text style={styles.valid}>{valid}</Text>
+                    <Text style={styles.errorU}>{errorUsername}</Text>
+                    <Text style={styles.valid}>{valid}</Text>
                     <View style={styles.inputMain}>
 
-                     
+
 
                         <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
                             <TextInput style={[styles.username, { textAlign: 'center' }]} onChangeText={(value) => setChangeUsername(value)} value={changeUsername} placeholderTextColor="black" placeholder='change username'></TextInput>
@@ -214,11 +242,11 @@ export default function Parametres({ navigation }) {
                     </View>
 
                     {/* EMAIL */}
-                        <Text style={styles.error}>{errorEmail}</Text>
+                    <Text style={styles.error}>{errorEmail}</Text>
                     <View style={styles.inputMain}>
 
 
-                    
+
                         <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
                             <TextInput style={[styles.email, { textAlign: 'center' }]} placeholderTextColor="black" onChangeText={(value) => setChangeEmail(value)} value={changeEmail} placeholder='change email'></TextInput>
                         </ImageBackground>
@@ -236,16 +264,16 @@ export default function Parametres({ navigation }) {
                     </View>
 
                     {/* PASSWORD CONFIRM ET NEW */}
-                            <Text style={styles.error}>{errorPassword}</Text>
+                    <Text style={styles.error}>{errorPassword}</Text>
 
                     <View style={styles.inputPass} >
                         <View >
                             <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                                <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangePassword(value)} value={changePassword} placeholderTextColor="black" placeholder='original password'></TextInput>
+                                <TextInput style={[styles.password, { textAlign: 'center' }]} secureTextEntry={true} onChangeText={(value) => setChangePassword(value)} value={changePassword} placeholderTextColor="black" placeholder='original password'></TextInput>
                             </ImageBackground>
 
                             <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                                <TextInput style={[styles.password, { textAlign: 'center' }]} onChangeText={(value) => setChangeNewPassword(value)} value={changeNewPassword} placeholderTextColor="black" placeholder='new password'></TextInput>
+                                <TextInput style={[styles.password, { textAlign: 'center' }]} secureTextEntry={true} onChangeText={(value) => setChangeNewPassword(value)} value={changeNewPassword} placeholderTextColor="black" placeholder='new password'></TextInput>
                             </ImageBackground>
                         </View>
                         <TouchableOpacity
@@ -317,6 +345,11 @@ const styles = StyleSheet.create({
         color: 'red',
         fontFamily: 'Minecraft',
     },
+    errorU: {
+        color: 'red',
+        fontFamily: 'Minecraft',
+        top: 20
+    },
     valid: {
         color: 'rgb(29, 255, 104)',
         fontFamily: 'Minecraft',
@@ -347,7 +380,7 @@ const styles = StyleSheet.create({
     },
     content: {
         //backgroundColor: 'rgba(135, 71, 255, 0.5)',
-        bottom: 110,
+        bottom: 85,
     },
     inputMain: {
         alignItems: 'center',
