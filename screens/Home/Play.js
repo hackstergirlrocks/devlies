@@ -16,9 +16,15 @@ export default function App({ navigation }) {
     const [users, setUsers] = useState([]);
 
     const [messages, setMessages] = useState([]);
+
+
     const [messagesDevOps, setMessagesDevOps] = useState([]);
+    const [messagesHacker, setMessagesHacker] = useState([]);
+
 
     const [message, setMessage] = useState("");
+    const [messageHacker, setMessageHacker] = useState("");
+
 
     const [countdown, setCountdown] = useState(null);
     const [gameStarted, setGameStarted] = useState(false);
@@ -120,7 +126,6 @@ export default function App({ navigation }) {
         });
 
         socket.on("votingStart", ({ time }) => {
-            // socket.emit("send_message", { username: 'Système', message: `Les votes commencent`, color: 'grey' });
             setPhase("vote");
             setPhaseTime(time);
             setHasVoted(false);
@@ -197,6 +202,21 @@ export default function App({ navigation }) {
         });
 
 
+        socket.on("chat_history_hacker", (history) => {
+            setMessagesHacker(history.map(msg => ({
+                message: `${msg.username}: ${msg.message}`,
+                color: msg.color || "#000"
+            })));
+        });
+
+        socket.on("receive_message_hacker", (msg) => {
+            setMessagesHacker((prev) => [...prev, {
+                message: `${msg.username}: ${msg.message}`,
+                color: msg.color || "#000"
+            }]);
+        });
+
+
         socket.on("countdown", (timeLeft) => setCountdown(timeLeft));
         socket.on("gameStarted", () => {
             setGameStarted(true);
@@ -206,16 +226,15 @@ export default function App({ navigation }) {
         socket.on("gameReset", ({ users }) => {
             setConnected(false);
             setVotedTarget(null);
-
             setUsers(users);
             setMessages([]);
             setMessagesDevOps([]);
+            setMessagesHacker([]);
             setGameStarted(false);
             setCountdown(null);
             setError("");
             setVotes({});
             setHasVoted(false);
-            // Alert.alert("🔄 La partie a été réinitialisée !");
         });
 
         socket.on("gameError", ({ message }) => setError(message));
@@ -229,6 +248,15 @@ export default function App({ navigation }) {
             setMessage("");
         }
     };
+
+    const sendMessageHacker = () => {
+        if (messageHacker.trim() !== "") {
+            socket.emit("send_message_hacker", { username: user.username, message: '🐺 ' + messageHacker.trim() });
+            setMessageHacker("");
+        }
+    };
+
+
 
     const joinLobby = () => {
         const roles = ['hacker', 'devops'];
@@ -261,7 +289,7 @@ export default function App({ navigation }) {
         console.log('Phase', phase)
         console.log('isSameTarget', votedTarget, targetUsername)
         // console.log(votedTarget, targetUsername)
-        
+
         if (phase === "vote") {
             if (isSameTarget) {
                 socket.emit("unvotePlayer", targetUsername);
@@ -404,13 +432,17 @@ export default function App({ navigation }) {
                         ref={scrollViewRef}
                         onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
                     >
-                        {messages.map((msg, index) => (
-                            <Text key={index} style={[styles.message, { color: msg.color }]}>
 
-                                {msg.message}
+                        {(phase === "vote" || phase === "day") &&
 
-                            </Text>
-                        ))}
+                            messages.map((msg, index) => (
+                                <Text key={index} style={[styles.message, { color: msg.color }]}>
+
+                                    {msg.message}
+
+                                </Text>
+                            ))
+                        }
                         {myRole === 'devops' &&
                             messagesDevOps.map((msg, index) => (
                                 <Text key={index} style={[styles.message, { color: msg.color }]}>
@@ -418,16 +450,40 @@ export default function App({ navigation }) {
                                 </Text>
                             ))
                         }
-                    </ScrollView>
+                        {(myRole === 'hacker' && phase === "night-vote") &&
 
-                    <TextInput
-                        style={styles.input}
-                        value={message}
-                        onChangeText={setMessage}
-                        placeholder="Écris un message..."
-                        editable={!isDead}
-                    />
-                    <Button title="Envoyer" onPress={sendMessage} disabled={isDead} />
+                            messagesHacker.map((msg, index) => (
+                                <Text key={index} style={[styles.message, { color: msg.color }]}>
+                                    {msg.message}
+                                </Text>
+                            ))
+                        }
+                    </ScrollView>
+                    {(myRole === 'hacker' && phase === "night-vote") &&
+                        <View>
+                            <TextInput
+                                style={styles.input}
+                                value={messageHacker}
+                                onChangeText={setMessageHacker}
+                                placeholder="Écris un message..."
+                                editable={!isDead}
+                            />
+                            <Button title="Envoyer" onPress={sendMessageHacker} disabled={isDead} />
+                        </View>
+                    }
+                    {phase !== "night-vote" &&
+                        <View>
+                            <TextInput
+                                style={styles.input}
+                                value={message}
+                                onChangeText={setMessage}
+                                placeholder="Écris un message..."
+                                editable={!isDead}
+                            />
+                            <Button title="Envoyer" onPress={sendMessage} disabled={isDead} />
+                        </View>
+                    }
+
                 </>
             )}
         </View>
