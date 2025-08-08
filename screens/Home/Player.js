@@ -20,9 +20,10 @@ const styles = StyleSheet.create({
 
     },
     skin: {
-        width: 96,
-        height: 86,
-        top: -10,
+        width: 84,
+        height: 74,
+        top: -0.5,
+        left: 5,
 
     },
     username: {
