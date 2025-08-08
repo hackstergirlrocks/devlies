@@ -8,7 +8,7 @@ import skins from "../../constants/skins";
 
 const socket = io("http://192.168.100.206:3001");
 
-export default function App({navigation}) {
+export default function App({ navigation }) {
     const user = useSelector((state) => state.user.value);
     const scrollViewRef = useRef();
 
@@ -36,6 +36,10 @@ export default function App({navigation}) {
 
     const [hasInspected, setHasInspected] = useState(false);
 
+    const [votedTarget, setVotedTarget] = useState(null);
+
+
+
     useEffect(() => {
         if (!gameStarted) return;
 
@@ -49,30 +53,34 @@ export default function App({navigation}) {
         }
 
         if (hackers.length === 0) {
-            socket.emit("send_message", {
-                username: "Système",
-                message: "Les développeurs ont gagné !",
-                color: "green"
-            });
+            // socket.emit("send_message", {
+            //     username: "Système",
+            //     message: "Les développeurs ont gagné !",
+            //     color: "green",
+            //     role: myRole
+            // });
 
             navigation.navigate("GameOver", {
                 result: "victory",
-                role: "developer",
+                rolewin: "dev",
                 xpEarned: 100,
+                role: myRole
                 // image: require("../../assets/victory.png")
             });
             socket.emit("stopGame");
         } else if (hackers.length >= others.length) {
-            socket.emit("send_message", {
-                username: "Système",
-                message: "Les hacker ont gagné !",
-                color: "green"
-            });
+            // socket.emit("send_message", {
+            //     username: "Système",
+            //     message: "Les hacker ont gagné !",
+            //     color: "green",
+            //     role: myRole
+            // });
 
             navigation.navigate("GameOver", {
                 result: "victory",
-                role: "hacker",
+                rolewin: "hacker",
                 xpEarned: 100,
+                role: myRole
                 // image: require("../../assets/victory.png")
             });
             socket.emit("stopGame");
@@ -82,11 +90,15 @@ export default function App({navigation}) {
 
 
 
+
+
     useEffect(() => {
         socket.on("phaseChange", ({ phase, timeLeft }) => {
             setPhase(phase);
             setPhaseTime(timeLeft);
             setHasVoted(false);
+            setVotedTarget(null);
+
             if (phase === 'night-vote') {
                 setHasInspected(false);
             }
@@ -112,10 +124,13 @@ export default function App({navigation}) {
             setPhase("vote");
             setPhaseTime(time);
             setHasVoted(false);
+            setVotedTarget(null);
+
             setVotes({});
         });
 
         socket.on("voteUpdate", (newVotes) => setVotes(newVotes));
+
         socket.on("nightVoteUpdate", (newVotes) => setVotes(newVotes));
 
         socket.on("playerEliminated", (username) => {
@@ -190,8 +205,11 @@ export default function App({navigation}) {
 
         socket.on("gameReset", ({ users }) => {
             setConnected(false);
+            setVotedTarget(null);
+
             setUsers(users);
             setMessages([]);
+            setMessagesDevOps([]);
             setGameStarted(false);
             setCountdown(null);
             setError("");
@@ -220,7 +238,7 @@ export default function App({navigation}) {
             token: user.token,
             username: user.username,
             skin: user.skin,
-            role: randomRole,
+            role: null,
         });
 
         setConnected(true);
@@ -237,14 +255,40 @@ export default function App({navigation}) {
     };
 
     const voteFor = (targetUsername) => {
-        if (hasVoted) return;
+        if (isDead || targetUsername === myName) return;
+
+        const isSameTarget = votedTarget === targetUsername;
+        console.log('Phase', phase)
+        console.log('isSameTarget', votedTarget, targetUsername)
+        // console.log(votedTarget, targetUsername)
+        
         if (phase === "vote") {
-            socket.emit("votePlayer", targetUsername);
+            if (isSameTarget) {
+                socket.emit("unvotePlayer", targetUsername);
+                setHasVoted(false);
+                setVotedTarget(null);
+            } else {
+                socket.emit("votePlayer", targetUsername);
+                setHasVoted(true);
+                setVotedTarget(targetUsername);
+            }
         } else if (phase === "night-vote") {
-            socket.emit("votePlayerNight", targetUsername);
+            if (isSameTarget) {
+                socket.emit("unvotePlayerNight", targetUsername);
+                setHasVoted(false);
+                console.log('unVote Player')
+
+                setVotedTarget(null);
+            } else {
+                socket.emit("votePlayerNight", targetUsername);
+                setHasVoted(true);
+                console.log('Vote Player')
+                setVotedTarget(targetUsername);
+            }
         }
-        setHasVoted(true);
     };
+
+
 
     return (
         <View style={styles.container}>
@@ -262,7 +306,8 @@ export default function App({navigation}) {
                             La partie commence dans {countdown} secondes ⏳
                         </Text>
                     )}
-                    <Text>ff - {myRole}</Text>
+
+
                     {gameStarted && (
                         <Text style={{ fontSize: 20, marginVertical: 10 }}>
                             {phase === "day" && "🌞 Jour"}
@@ -311,17 +356,18 @@ export default function App({navigation}) {
                                                 role: 'devops',
                                             });
                                             setHasInspected(true);
-                                        } else if (myRole === "hacker" && !hasVoted) {
+                                        } else if (myRole === "hacker" && (item.role !== 'hacker' || votedTarget === item.username)) {
                                             voteFor(item.username);
                                         }
-                                    } else if (phase === "vote" && !hasVoted) {
+
+                                    } else if (phase === "vote") {
                                         voteFor(item.username);
                                     }
                                 }}
 
                                 disabled={
                                     isDead ||
-                                    hasVoted ||
+
                                     (
                                         phase === "night-vote" &&
                                         myRole !== "devops" &&
@@ -333,11 +379,20 @@ export default function App({navigation}) {
                                 <View style={styles.userBox}>
                                     <Image style={styles.skin} source={skins[item.skin].require} />
                                     <Text style={styles.user}>{item.username}</Text>
-                                    {(item.token === user.token || item.isDead) && (
-                                        <Text style={styles.user}>{item.role}</Text>
+
+                                    {myRole !== null && (
+                                        (item.token === user.token || item.isDead || (myRole === "hacker" && item.role === "hacker")) && (
+                                            <Text style={styles.user}>{item.role}</Text>
+                                        )
                                     )}
 
+                                    {(phase === "vote" && gameStarted || phase === "night-vote" && myRole === 'hacker') && (
+                                        <Text style={{ color: "red", fontWeight: "bold" }}>
+                                            Votes : {votes[item.username] || 0}
+                                        </Text>
+                                    )}
                                 </View>
+
                             </TouchableOpacity>
 
                         ))}

@@ -2,6 +2,7 @@ import { StyleSheet, SafeAreaView, Text, View, Image, TouchableOpacity, ImageBac
 import React from 'react'
 
 export default function Player(props) {
+
     return (
         <View style={styles.main}>
             <Text style={styles.username}>1 - {props.username} </Text>
