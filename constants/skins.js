@@ -108,7 +108,7 @@ const skins = {
         name: "Nosferatu",
         require: require("../assets/Skin/nosferatu-big.png"),
         price: 80,
-        description: "Un vampire de légende."
+        description: "Un vampire de legende."
     },
     "robot": {
         name: "Robot",
@@ -184,7 +184,7 @@ const skins = {
         name: "Peach",
         require: require("../assets/Skin/peach-big.png"),
         price: 150,
-        description: "Une princesse très connue."
+        description: "Une princesse tres connue."
     },
 
     // 170 PIECES
@@ -232,7 +232,7 @@ const skins = {
         name: "Demon",
         require: require("../assets/Skin/demon-big.png"),
         price: 666,
-        description: "Un démon venu des enfers."
+        description: "Un demon venu des enfers."
     },
 
     // 1000 PIECES

@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useFonts } from 'expo-font'
 
-
 import skins from "../constants/skins";;
 
 export default function App({ navigation }) {
@@ -53,6 +52,7 @@ export default function App({ navigation }) {
   }
 
   // modal (pop-up) visible ou non
+  const [modalVisibleAmi, setModalVisibleAmi] = useState(false)
   const [modalVisibleInfo, setModalVisibleInfo] = useState(false)
   const [modalVisibleProfile, setModalVisibleProfile] = useState(false)
   const [infoPlayer, setInfoPlayer] = useState([])
@@ -117,7 +117,28 @@ export default function App({ navigation }) {
     <ImageBackground style={styles.container} source={require('../assets/HomePage/desk-home-page-bigger.png')}>
       {/* Menu en haut a droite */}
       <View style={styles.MainTop}>
-        <Image style={styles.top} source={require('../assets/btn/star.png')} />
+        <TouchableOpacity onPress={() => setModalVisibleAmi(!modalVisibleAmi)}>
+          <Image style={styles.top} source={require('../assets/btn/star.png')} />
+        </TouchableOpacity>
+        <Modal
+          animationType='fade'
+          transparent={true}
+          visible={modalVisibleAmi}
+          onRequestClose={() => {
+            setModalVisibleAmi(!modalVisibleAmi);
+          }}>
+          <View style={{ flexDirection: 'row' }}>
+            <TouchableOpacity style={{ width: 150 }} onPress={() => setModalVisibleAmi(!modalVisibleAmi)}>
+
+            </TouchableOpacity>
+            <ImageBackground source={require('../assets/HomePage/pop-up-ami.png')} resizeMode='contain' style={styles.image}>
+              <View style={{ width: 260, height: 850, alignItems: 'center', justifyContent: 'center' }} >
+
+                <Text>OUVERT</Text>
+              </View>
+            </ImageBackground>
+          </View>
+        </Modal>
         <TouchableOpacity
           style={styles.switchPage}
           activeOpacity={1}
@@ -125,9 +146,7 @@ export default function App({ navigation }) {
         >
           <Image style={styles.top} source={require('../assets/btn/ecroue.png')} />
         </TouchableOpacity>
-
       </View>
-
       <View style={styles.mainBtn} >
 
         {/* PLAY BUTTON */}
@@ -290,7 +309,7 @@ export default function App({ navigation }) {
                   <TouchableOpacity onPress={() => openInfo()} style={{ bottom: 31, width: 323, right: 19, height: 22 }}>
                     <Image source={require('../assets/HomePage/croix-bleu-pop-up.png')} style={{ bottom: 39, height: 22, width: 22, right: 123 }} />
                   </TouchableOpacity>
-                  <View style={[styles.modalView, {bottom: 5}]}>
+                  <View style={[styles.modalView, { bottom: 5 }]}>
                     <View style={styles.regles}>
                       <Text style={{ fontFamily: 'Minecraft', fontSize: '23', textDecorationLine: 'underline', color: 'red' }}>Explication roles :</Text>
                       <View>
@@ -316,7 +335,7 @@ export default function App({ navigation }) {
                   <TouchableOpacity onPress={() => openInfo()} style={{ bottom: 31, width: 323, right: 19, height: 22 }}>
                     <Image source={require('../assets/HomePage/croix-bleu-pop-up.png')} style={{ bottom: 39, height: 22, width: 22, right: 123 }} />
                   </TouchableOpacity>
-                  <View style={[styles.modalView, {bottom: 5}]}>
+                  <View style={[styles.modalView, { bottom: 5 }]}>
                     <View style={styles.regles}>
                       <Text style={{ fontFamily: 'Minecraft', fontSize: '23', textDecorationLine: 'underline', color: 'red' }}>Explication roles :</Text>
                       <View>
@@ -415,8 +434,8 @@ const styles = StyleSheet.create({
   },
   encardskin: {
     height: 150,
-    width: 150, 
-    alignItems: 'center', 
+    width: 150,
+    alignItems: 'center',
     justifyContent: 'center'
   },
   icone: {
