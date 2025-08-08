@@ -270,12 +270,12 @@ export default function App({ navigation }) {
                       <View>
                         <Text style={{ fontFamily: 'Minecraft', fontSize: '20', textDecorationLine: 'underline' }}>Deroulement</Text>
                         <Text style={{ fontFamily: 'Minecraft', fontSize: '17' }}>Nuit : Tout le monde "ferme les yeux". Les hackers choississent une victime (un dev). Les devs avec un role special jouent egalement.</Text>
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '17' }}>Jour : Tous les joueurs debattent dans le chat, un vote a lieu pour bannir un joueur suspect. Quand il meurt, il revele son role.</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '17' }}>Jour : Tous les joueurs debattent dans le chat, un vote a lieu pour virer un joueur suspect. Quand il part, il revele son role.</Text>
                       </View>
                       <View>
                         <Text style={{ fontFamily: 'Minecraft', fontSize: '20', textDecorationLine: 'underline' }}>Fin de partie</Text>
                         <Text style={{ fontFamily: 'Minecraft', fontSize: '17' }}>Victoire des hackers : si les devs ne sont plus assez nombreux pour resister</Text>
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '17' }}>Victoires des devs : si tous les hackers ont ete bannis.</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '17' }}>Victoires des devs : si tous les hackers ont ete vires.</Text>
                       </View>
                     </View>
                   </View>
@@ -285,12 +285,12 @@ export default function App({ navigation }) {
 
             {/* PAGE 2, description rôle hacker et dev junior */}
             {step === 2 &&
-              <View style={{ height: '50%', width: 350, paddingLeft: 50, bottom: 10 }}>
+              <View style={{ height: '50%', width: 350, paddingLeft: 50, bottom: 10, }}>
                 <View style={styles.modal2}>
                   <TouchableOpacity onPress={() => openInfo()} style={{ bottom: 31, width: 323, right: 19, height: 22 }}>
                     <Image source={require('../assets/HomePage/croix-bleu-pop-up.png')} style={{ bottom: 39, height: 22, width: 22, right: 123 }} />
                   </TouchableOpacity>
-                  <View style={styles.modalView}>
+                  <View style={[styles.modalView, {bottom: 5}]}>
                     <View style={styles.regles}>
                       <Text style={{ fontFamily: 'Minecraft', fontSize: '23', textDecorationLine: 'underline', color: 'red' }}>Explication roles :</Text>
                       <View>
@@ -316,7 +316,7 @@ export default function App({ navigation }) {
                   <TouchableOpacity onPress={() => openInfo()} style={{ bottom: 31, width: 323, right: 19, height: 22 }}>
                     <Image source={require('../assets/HomePage/croix-bleu-pop-up.png')} style={{ bottom: 39, height: 22, width: 22, right: 123 }} />
                   </TouchableOpacity>
-                  <View style={styles.modalView}>
+                  <View style={[styles.modalView, {bottom: 5}]}>
                     <View style={styles.regles}>
                       <Text style={{ fontFamily: 'Minecraft', fontSize: '23', textDecorationLine: 'underline', color: 'red' }}>Explication roles :</Text>
                       <View>
