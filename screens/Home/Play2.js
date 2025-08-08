@@ -87,8 +87,9 @@ export default function Play2({ navigation }) {
         },
     ];
 
+
     const listUser = users.map((user, i) =>
-        <Player key={i} username={user.username} skin={user.skin} />
+     <Player key={i} username={user.username} skin={user.skin} />
     );
 
     return (
