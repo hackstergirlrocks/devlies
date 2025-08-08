@@ -201,9 +201,9 @@ router.post('/buySkin/:token', (req, res) => {
           }
         ).then(result => {
           if (result.modifiedCount > 0) {
-            res.json({ result: true, message: 'Yes skin' });
+            res.json({ result: true, message: 'Skin bien achete' });
           } else {
-            res.json({ result: false, error: 'No skin' });
+            res.json({ result: false, message: "Une erreur s'est produite. Reesayez.." });
           }
         })
       }
