@@ -120,6 +120,8 @@ export default function App({ navigation }) {
         <TouchableOpacity onPress={() => setModalVisibleAmi(!modalVisibleAmi)}>
           <Image style={styles.top} source={require('../assets/btn/star.png')} />
         </TouchableOpacity>
+
+        {/* POP-UP LISTE D'AMI */}
         <Modal
           animationType='fade'
           transparent={true}
@@ -128,6 +130,7 @@ export default function App({ navigation }) {
             setModalVisibleAmi(!modalVisibleAmi);
           }}>
           <View style={{ flexDirection: 'row' }}>
+            {/* view créée pour fermer la modal */}
             <TouchableOpacity style={{ width: 150 }} onPress={() => setModalVisibleAmi(!modalVisibleAmi)}>
             </TouchableOpacity>
             <ImageBackground source={require('../assets/HomePage/pop-up-ami.png')} resizeMode='contain' style={styles.imageAmi}>
