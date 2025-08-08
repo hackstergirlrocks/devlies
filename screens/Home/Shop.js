@@ -16,6 +16,11 @@ export default function Shop({ navigation }) {
     const [modalImage, setModalImage] = useState('');
     const [msgBack, setMsgBack] = useState('')
 
+    const [refresh, setRefresh] = useState(true)
+
+
+    
+
     // récupère toutes les infos de l'user
     useEffect(() => {
         fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/` + user.token)
@@ -24,7 +29,7 @@ export default function Shop({ navigation }) {
                 setInfoCoin(data.info.coins)
                 setInfoSkin(data.info.skins)
             });
-    }, [infoSkin]);
+    }, [refresh]);
 
     // récupère tous les noms des skins
     let skinList = Object.entries(skins).map(([key, skin]) => skin.name)
@@ -58,6 +63,7 @@ export default function Shop({ navigation }) {
             .then((data) => {
                 console.log(data)
                 setMsgBack(data.message)
+                setRefresh(!refresh)
             })
         setModalVisible(!modalVisible)
     }

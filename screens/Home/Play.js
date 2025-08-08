@@ -1,14 +1,14 @@
 // Play.js (version modifiée)
 
 import React, { useEffect, useState, useRef } from "react";
-import { View, Text, Button, StyleSheet, Image, ScrollView, TextInput, Alert, TouchableOpacity } from "react-native";
+import { View, Text, Button, StyleSheet, Image, ScrollView, TextInput, Alert, TouchableOpacity, ImageBackground } from "react-native";
 import io from "socket.io-client";
 import { useSelector } from 'react-redux';
 import skins from "../../constants/skins";
 
 const socket = io("http://192.168.100.206:3001");
 
-export default function App() {
+export default function App({navigation}) {
     const user = useSelector((state) => state.user.value);
     const scrollViewRef = useRef();
 
@@ -54,12 +54,26 @@ export default function App() {
                 message: "Les développeurs ont gagné !",
                 color: "green"
             });
+
+            navigation.navigate("GameOver", {
+                result: "victory",
+                role: "developer",
+                xpEarned: 100,
+                // image: require("../../assets/victory.png")
+            });
             socket.emit("stopGame");
         } else if (hackers.length >= others.length) {
             socket.emit("send_message", {
                 username: "Système",
-                message: "Les hackers ont pris le contrôle !",
-                color: "red"
+                message: "Les hacker ont gagné !",
+                color: "green"
+            });
+
+            navigation.navigate("GameOver", {
+                result: "victory",
+                role: "hacker",
+                xpEarned: 100,
+                // image: require("../../assets/victory.png")
             });
             socket.emit("stopGame");
         }
@@ -235,7 +249,9 @@ export default function App() {
     return (
         <View style={styles.container}>
             {!connected ? (
-                <Button title="Rejoindre le lobby" onPress={joinLobby} />
+                <ImageBackground style={styles.background} source={require('../../assets/HomePage/desk-home-page-bigger.png')}>
+                    <Button style={styles.btnStart} title="Rejoindre le lobby" onPress={joinLobby} />
+                </ImageBackground>
             ) : (
                 <>
                     <Text style={styles.title}>👥 Lobby</Text>
@@ -364,7 +380,13 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: "center", alignItems: "center", padding: 20 },
+    background: {
+        flex: 1,
+        width: '100%',
+        justifyContent: "center", alignItems: "center"
+    },
+
+    container: { flex: 1, justifyContent: "center", alignItems: "center" },
     title: { fontSize: 22, fontWeight: "bold", marginBottom: 20 },
     usersContainer: { alignItems: "center", flexWrap: 'wrap', flexDirection: 'row' },
     userBox: { alignItems: "center", marginBottom: 10, marginHorizontal: 5 },
