@@ -131,20 +131,20 @@ export default function App({ navigation }) {
             <TouchableOpacity style={{ width: 150 }} onPress={() => setModalVisibleAmi(!modalVisibleAmi)}>
             </TouchableOpacity>
             <ImageBackground source={require('../assets/HomePage/pop-up-ami.png')} resizeMode='contain' style={styles.imageAmi}>
-              <View style={{ width: 260, height: 850, alignItems: 'center', justifyContent: 'center', gap: 10 }} >
-                <ImageBackground source={require('../assets/HomePage/pop-up-ami-input.png')}>
+              <View style={{ width: 260, height: 850, alignItems: 'center', justifyContent: 'flex-start', gap: 10 }} >
+                <ImageBackground source={require('../assets/HomePage/pop-up-ami-input.png')} style={{ top: 45 }}>
                   <View style={{ backgroundColor: 'rgba(45, 98, 150, 0)', height: 55, width: 240, justifyContent: 'center', left: 10 }}>
-                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>OnlyGuts_</Text>
+                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20, bottom: 5 }}>OnlyGuts_</Text>
                   </View>
                 </ImageBackground>
-                <ImageBackground source={require('../assets/HomePage/pop-up-ami-input.png')}>
+                <ImageBackground source={require('../assets/HomePage/pop-up-ami-input.png')} style={{ top: 45 }}>
                   <View style={{ backgroundColor: 'rgba(45, 98, 150, 0)', height: 55, width: 240, justifyContent: 'center', left: 10 }}>
-                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Etiolate</Text>
+                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20, bottom: 5 }}>Etiolate</Text>
                   </View>
                 </ImageBackground>
-                <ImageBackground source={require('../assets/HomePage/pop-up-ami-input.png')}>
+                <ImageBackground source={require('../assets/HomePage/pop-up-ami-input.png')} style={{ top: 45 }}>
                   <View style={{ backgroundColor: 'rgba(45, 98, 150, 0)', height: 55, width: 240, justifyContent: 'center', left: 10 }}>
-                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Shner, Proust et Wifi</Text>
+                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20, bottom: 5 }}>Shner, Proust et Wifi</Text>
                   </View>
                 </ImageBackground>
               </View>

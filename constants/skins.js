@@ -8,7 +8,7 @@ const skins = {
     },
     "mcdo": {
         name: "mcdo",
-        displayName: 'Employe de fast-food',
+        displayName: 'Employe',
         require: require("../assets/Skin/employe-mcdo-big.png"),
         price: 5,
         description: "Burger, frite, coca?"
