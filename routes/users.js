@@ -196,7 +196,7 @@ router.post('/buySkin/:token', (req, res) => {
         User.updateOne(
           { token: req.params.token },
           {
-            $set: { coins: data.coins -= req.body.coins },
+            $set: { coins: data.coins -= Number(req.body.coins) },
             $push: { skins: req.body.skin }
           }
         ).then(result => {
@@ -319,6 +319,57 @@ router.get('/:token', (req, res) => {
     .then(data => {
       console.log(data)
       res.json({ result: true, info: data })
+    })
+})
+
+/* modifie statistique et infos après une WIN ! */
+router.post('/win/:token', (req, res) => {
+  User.findOne({ token: req.params.token })
+    .then(data => {
+      if (data) {
+        User.updateOne(
+          { token: req.params.token },
+          {
+            $set: { coins: data.coins += Number(req.body.coins),
+              experience: data.experience += Number(req.body.experience),
+              'stats.win': data.stats.win += Number(req.body.win),
+              'stats.game': data.stats.game += Number(req.body.game)
+             },
+          }
+        ).then(result => {
+          if (result.modifiedCount > 0) {
+            res.json({ result: true, message: 'Stats de win modifiées avec succès !' });
+          } else {
+            res.json({ result: false, message: "Pas de modification de stats de win..." });
+          }
+        })
+        console.log(data);
+      }
+    })
+})
+
+/* modifie statistique et infos après une LOSE ! */
+router.post('/lose/:token', (req, res) => {
+  User.findOne({ token: req.params.token })
+    .then(data => {
+      if (data) {
+        User.updateOne(
+          { token: req.params.token },
+          {
+            $set: { coins: data.coins += Number(req.body.coins),
+              experience: data.experience += Number(req.body.experience),
+              'stats.lose': data.stats.lose += Number(req.body.lose),
+              'stats.game': data.stats.game += Number(req.body.game)
+             },
+          }
+        ).then(result => {
+          if (result.modifiedCount > 0) {
+            res.json({ result: true, message: 'Stats de lose modifiées avec succès !' });
+          } else {
+            res.json({ result: false, message: "Pas de modification de stats de lose..." });
+          }
+        })
+      }
     })
 })
 
