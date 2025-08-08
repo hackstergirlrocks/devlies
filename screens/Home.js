@@ -129,12 +129,24 @@ export default function App({ navigation }) {
           }}>
           <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity style={{ width: 150 }} onPress={() => setModalVisibleAmi(!modalVisibleAmi)}>
-
             </TouchableOpacity>
-            <ImageBackground source={require('../assets/HomePage/pop-up-ami.png')} resizeMode='contain' style={styles.image}>
-              <View style={{ width: 260, height: 850, alignItems: 'center', justifyContent: 'center' }} >
-
-                <Text>OUVERT</Text>
+            <ImageBackground source={require('../assets/HomePage/pop-up-ami.png')} resizeMode='contain' style={styles.imageAmi}>
+              <View style={{ width: 260, height: 850, alignItems: 'center', justifyContent: 'center', gap: 10 }} >
+                <ImageBackground source={require('../assets/HomePage/pop-up-ami-input.png')}>
+                  <View style={{ backgroundColor: 'rgba(45, 98, 150, 0)', height: 55, width: 240, justifyContent: 'center', left: 10 }}>
+                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>OnlyGuts_</Text>
+                  </View>
+                </ImageBackground>
+                <ImageBackground source={require('../assets/HomePage/pop-up-ami-input.png')}>
+                  <View style={{ backgroundColor: 'rgba(45, 98, 150, 0)', height: 55, width: 240, justifyContent: 'center', left: 10 }}>
+                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Etiolate</Text>
+                  </View>
+                </ImageBackground>
+                <ImageBackground source={require('../assets/HomePage/pop-up-ami-input.png')}>
+                  <View style={{ backgroundColor: 'rgba(45, 98, 150, 0)', height: 55, width: 240, justifyContent: 'center', left: 10 }}>
+                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Shner, Proust et Wifi</Text>
+                  </View>
+                </ImageBackground>
               </View>
             </ImageBackground>
           </View>
@@ -418,6 +430,12 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     flexDirection: 'row',
     justifyContent: 'flex-end'
+  },
+
+  imageAmi: {
+    flex: 1,
+    justifyContent: 'center',
+    width: 385
   },
 
   // CSS MODAL PROFILE
