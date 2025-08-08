@@ -337,10 +337,10 @@ export default function App({ navigation }) {
 
             {/* Flèche pour changer de page */}
             <View style={{ flexDirection: 'row', justifyContent: 'center', gap: 150 }}>
-              <TouchableOpacity onPress={() => changeStepMoins()}>
+              <TouchableOpacity activeOpacity={1} onPress={() => changeStepMoins()}>
                 <Image source={require('../assets/HomePage/fleche-bleu-gauche.png')} style={{ width: 40, height: 40 }} />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => changeStepPlus()}>
+              <TouchableOpacity activeOpacity={1} onPress={() => changeStepPlus()}>
                 <Image source={require('../assets/HomePage/fleche-bleu-droite.png')} style={{ width: 40, height: 40 }} />
               </TouchableOpacity>
             </View>

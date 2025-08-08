@@ -1,225 +1,207 @@
 const skins = {
     "basic": {
-        name: "basic",
+        name: "Basic",
         require: require("../assets/Skin/basic-big.png"),
         price: 0,
         description: "Le skin de base pour tous les joueurs."
     },
     "ange": {
-        name: "ange",
+        name: "Ange",
         require: require("../assets/Skin/ange-big.png"),
         price: 100,
         description: "Un ange gardien venu du ciel."
     },
     "astro": {
-        name: "astro",
+        name: "Astronaute",
         require: require("../assets/Skin/astro-big.png"),
-        price: 120,
-        description: "Un explorateur de galaxies."
+        price: 170,
+        description: "Il a chaud dans sa combi."
     },
     "cat": {
-        name: "cat",
+        name: "Chat",
         require: require("../assets/Skin/cat-big.png"),
-        price: 90,
-        description: "Un chat mignon et agile."
+        price: 10,
+        description: "Miaou"
     },
     "clovis": {
-        name: "clovis",
+        name: "Clovis",
         require: require("../assets/Skin/clovis-big.png"),
-        price: 80,
-        description: "Un guerrier des temps anciens."
+        price: 10,
+        description: "<3<3<3<3<3<3"
     },
     "clown": {
-        name: "clown",
+        name: "Clown",
         require: require("../assets/Skin/clown-big.png"),
-        price: 110,
+        price: 50,
         description: "Un clown drôle... ou terrifiant."
     },
     "demon": {
-        name: "demon",
+        name: "Demon",
         require: require("../assets/Skin/demon-big.png"),
-        price: 130,
+        price: 666,
         description: "Un démon venu des enfers."
     },
     "flower-girl": {
-        name: "flower-girl",
+        name: "Girly",
         require: require("../assets/Skin/flower-girl-big.png"),
-        price: 100,
+        price: 20,
         description: "Une fille pleine de douceur florale."
     },
     "guts": {
-        name: "guts",
+        name: "Guts",
         require: require("../assets/Skin/guts-big.png"),
-        price: 150,
-        description: "Un héros sombre et puissant."
+        price: 1000,
+        description: "GRIFFIIIIIIIIIIIIIITH!!!!!!!!"
     },
     "lunette": {
-        name: "lunette",
+        name: "Mec cool",
         require: require("../assets/Skin/lunette-big.png"),
-        price: 60,
-        description: "Un intello sympa."
+        price: 10,
+        description: "Un mec cool."
     },
     "mafia": {
-        name: "mafia",
+        name: "Tony Montana",
         require: require("../assets/Skin/mafia-big.png"),
-        price: 130,
+        price: 40,
         description: "Le parrain de la pègre."
     },
     "nosferatu": {
-        name: "nosferatu",
+        name: "Nosferatu",
         require: require("../assets/Skin/nosferatu-big.png"),
-        price: 140,
+        price: 80,
         description: "Un vampire de légende."
     },
     "peach": {
-        name: "peach",
+        name: "Peach",
         require: require("../assets/Skin/peach-big.png"),
-        price: 110,
+        price: 150,
         description: "Une princesse très connue."
     },
     "plant": {
-        name: "plant",
+        name: "Plante",
         require: require("../assets/Skin/plant-big.png"),
-        price: 70,
-        description: "Une plante qui mord."
+        price: 20,
+        description: "Go touch grass."
     },
     "pokemon": {
-        name: "pokemon",
+        name: "Pokemon",
         require: require("../assets/Skin/pokemon-big.png"),
-        price: 150,
-        description: "Un monstre de poche prêt à se battre."
+        price: 100,
+        description: "Sacha du Bourg-Palette."
     },
     "robot": {
-        name: "robot",
+        name: "Robot",
         require: require("../assets/Skin/robot-big.png"),
-        price: 100,
-        description: "Un robot du futur."
+        price: 80,
+        description: "WALL E."
     },
     "roi": {
-        name: "roi",
+        name: "Roi",
         require: require("../assets/Skin/roi-big.png"),
-        price: 120,
+        price: 50,
         description: "Le roi de ce royaume."
     },
     "wolf": {
-        name: "wolf",
+        name: "Loup",
         require: require("../assets/Skin/wolf-big.png"),
-        price: 100,
-        description: "Un loup sauvage et rusé."
+        price: 130,
+        description: "Un loup parmi nous. Grr"
     },
     "emo": {
-        name: "emo",
+        name: "Emo",
         require: require("../assets/Skin/emo-big.png"),
         price: 90,
-        description: "Un ado dans sa période dark."
+        description: "Jena Li."
     },
     "kotaro": {
-        name: "kotaro",
+        name: "Kotaro",
         require: require("../assets/Skin/kotaro-big.png"),
         price: 120,
-        description: "Un ninja légendaire."
+        description: "Moi, c'est Kotaro."
     },
     "puck": {
-        name: "puck",
+        name: "Puck",
         require: require("../assets/Skin/puck-big.png"),
-        price: 100,
-        description: "Une créature féérique et malicieuse."
+        price: 500,
+        description: "Calme toi Guts..."
     },
     "requin": {
-        name: "requin",
+        name: "Requin",
         require: require("../assets/Skin/requin-big.png"),
-        price: 110,
-        description: "Un prédateur des mers."
-    },
-    "titan": {
-        name: "titan",
-        require: require("../assets/Skin/titan-colossal-big.png"),
-        price: 200,
-        description: "Un titan destructeur colossal."
+        price: 21,
+        description: "Un requin spécial..."
     },
     "toto-en-fumence": {
-        name: "toto-en-fumence",
+        name: "Toto",
         require: require("../assets/Skin/toto-en-fumence-big.png"),
-        price: 90,
+        price: 100,
         description: "Toto, mais il a fumé un truc."
     },
     "toto-dead": {
-        name: "toto-dead",
+        name: "Toto mort",
         require: require("../assets/Skin/toto-dead-big.png"),
-        price: 70,
+        price: 20,
         description: "Toto... mais mort."
     },
     "stitch": {
         name: "stitch",
         require: require("../assets/Skin/stitch-big.png"),
         price: 130,
-        description: "Une créature extraterrestre adorée."
-    },
-    "tanuki": {
-        name: "tanuki",
-        require: require("../assets/Skin/tanuki-big.png"),
-        price: 90,
-        description: "Un tanuki espiègle."
+        description: "Ohana signifie Famille."
     },
     "garfield": {
-        name: "garfield",
+        name: "Garfield",
         require: require("../assets/Skin/garfield-big.png"),
-        price: 100,
+        price: 150,
         description: "Un chat paresseux amateur de lasagnes."
     },
     "pichu": {
-        name: "pichu",
+        name: "Pichu",
         require: require("../assets/Skin/pichu-big.png"),
-        price: 120,
-        description: "Une version adorable d’un Pokémon électrique."
+        price: 50,
+        description: "Pikachu etait pas dispo."
     },
     "mcdo": {
-        name: "mcdo",
+        name: "Employe fast-food",
         require: require("../assets/Skin/employe-mcdo-big.png"),
-        price: 80,
-        description: "Un employé de fast-food motivé."
+        price: 5,
+        description: "Burger, frite, coca?"
     },
     "steve": {
-        name: "steve",
+        name: "Steve",
         require: require("../assets/Skin/steve-retarded-big.png"),
-        price: 90,
+        price: 250,
         description: "Un Steve un peu... spécial."
     },
     "zombie": {
-        name: "zombie",
+        name: "Zombie",
         require: require("../assets/Skin/zombie-big.png"),
-        price: 100,
-        description: "Un mort-vivant affamé."
-    },
-    "moche": {
-        name: "moche",
-        require: require("../assets/Skin/le-moche-big.png"),
-        price: 50,
-        description: "Pas beau, mais marrant."
+        price: 200,
+        description: "Cerveau..."
     },
     "han": {
-        name: "han",
+        name: "Villageois",
         require: require("../assets/Skin/haaaan-big.png"),
-        price: 60,
-        description: "Haaaaaaaan, quel style."
+        price: 300,
+        description: "Haaaaan..."
     },
     "ghost": {
-        name: "ghost",
+        name: "Fantome",
         require: require("../assets/Skin/ghost-big.png"),
         price: 80,
-        description: "Un fantôme tout blanc."
+        description: "RIP"
     },
     "dealos": {
-        name: "dealos",
+        name: "Dealos",
         require: require("../assets/Skin/dealos-big.png"),
-        price: 110,
-        description: "Un héros sans peur... ou presque."
+        price: 10,
+        description: "Tu veux un seudi mon reuf ?"
     },
     "duck": {
-        name: "duck",
+        name: "Canard",
         require: require("../assets/Skin/duck-big.png"),
-        price: 110,
-        description: "Un canard dans la mare."
+        price: 150,
+        description: "Un canard dans la mare, coin coin."
     }
 };
 
