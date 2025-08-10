@@ -42,13 +42,14 @@ export default function App({ navigation }) {
             key: skinKey,
             name: skins[skinKey].name,
             image: skins[skinKey].require,
+            displayName: skins[skinKey].displayName,
         }));
 
     // Étape 2 : Affichage des skins valides
     const listItems = combinedSkins.map((skin, index) => (
         <View key={skin.key || index}>
             <Image style={styles.skin} source={skin.image} />
-            <Text style={styles.textSkin}>{skin.name}</Text>
+            <Text style={styles.textSkin}>{skin.displayName}</Text>
         </View>
     ));
 
