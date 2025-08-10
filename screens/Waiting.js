@@ -51,7 +51,7 @@ export default function App({ navigation }) {
 
 
         if (token) {
-            navigation.navigate('Parametres')
+            navigation.navigate('Home')
         } else {
             // navigation.navigate('Parametres')
             // navigation.navigate('PageSign')
