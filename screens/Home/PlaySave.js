@@ -6,7 +6,7 @@ import io from "socket.io-client";
 import { useSelector } from 'react-redux';
 import skins from "../../constants/skins";
 
-const socket = io("http://192.168.1.2:3001");
+const socket = io("http://192.168.1.27:3001");
 
 export default function App({ navigation }) {
     const user = useSelector((state) => state.user.value);

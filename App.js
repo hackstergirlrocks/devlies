@@ -12,7 +12,7 @@ import PageSign from './screens/Login/PageSign';
 import SignUp from './screens/Login/SignUp';
 import SignIn from './screens/Login/SignIn';
 import Parametres from './screens/Home/Parametres';
-import Play from './screens/Home/Play';
+// import Play from './screens/Home/Play';
 import Shop from './screens/Home/Shop'
 import Play2 from './screens/Home/Play2';
 import GameOver from './screens/Home/GameOver';
@@ -46,7 +46,7 @@ export default function App() {
             <Stack.Screen name="SignIn" component={SignIn} />
             <Stack.Screen name="Skin" component={Skin} />
             <Stack.Screen name="Parametres" component={Parametres} />
-            <Stack.Screen name="Play" component={Play} />
+            {/* <Stack.Screen name="Play" component={Play} /> */}
             <Stack.Screen name="Play2" component={Play2} />
             <Stack.Screen name="Shop" component={Shop} />
             <Stack.Screen name="GameOver" component={GameOver} />
