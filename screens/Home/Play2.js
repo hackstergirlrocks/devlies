@@ -9,7 +9,7 @@ import io from "socket.io-client";
 import { useSelector } from 'react-redux';
 import skins from "../../constants/skins";
 
-const socket = io("http://192.168.1.27:3001");
+const socket = io("http://192.168.1.2:3001");
 
 export default function Play2({ navigation }) {
     const dispatch = useDispatch();
