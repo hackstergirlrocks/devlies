@@ -4,8 +4,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
-const http = require("http");
-const { Server } = require("socket.io");
+const http = require('http');
+const { Server } = require('socket.io');
 
 require('./models/connection');
 
@@ -25,41 +25,62 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: "*" } });
+const io = new Server(server, { cors: { origin: '*' } });
 
-// --- Paramètres du jeu ---
-const DAY_DURATION = 1;
-const NIGHT_DURATION = 5;
-const VOTE_DURATION = 4;
+// --- Paramètres ---
+const DAY_DURATION = 5;
+const VOTE_DURATION = 15;
 const START_COUNTDOWN = 5;
 
 // --- Données ---
-let users = {
-    0: { id: 0, username: 'Bot_0', skin: 'han', role: 'hacker', isDead: false },
-    1: { id: 1, username: 'Bot_1', skin: 'han', role: 'dev', isDead: false },
-    2: { id: 2, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false },
-    3: { id: 3, username: 'Bot_3', skin: 'han', role: 'dev', isDead: false },
-};
+let users = [
+
+    // { id: 0, username: 'Bot_0', skin: 'han', role: 'hacker', isDead: false },
+    // { id: 1, username: 'Bot_1', skin: 'han', role: 'dev', isDead: false },
+    // { id: 2, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false },
+    // { id: 3, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false },
+
+
+    { id: 0, username: 'Bot_0', skin: 'demon', role: 'hacker', isDead: false },
+    { id: 1, username: 'Bot_1', skin: 'han', role: 'dev', isDead: false },
+    { id: 2, username: 'Bot_2', skin: 'duck', role: 'dev', isDead: false },
+    { id: 3, username: 'Bot_3', skin: 'emo', role: 'dev', isDead: false },
+    { id: 4, username: 'Bot_4', skin: 'garfield', role: 'dev', isDead: false },
+    { id: 5, username: 'Bot_5', skin: 'dealos', role: 'dev', isDead: false },
+    { id: 6, username: 'Bot_6', skin: 'pichu', role: 'dev', isDead: false },
+    { id: 7, username: 'Bot_7', skin: 'nosferatu', role: 'dev', isDead: false },
+    { id: 8, username: 'Bot_8', skin: 'plant', role: 'dev', isDead: false },
+    { id: 9, username: 'Bot_9', skin: 'puck', role: 'dev', isDead: false },
+    { id: 10, username: 'Bot_10', skin: 'steve', role: 'dev', isDead: false },
+    { id: 11, username: 'Bot_11', skin: 'toto-dead', role: 'dev', isDead: false },
+    { id: 12, username: 'Bot_12', skin: 'stitch', role: 'dev', isDead: false },
+
+    { id: 13, username: 'Bot_13', skin: 'wolf', role: 'dev', isDead: false },
+    { id: 14, username: 'Bot_14', skin: 'zombie', role: 'dev', isDead: false },
+
+
+];
 
 let chatHistory = [];
 let chatHistoryDevOps = [];
+let chatHistoryHacker = [];
 
 let gameState = {
     started: false,
     timer: null,
     countdown: START_COUNTDOWN,
-    phase: "day",
+    phase: 'day',
     phaseTime: DAY_DURATION,
     phaseTimer: null,
     voting: false,
-    votes: {},
-    hasVoted: {},
+    votes: {},          // votes jour
+    hasVoted: {},       // sockets qui ont voté (jour)
 };
 
-let nightVotes = {};
-let nightHasVoted = {};
+let nightVotes = {};      // votes nuit
+let nightHasVoted = {};   // sockets qui ont voté (nuit)
 
-// ✅ Reset du jeu
+// --- Reset ---
 function resetGame(io) {
     if (gameState.timer) clearInterval(gameState.timer);
     if (gameState.phaseTimer) clearInterval(gameState.phaseTimer);
@@ -68,7 +89,7 @@ function resetGame(io) {
         started: false,
         timer: null,
         countdown: START_COUNTDOWN,
-        phase: "day",
+        phase: 'day',
         phaseTime: DAY_DURATION,
         phaseTimer: null,
         voting: false,
@@ -76,35 +97,122 @@ function resetGame(io) {
         hasVoted: {},
     };
 
-    users = {
-        0: { id: 0, username: 'Bot_0', skin: 'han', role: 'hacker', isDead: false },
-        1: { id: 1, username: 'Bot_1', skin: 'han', role: 'dev', isDead: false },
-        2: { id: 2, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false },
-        3: { id: 3, username: 'Bot_3', skin: 'han', role: 'dev', isDead: false },
+    users = [
+        // { id: 0, username: 'Bot_0', skin: 'han', role: 'hacker', isDead: false },
+        // { id: 1, username: 'Bot_1', skin: 'han', role: 'dev', isDead: false },
+        // { id: 2, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false },
+        // { id: 3, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false },
 
-    };
+
+        { id: 0, username: 'Bot_0', skin: 'demon', role: 'hacker', isDead: false },
+        { id: 1, username: 'Bot_1', skin: 'han', role: 'dev', isDead: false },
+        { id: 2, username: 'Bot_2', skin: 'duck', role: 'dev', isDead: false },
+        { id: 3, username: 'Bot_3', skin: 'emo', role: 'dev', isDead: false },
+        { id: 4, username: 'Bot_4', skin: 'garfield', role: 'dev', isDead: false },
+        { id: 5, username: 'Bot_5', skin: 'dealos', role: 'dev', isDead: false },
+        { id: 6, username: 'Bot_6', skin: 'pichu', role: 'dev', isDead: false },
+        { id: 7, username: 'Bot_7', skin: 'nosferatu', role: 'dev', isDead: false },
+        { id: 8, username: 'Bot_8', skin: 'plant', role: 'dev', isDead: false },
+        { id: 9, username: 'Bot_9', skin: 'puck', role: 'dev', isDead: false },
+        { id: 10, username: 'Bot_10', skin: 'steve', role: 'dev', isDead: false },
+        { id: 11, username: 'Bot_11', skin: 'toto-dead', role: 'dev', isDead: false },
+        { id: 12, username: 'Bot_12', skin: 'stitch', role: 'dev', isDead: false },
+
+        { id: 13, username: 'Bot_13', skin: 'wolf', role: 'dev', isDead: false },
+        { id: 14, username: 'Bot_14', skin: 'zombie', role: 'dev', isDead: false },
+
+
+    ];
 
     chatHistory = [];
     chatHistoryDevOps = [];
+    chatHistoryHacker = [];
+    nightVotes = {};
+    nightHasVoted = {};
 
-    io.emit("gameReset", { users: Object.values(users) });
-    // console.log("🔄 Partie réinitialisée !");
+    io.emit('gameReset', { users });
 }
 
-// ✅ Phase de nuit avec vote
+// --- Phases ---
+function startPhase(io, phase) {
+    if (gameState.phaseTimer) clearInterval(gameState.phaseTimer);
+
+    if (phase === 'day') {
+        gameState.phase = 'day';
+        gameState.phaseTime = DAY_DURATION;
+        gameState.voting = false;
+        io.emit('receive_message', { username: 'Système', message: 'Le jour commence', color: 'orange' });
+    } else if (phase === 'vote') {
+        gameState.phase = 'vote';
+        gameState.phaseTime = VOTE_DURATION;
+        gameState.voting = true;
+        gameState.votes = {};
+        gameState.hasVoted = {};
+        io.emit('votingStart', { time: VOTE_DURATION });
+        io.emit('receive_message', { username: 'Système', message: 'Le vote commence', color: 'grey' });
+    } else if (phase === 'night') {
+        io.emit('receive_message', { username: 'Système', message: 'La nuit commence', color: 'blue' });
+        startNightVoting(io);
+        return;
+    }
+
+    io.emit('phaseChange', { phase: gameState.phase, timeLeft: gameState.phaseTime });
+
+    gameState.phaseTimer = setInterval(() => {
+        gameState.phaseTime--;
+        io.emit('phaseUpdate', { phase: gameState.phase, timeLeft: gameState.phaseTime });
+
+        if (gameState.phaseTime <= 0) {
+            clearInterval(gameState.phaseTimer);
+            gameState.phaseTimer = null;
+
+            if (gameState.phase === 'day') startPhase(io, 'vote');
+            else if (gameState.phase === 'vote') endVoting(io);
+        }
+    }, 1000);
+}
+
+function endVoting(io) {
+    gameState.voting = false;
+
+    let maxVotes = 0;
+    let eliminated = null;
+
+    for (const name in gameState.votes) {
+        const count = gameState.votes[name];
+        if (count > maxVotes) { maxVotes = count; eliminated = name; }
+        else if (count === maxVotes && eliminated !== null) { eliminated = null; }
+    }
+
+    if (eliminated) {
+        io.emit('playerEliminated', eliminated);
+        const idx = users.findIndex(u => u.username === eliminated);
+        if (idx !== -1) {
+            users[idx].isDead = true;
+            users[idx].skin = 'ghost';
+        }
+        io.emit('updateUsers', users);
+    } else {
+        io.emit('noElimination');
+    }
+
+    startPhase(io, 'night');
+}
+
 function startNightVoting(io) {
-    gameState.phase = "night-vote";
+    gameState.phase = 'night-vote';
     gameState.phaseTime = VOTE_DURATION;
     nightVotes = {};
     nightHasVoted = {};
     gameState.voting = true;
 
-    io.emit("nightVotingStart", { time: VOTE_DURATION });
-    io.emit("phaseChange", { phase: gameState.phase, timeLeft: gameState.phaseTime });
+    io.emit('nightVotingStart', { time: VOTE_DURATION });
+    io.emit('phaseChange', { phase: gameState.phase, timeLeft: gameState.phaseTime });
 
     gameState.phaseTimer = setInterval(() => {
         gameState.phaseTime--;
-        io.emit("phaseUpdate", { phase: gameState.phase, timeLeft: gameState.phaseTime });
+        io.emit('phaseUpdate', { phase: gameState.phase, timeLeft: gameState.phaseTime });
+
         if (gameState.phaseTime <= 0) {
             clearInterval(gameState.phaseTimer);
             gameState.phaseTimer = null;
@@ -113,309 +221,186 @@ function startNightVoting(io) {
     }, 1000);
 }
 
-// ✅ Fin du vote de nuit
 function endNightVoting(io) {
     gameState.voting = false;
 
     let maxVotes = 0;
     let eliminated = null;
 
-    for (let [username, count] of Object.entries(nightVotes)) {
-        if (count > maxVotes) {
-            maxVotes = count;
-            eliminated = username;
-        } else if (count === maxVotes && eliminated !== null) {
-            eliminated = null;
-        }
+    for (const name in nightVotes) {
+        const count = nightVotes[name];
+        if (count > maxVotes) { maxVotes = count; eliminated = name; }
+        else if (count === maxVotes && eliminated !== null) { eliminated = null; }
     }
 
     if (eliminated) {
-        // console.log(`🌒 Nuit : ${eliminated} a été éliminé !`);
-        io.emit("playerEliminatedNight", eliminated);
-
-        const userId = Object.keys(users).find(id => users[id].username === eliminated);
-        if (userId) {
-            users[userId].isDead = true;
-            users[userId].skin = 'ghost';
+        io.emit('playerEliminatedNight', eliminated);
+        const idx = users.findIndex(u => u.username === eliminated);
+        if (idx !== -1) {
+            users[idx].isDead = true;
+            users[idx].skin = 'ghost';
         }
-        io.emit("updateUsers", Object.values(users));
+        io.emit('updateUsers', users);
     } else {
-        io.emit("noEliminationNight");
+        io.emit('noEliminationNight');
     }
 
-    startPhase(io, "day");
+    startPhase(io, 'day');
 }
 
-// ✅ Lancer une phase
-function startPhase(io, phase) {
-    if (gameState.phaseTimer) clearInterval(gameState.phaseTimer);
+// --- Socket.io ---
+io.on('connection', (socket) => {
+    console.log('Connexion:', socket.id);
 
-    if (phase === "day") {
-        gameState.phase = "day";
-        gameState.phaseTime = DAY_DURATION;
-        gameState.voting = false;
-        // console.log("🌞 Début de la journée");
-        io.emit("receive_message", {
-            username: "Système",
-            message: "Le jour commence",
-            color: "orange"
-        });
-    } else if (phase === "vote") {
-        gameState.phase = "vote";
-        gameState.phaseTime = VOTE_DURATION;
-        gameState.voting = true;
-        gameState.votes = {};
-        gameState.hasVoted = {};
-        // console.log("🗳️ Début du vote");
-        io.emit("votingStart", { time: VOTE_DURATION });
-        io.emit("receive_message", {
-            username: "Système",
-            message: "Le vote commence",
-            color: "grey"
-        });
-    } else if (phase === "night") {
-        // console.log("🌙 Début de la nuit avec vote");
-        io.emit("receive_message", {
-            username: "Système",
-            message: "La nuit commence",
-            color: "blue"
-        });
-        startNightVoting(io);
-        return;
-    }
-
-    io.emit("phaseChange", { phase: gameState.phase, timeLeft: gameState.phaseTime });
-
-    gameState.phaseTimer = setInterval(() => {
-        gameState.phaseTime--;
-        io.emit("phaseUpdate", { phase: gameState.phase, timeLeft: gameState.phaseTime });
-
-        if (gameState.phaseTime <= 0) {
-            clearInterval(gameState.phaseTimer);
-            gameState.phaseTimer = null;
-
-            if (gameState.phase === "day") startPhase(io, "vote");
-            else if (gameState.phase === "vote") endVoting(io);
-        }
-    }, 1000);
-}
-
-// ✅ Fin du vote de jour
-function endVoting(io) {
-    gameState.voting = false;
-
-    let maxVotes = 0;
-    let eliminated = null;
-
-    for (let [username, count] of Object.entries(gameState.votes)) {
-        if (count > maxVotes) {
-            maxVotes = count;
-            eliminated = username;
-        } else if (count === maxVotes && eliminated !== null) {
-            eliminated = null;
-        }
-    }
-
-    if (eliminated) {
-        // console.log(`❌ ${eliminated} est éliminé !`);
-        io.emit("playerEliminated", eliminated);
-
-        const userId = Object.keys(users).find(id => users[id].username === eliminated);
-        if (userId) {
-            users[userId].isDead = true;
-            users[userId].skin = 'ghost';
-        }
-        io.emit("updateUsers", Object.values(users));
-    } else {
-        io.emit("noElimination");
-    }
-
-    startPhase(io, "night");
-}
-
-// --- Socket.IO ---
-io.on("connection", (socket) => {
-    console.log(`Nouvelle connexion: ${socket.id}`);
-
-    socket.on("joinLobby", (player) => {
+    socket.on('joinLobby', (player) => {
         if (gameState.started) {
-            socket.emit("gameError", { message: "La partie est déjà en cours !" });
+            socket.emit('gameError', { message: 'La partie est déjà en cours !' });
             return;
         }
 
-        // console.log(Object.keys(users).length)
-        if (Object.keys(users).length === 5) {
-            return;
-        }
+        if (users.length === 5) return; // limite simple
 
-        const alreadyExists = Object.values(users).some(u => u.username === player.username);
-        if (alreadyExists) return;
+        const exists = users.some(u => u.username === player.username);
+        if (exists) return;
 
-        users[socket.id] = {
+        users.push({
             id: socket.id,
             token: player.token,
             username: player.username,
             skin: player.skin,
-            role: player.role,
-            isDead: false
-        };
+            role: player.role, // null au début
+            isDead: false,
+        });
 
-        io.emit("updateUsers", Object.values(users));
+        io.emit('updateUsers', users);
 
-        if (Object.keys(users).length >= 3 && !gameState.timer) {
-            let countdown = gameState.countdown;
-            // console.log("⏳ La partie démarre dans", countdown, "sec");
+        if (users.length >= 3 && !gameState.timer) {
+            let c = gameState.countdown;
 
             gameState.timer = setInterval(() => {
-                countdown--;
-                io.emit("countdown", countdown);
+                c--;
+                io.emit('countdown', c);
 
-                if (countdown <= 0) {
+                if (c <= 0) {
                     clearInterval(gameState.timer);
                     gameState.timer = null;
                     gameState.started = true;
-                    io.emit("gameStarted");
+                    io.emit('gameStarted');
 
-                    Object.values(users).forEach((user, index) => {
-                        if (!user.role) {
-                            user.role = 'hacker';
-                        }
-                        console.log(user.role)
+                    // Attribution simple de rôle si null
+                    users = users.map(u => {
+                        if (!u.role) return { ...u, role: 'hacker' };
+                        return u;
+                        // variante random:
+                        // return !u.role ? { ...u, role: Math.random() < 0.5 ? 'hacker' : 'devops' } : u;
                     });
 
-                    io.emit("updateUsers", Object.values(users));
-
-                    startPhase(io, "day");
+                    io.emit('updateUsers', users);
+                    startPhase(io, 'day');
                 }
             }, 1000);
         }
     });
 
-    socket.on("leaveLobby", () => {
-        // console.log(`👋 ${users[socket.id]?.username || socket.id} a quitté le lobby`);
-        // delete users[socket.id];
-        if (users[socket.id]) {
-
-            users[socket.id].isDead = true;
-            users[socket.id].skin = 'ghost';
+    socket.on('leaveLobby', () => {
+        const idx = users.findIndex(u => String(u.id) === String(socket.id));
+        if (idx !== -1) {
+            users[idx].isDead = true;
+            users[idx].skin = 'ghost';
         }
-
-        io.emit("updateUsers", Object.values(users));
+        io.emit('updateUsers', users);
     });
 
-    // Chat
-    socket.emit("chat_history", chatHistory);
-    socket.emit("chat_history_devops", chatHistoryDevOps);
+    // Historique
+    socket.emit('chat_history', chatHistory);
+    socket.emit('chat_history_devops', chatHistoryDevOps);
+    socket.emit('chat_history_hacker', chatHistoryHacker);
 
-
-    socket.on("send_message", (data) => {
-        if (users[socket.id]?.isDead) return;
+    // Chat global
+    socket.on('send_message', (data) => {
+        const me = users.find(u => String(u.id) === String(socket.id));
+        if (me?.isDead) return;
         chatHistory.push(data);
-        io.emit("receive_message", data);
+        io.emit('receive_message', data);
     });
 
-    socket.on("send_message_devops", (data) => {
-        if (users[socket.id]?.isDead) return;
+    // Chat devops
+    socket.on('send_message_devops', (data) => {
+        const me = users.find(u => String(u.id) === String(socket.id));
+        if (me?.isDead) return;
         chatHistoryDevOps.push(data);
-        io.emit("receive_message_devops", data);
+        io.emit('receive_message_devops', data);
     });
 
-    // Vote de jour
-    socket.on("votePlayer", (targetUsername) => {
-        if (!gameState.voting || gameState.phase !== "vote") return;
+    // Chat hacker
+    socket.on('send_message_hacker', (data) => {
+        const me = users.find(u => String(u.id) === String(socket.id));
+        if (me?.isDead) return;
+        chatHistoryHacker.push(data);
+        io.emit('receive_message_hacker', data);
+    });
+
+    // Votes jour
+    socket.on('votePlayer', (targetUsername) => {
+        if (!gameState.voting || gameState.phase !== 'vote') return;
         if (gameState.hasVoted[socket.id]) return;
-        if (users[socket.id]?.isDead) return;
-        // if (users[socket.id]?.username === targetUsername) return;
+
+        const me = users.find(u => String(u.id) === String(socket.id));
+        if (me?.isDead) return;
 
         gameState.hasVoted[socket.id] = true;
-        if (!gameState.votes[targetUsername]) {
-            gameState.votes[targetUsername] = 0;
-        }
-        gameState.votes[targetUsername]++;
-
-        console.log(`${users[socket.id]?.username} a voté contre ${targetUsername}`);
-        io.emit("voteUpdate", gameState.votes);
+        gameState.votes[targetUsername] = (gameState.votes[targetUsername] || 0) + 1;
+        io.emit('voteUpdate', gameState.votes);
     });
 
-    // Vote de nuit
-    socket.on("votePlayerNight", (targetUsername) => {
-        if (!gameState.voting || gameState.phase !== "night-vote") return;
-        if (nightHasVoted[socket.id]) return;
-        if (users[socket.id]?.isDead) return;
-
-        nightHasVoted[socket.id] = true;
-        if (!nightVotes[targetUsername]) {
-            nightVotes[targetUsername] = 0;
-        }
-        nightVotes[targetUsername]++;
-
-        console.log(`${users[socket.id]?.username} a voté (nuit) contre ${targetUsername}`);
-        io.emit("nightVoteUpdate", nightVotes);
-    });
-
-    socket.on("unvotePlayer", (targetUsername) => {
-        if (!gameState.voting || gameState.phase !== "vote") return;
+    socket.on('unvotePlayer', (targetUsername) => {
+        if (!gameState.voting || gameState.phase !== 'vote') return;
         if (!gameState.hasVoted[socket.id]) return;
-        if (users[socket.id]?.isDead) return;
+
+        const me = users.find(u => String(u.id) === String(socket.id));
+        if (me?.isDead) return;
 
         if (gameState.votes[targetUsername]) {
             gameState.votes[targetUsername]--;
-            if (gameState.votes[targetUsername] <= 0) {
-                delete gameState.votes[targetUsername];
-            }
+            if (gameState.votes[targetUsername] <= 0) delete gameState.votes[targetUsername];
         }
-
         delete gameState.hasVoted[socket.id];
-
-        io.emit("voteUpdate", gameState.votes);
+        io.emit('voteUpdate', gameState.votes);
     });
 
-    socket.on("unvotePlayerNight", (targetUsername) => {
-        if (!gameState.voting || gameState.phase !== "night-vote") return;
-        if (!nightHasVoted[socket.id]) return;
-        if (users[socket.id]?.isDead) return;
+    // Votes nuit (hackers)
+    socket.on('votePlayerNight', (targetUsername) => {
+        if (!gameState.voting || gameState.phase !== 'night-vote') return;
+        if (nightHasVoted[socket.id]) return;
 
+        const me = users.find(u => String(u.id) === String(socket.id));
+        if (me?.isDead) return;
+
+        nightHasVoted[socket.id] = true;
+        nightVotes[targetUsername] = (nightVotes[targetUsername] || 0) + 1;
+        io.emit('nightVoteUpdate', nightVotes);
+    });
+
+    socket.on('unvotePlayerNight', (targetUsername) => {
+        if (!gameState.voting || gameState.phase !== 'night-vote') return;
+        if (!nightHasVoted[socket.id]) return;
+
+        const me = users.find(u => String(u.id) === String(socket.id));
+        if (me?.isDead) return;
 
         if (nightVotes[targetUsername]) {
             nightVotes[targetUsername]--;
-            if (nightVotes[targetUsername] <= 0) {
-                delete nightVotes[targetUsername];
-            }
+            if (nightVotes[targetUsername] <= 0) delete nightVotes[targetUsername];
         }
-        console.log(nightVotes)
         delete nightHasVoted[socket.id];
-
-        io.emit("nightVoteUpdate", nightVotes);
+        io.emit('nightVoteUpdate', nightVotes);
     });
 
-
- 
-
-
-    //   socket.on("unvotePlayerNight", () => {
-    //         if (!gameState.voting || gameState.phase !== "night-vote") return;
-    //         if (!nightHasVoted[socket.id]) return;
-    //         if (users[socket.id]?.isDead) return;
-
-    //         const targetUsername = nightHasVoted[socket.id];
-    //         if (nightVotes[targetUsername]) {
-    //             nightVotes[targetUsername]--;
-    //             if (nightVotes[targetUsername] <= 0) delete nightVotes[targetUsername];
-    //         }
-    //         delete nightHasVoted[socket.id];
-    //         io.emit("nightVoteUpdate", nightVotes);
-    //     });
-
-
-
-
-    socket.on("stopGame", () => {
-        resetGame(io);
-    });
+    socket.on('stopGame', () => resetGame(io));
 });
 
 server.listen(3001, () => {
-    console.log("✅ Serveur lancé sur http://localhost:3001");
+    console.log('✅ Serveur lancé sur http://localhost:3001');
 });
 
 module.exports = app;
