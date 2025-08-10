@@ -394,5 +394,6 @@ const styles = StyleSheet.create({
         width: 75,
         height: 60,
         marginLeft: 20,
+        marginTop: 20,
     }
 });

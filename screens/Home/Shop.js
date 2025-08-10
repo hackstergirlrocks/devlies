@@ -95,9 +95,9 @@ export default function Shop({ navigation }) {
                         onPress={() => navigation.navigate('Home')}
                         activeOpacity={1}
                     >
-                        <Image source={require('../../assets/btn/icone-fleche-retour.png')} style={{ width: 75, height: 60, marginLeft: 20 }} />
+                        <Image source={require('../../assets/btn/icone-fleche-retour.png')} style={{ width: 75, height: 60, marginLeft: 20, marginTop: 30 }} />
                     </TouchableOpacity>
-                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', right: 10 }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', right: 10, marginTop: 35 }}>
                         <Text style={{ fontFamily: 'Minecraft', fontSize: '20' }}>Total coins : {infoCoin}</Text>
                         <Image source={require('../../assets/HomePage/icone-coin.png')} style={styles.coin} />
                     </View>
