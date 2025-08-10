@@ -411,7 +411,7 @@ export default function Play2({ navigation }) {
                                         if (phase === "night-vote") {
                                             if (myRole === "devops" && !hasInspected) {
                                                 socket.emit("send_message_devops", {
-                                                    username: 'Système',
+                                                    username: '🔧 DevOps',
                                                     message: `${item.username} est ${item.role}`,
                                                     role: 'devops',
                                                 });
