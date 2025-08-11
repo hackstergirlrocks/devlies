@@ -368,6 +368,7 @@ export default function Play2({ navigation }) {
 
     let lastClickTime = 0;
 
+    
     const roleImages = {
         hacker: require('../../assets/HomePage/hacker.png'),
         dev: require('../../assets/HomePage/devjunior.png'),
@@ -689,7 +690,7 @@ const styles = StyleSheet.create({
         fontSize: 17,
     },
     carreChat: {
-        backgroundColor: 'rgba(242, 44, 44, 0.56)',
+        // backgroundColor: 'rgba(242, 44, 44, 0.56)',
         width: 350,
         height: 100,
         marginTop: 15,
