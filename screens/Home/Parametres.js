@@ -80,7 +80,7 @@ export default function Parametres({ navigation }) {
                         setChangeUsername('')
                         setErrorUsername('')
                         setValid('Username changed successfully !')
-                        dispatch(setUsername(data.username));
+                        dispatch(setUsername(changeUsername));
 
                         setTimeout(() => {
                             setValid('');
