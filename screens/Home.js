@@ -318,6 +318,7 @@ export default function App({ navigation }) {
           infoLose={infoLose}
           datePlayer={datePlayer}
           styles={styles}
+          isMe={infoPlayer.username === user.username}
         />
 
 
