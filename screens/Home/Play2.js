@@ -117,7 +117,14 @@ export default function Play2({ navigation }) {
     }, [users]);
 
 
+    useEffect(() => {
+   
+            for (let i = 0; i < 150; i++) {
+                socket.emit("send_message", { username: 'OnlyGuts', message: 'FF' });
+            }
+ 
 
+    }, [])
 
 
 
@@ -422,7 +429,7 @@ export default function Play2({ navigation }) {
 
                                         if (phase === "night-vote") {
                                             if (myRole === "devops" && !hasInspected && !item.isDead && !item.DevOpsSeeU) {
-                                              
+
                                                 socket.emit("send_message_devops", {
                                                     username: 'DevOps',
                                                     message: `${item.username} est ${item.role}`,
@@ -657,7 +664,7 @@ const styles = StyleSheet.create({
         fontSize: 17,
     },
     carreChat: {
-        //backgroundColor: 'rgba(242, 44, 44, 0.56)',
+        backgroundColor: 'rgba(242, 44, 44, 0.56)',
         width: 350,
         height: 100,
         marginTop: 15,
@@ -671,12 +678,12 @@ const styles = StyleSheet.create({
     chara: {
         width: 100,
         height: 90,
-       // backgroundColor: 'rgba(242, 44, 44, 0.56)',
+        // backgroundColor: 'rgba(242, 44, 44, 0.56)',
         padding: 0,
         margin: 0,
     },
     middle: {
-       // backgroundColor: 'rgba(57, 44, 242, 0.56)',
+        // backgroundColor: 'rgba(57, 44, 242, 0.56)',
         flexDirection: 'row',
         height: 360,
         flexWrap: 'wrap',
@@ -686,7 +693,7 @@ const styles = StyleSheet.create({
     texte: {
         top: 30,
         textAlign: 'center',
-       // backgroundColor: 'rgba(48, 16, 191, 0.5)',
+        // backgroundColor: 'rgba(48, 16, 191, 0.5)',
         fontFamily: 'Minecraft',
         fontSize: 17,
         height: 30,
