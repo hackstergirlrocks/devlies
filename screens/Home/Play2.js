@@ -475,7 +475,7 @@ export default function Play2({ navigation }) {
                                             {/* Slot fixe pour l’icône de rôle */}
                                             <View style={styles.roleSlot}>
                                                 {myRole !== null && (
-                                                    (item.token === user.token || item.isDead || (myRole === "hacker" && item.role === "hacker")) && (
+                                                    (item.token === user.token || item.isDead || item.DevOpsSeeU || (myRole === "hacker" && item.role === "hacker")) && (
                                                         <Image style={styles.logoRole} source={roleImages[item.role]} />
                                                     )
                                                 )}
