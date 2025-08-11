@@ -391,7 +391,6 @@ router.get('/allfriends/:token', (req, res) => {
     .populate('friends')
     .then(data => {
       if (data) {
-        console.log('data')
         res.json({ result: true, data: data.friends })
       }
     })
@@ -403,7 +402,7 @@ router.post('/addfriend/:token', (req, res) => {
     { $push: { friends: new mongoose.Types.ObjectId(req.body.friends) } })
     .then(data => {
       if (data) {
-        res.json({ result: true, message: 'Ami ajouté!' })
+        res.json({ result: true, message: 'Ami ajoute!' })
       } else {
         res.json({ result: false, message: 'Erreur dans la demande' })
       }
@@ -416,7 +415,7 @@ router.post('/removefriend/:token', (req, res) => {
     { $pull: { friends: new mongoose.Types.ObjectId(req.body.friends) } })
     .then(data => {
       if (data) {
-        res.json({ result: true, message: 'Ami supprimé!' })
+        res.json({ result: true, message: 'Ami supprime!' })
       } else {
         res.json({ result: false, message: 'Erreur dans la demande' })
       }
