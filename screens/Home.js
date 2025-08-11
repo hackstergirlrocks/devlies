@@ -68,17 +68,22 @@ export default function App({ navigation }) {
   const [infoAmi, setInfoAmi] = useState([])
   const [msgBack, setMsgBack] = useState('')
 
+  const [searchUser, setSearchUser] = useState('')
+  const [allUsers, setAllUsers] = useState([])
+
   // useEffect, récupère toutes infos de l'user grâce à son token. Rappelle à chaque ouverture du modal Profile
   useEffect(() => {
-    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/` + user.token)
-      .then((response) => response.json())
-      .then((data) => {
-        setInfoPlayer(data.info)
-        setInfoGame(data.info.stats.game)
-        setInfoWin(data.info.stats.win)
-        setInfoLose(data.info.stats.lose)
-        setDatePlayer(data.info.created)
-      });
+    if (modalVisibleProfile) {
+      fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/` + user.token)
+        .then((response) => response.json())
+        .then((data) => {
+          setInfoPlayer(data.info)
+          setInfoGame(data.info.stats.game)
+          setInfoWin(data.info.stats.win)
+          setInfoLose(data.info.stats.lose)
+          setDatePlayer(data.info.created)
+        });
+    }
   }, [modalVisibleProfile]);
 
   // quand ouvre la modal, reviens sur la page 1 par défaut
@@ -110,24 +115,30 @@ export default function App({ navigation }) {
   //   // }
   // }, [])
 
+  // Appuie sur le bouton skin + navigation vers la page
   const Skin = () => {
     setPressSkin(false)
     navigation.navigate('Skin')
   }
 
+  // Appuie sur le bouton shop + navigation vers la page
   const Shop = () => {
     setPressShop(false)
     navigation.navigate('Shop')
   }
 
+  // useEffect pour récupérer tous ses amis, restart à chaque fois qu'on ferme le modal profil Ami
   useEffect(() => {
-    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allfriends/` + user.token)
-      .then((response) => response.json())
-      .then((data) => {
-        setInfoAmi(data.data)
-      });
+    if (modalVisibleAmi) {
+      fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allfriends/` + user.token)
+        .then(response => response.json())
+        .then(data => {
+          setInfoAmi(data.data)
+        });
+    }
   }, [modalVisibleProfilAmi])
 
+  // fetch pour ajouter un ami
   const addAmi = () => {
     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/addfriend/` + user.token, {
       method: 'POST',
@@ -139,10 +150,11 @@ export default function App({ navigation }) {
 
         setTimeout(() => {
           setMsgBack('');
-      }, 3000);
+        }, 3000);
       })
   }
 
+  // fetch pour remove un ami
   const removeAmi = () => {
     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/removefriend/` + user.token, {
       method: 'POST',
@@ -154,9 +166,18 @@ export default function App({ navigation }) {
 
         setTimeout(() => {
           setMsgBack('');
-      }, 3000);
+        }, 3000);
       })
   }
+
+  // useEffect pour récupèrer tous les membres
+  useEffect(() => {
+    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allusers`)
+      .then(response => response.json())
+      .then(data => {
+        setAllUsers(data.users)
+      })
+  }, [])
 
   return (
     <ImageBackground style={styles.container} source={require('../assets/HomePage/desk-home-page-bigger.png')}>
@@ -172,27 +193,45 @@ export default function App({ navigation }) {
           transparent={true}
           visible={modalVisibleAmi}
           onRequestClose={() => {
-            setModalVisibleAmi(!modalVisibleAmi);
+            setModalVisibleAmi(!modalVisibleAmi)
           }}>
           <View style={{ flexDirection: 'row' }}>
             {/* view créée pour fermer la modal */}
             <TouchableOpacity style={{ width: 150 }} onPress={() => setModalVisibleAmi(!modalVisibleAmi)}>
             </TouchableOpacity>
             <ImageBackground source={require('../assets/HomePage/pop-up-ami.png')} resizeMode='contain' style={styles.imageAmi}>
-              <TextInput style={{ top: 60, fontFamily: 'Minecraft', fontSize: 23, left: 20 }} value='Recherche un joueur'></TextInput>
+              <TextInput style={{ top: 60, fontFamily: 'Minecraft', fontSize: 23, left: 20 }} placeholder='Recherche un joueur' onChangeText={setSearchUser} value={searchUser}></TextInput>
               <View style={{ width: 260, height: 850, alignItems: 'center', justifyContent: 'flex-start', gap: 10 }} >
-                {infoAmi.map((ami) =>
-                  <ImageBackground key={ami.username} source={require('../assets/HomePage/pop-up-ami-input.png')} style={{ top: 70 }}>
-                    <View style={{ backgroundColor: 'rgba(45, 98, 150, 0)', height: 55, width: 240, justifyContent: 'center', left: 10 }}>
-                      <TouchableOpacity onPress={() => {
-                        setSelectedFriend(ami)
-                        setModalVisibleProfilAmi(!modalVisibleProfilAmi)
-                      }}>
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: 20, bottom: 5 }} >{ami.username}</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </ImageBackground>
-                )}
+                {/* si pas de recherche,alors */}
+                {searchUser.length === 0
+                // montre la liste d'ami
+                  ? infoAmi.map((ami =>
+                    <ImageBackground key={ami.username} source={require('../assets/HomePage/pop-up-ami-input.png')} style={{ top: 70 }}>
+                      <View style={{ backgroundColor: 'rgba(45, 98, 150, 0)', height: 55, width: 240, justifyContent: 'center', left: 10 }}>
+                        <TouchableOpacity onPress={() => {
+                          setSelectedFriend(ami)
+                          setModalVisibleProfilAmi(!modalVisibleProfilAmi)
+                        }}>
+                          <Text style={{ fontFamily: 'Minecraft', fontSize: 20, bottom: 5 }} >{ami.username}</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </ImageBackground>
+                  ))
+                  // si recherche, recherche dynamique
+                  : allUsers.filter(user => user.username.toLowerCase().includes(searchUser.toLocaleLowerCase()))
+                    .map(user =>
+                      <ImageBackground key={user.username} source={require('../assets/HomePage/pop-up-ami-input.png')} style={{ top: 70 }}>
+                        <View style={{ backgroundColor: 'rgba(45, 98, 150, 0)', height: 55, width: 240, justifyContent: 'center', left: 10 }}>
+                          <TouchableOpacity onPress={() => {
+                            setSelectedFriend(user)
+                            setModalVisibleProfilAmi(!modalVisibleProfilAmi)
+                          }}>
+                            <Text style={{ fontFamily: 'Minecraft', fontSize: 20, bottom: 5 }} >{user.username}</Text>
+                          </TouchableOpacity>
+                        </View>
+                      </ImageBackground>
+                    )
+                }
 
                 {/* POP UP PROFIL AMI (voir ProfilModal.js) */}
                 {selectedFriend && (
@@ -200,11 +239,13 @@ export default function App({ navigation }) {
                     visible={modalVisibleProfilAmi}
                     onClose={() => setModalVisibleProfilAmi(!modalVisibleProfilAmi)}
 
+                    // infos des joueurs
                     skinUser={skins[selectedFriend.skin_use]?.require}
                     infoPlayer={{
                       username: selectedFriend.username,
                       level: selectedFriend.level,
-                      experience: selectedFriend.experience
+                      experience: selectedFriend.experience,
+                      coins: selectedFriend.coins
                     }}
                     infoGame={selectedFriend.stats.game}
                     infoWin={selectedFriend.stats.win}
@@ -214,7 +255,12 @@ export default function App({ navigation }) {
                     styles={styles}
                     message={msgBack}
 
+                    // si il est dans le tableau ami
                     isFriend={infoAmi.some(ami => ami.username === selectedFriend.username)}
+                    // si c'est moi, pseudo égal à celui du redux
+                    isMe={selectedFriend.username === user.username}
+
+                    // fonction ajouter/delete ami avec id_ du joueur sélectionné
                     onAddAmi={() => addAmi(selectedFriend._id)}
                     onRemoveAmi={() => removeAmi(selectedFriend._id)}
                   />

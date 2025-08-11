@@ -14,7 +14,8 @@ export default function ProfilModal({
     isFriend,
     onAddAmi,
     onRemoveAmi,
-    message
+    message,
+    isMe
 }) {
     return (
         <Modal
@@ -58,26 +59,26 @@ export default function ProfilModal({
 
                     {/* Stats */}
                     <View style={{ width: 330, height: 345, justifyContent: 'center', gap: 10 }}>
-                        {infoPlayer.coins === undefined ? (
-                            isFriend ? (
-                                <TouchableOpacity onPress={onRemoveAmi}>
-                                    <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 15, bottom: 25, color: 'green' }}>{message}</Text>
-                                    <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 20, bottom: 15, color: 'brown' }}>Supprimer de la liste d'ami</Text>
-                                </TouchableOpacity>
-                            ) : (
-                                <TouchableOpacity onPress={onAddAmi}>
-                                    <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 15, bottom: 25, color: 'green' }}>{message}</Text>
-                                    <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 20, bottom: 15, color: 'green' }}>Ajouter en ami</Text>
-                                </TouchableOpacity>
-                            )
+                        {isMe ? (
+                            <StatItem
+                                icon={require('../assets/HomePage/icone-coin.png')}
+                                text={infoPlayer.coins <= 1 ? `${infoPlayer.coins} coin` : `${infoPlayer.coins} coins`}
+                                styles={styles}
+                            />
                         )
                             :
                             (
-                                <StatItem
-                                    icon={require('../assets/HomePage/icone-coin.png')}
-                                    text={infoPlayer.coins <= 1 ? `${infoPlayer.coins} coin` : `${infoPlayer.coins} coins`}
-                                    styles={styles}
-                                />
+                                isFriend ? (
+                                    <TouchableOpacity onPress={onRemoveAmi}>
+                                        <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 15, bottom: 25, color: 'green' }}>{message}</Text>
+                                        <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 20, bottom: 15, color: 'brown' }}>Supprimer de la liste d'ami</Text>
+                                    </TouchableOpacity>
+                                ) : (
+                                    <TouchableOpacity onPress={onAddAmi}>
+                                        <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 15, bottom: 25, color: 'green' }}>{message}</Text>
+                                        <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 20, bottom: 15, color: 'green' }}>Ajouter en ami</Text>
+                                    </TouchableOpacity>
+                                )
                             )}
                         <StatItem
                             icon={require('../assets/HomePage/icone-manette.png')}
