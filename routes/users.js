@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const mongoose = require("mongoose");
 
 /* GET users listing. */
 require('../models/connection');
@@ -8,6 +9,13 @@ const { checkBody } = require('../modules/users')
 
 const uid2 = require('uid2');
 const bcrypt = require('bcrypt');
+
+router.get('/allusers', async (req, res) => {
+  User.find()
+    .then(data => {
+      res.json({ result: true, users: data })
+    })
+});
 
 // ROUTE CONNEXION-INSCRIPTION
 /* Route SignUp/Inscription */
@@ -330,11 +338,12 @@ router.post('/win/:token', (req, res) => {
         User.updateOne(
           { token: req.params.token },
           {
-            $set: { coins: data.coins += Number(req.body.coins),
+            $set: {
+              coins: data.coins += Number(req.body.coins),
               experience: data.experience += Number(req.body.experience),
               'stats.win': data.stats.win += Number(req.body.win),
               'stats.game': data.stats.game += Number(req.body.game)
-             },
+            },
           }
         ).then(result => {
           if (result.modifiedCount > 0) {
@@ -356,11 +365,12 @@ router.post('/lose/:token', (req, res) => {
         User.updateOne(
           { token: req.params.token },
           {
-            $set: { coins: data.coins += Number(req.body.coins),
+            $set: {
+              coins: data.coins += Number(req.body.coins),
               experience: data.experience += Number(req.body.experience),
               'stats.lose': data.stats.lose += Number(req.body.lose),
               'stats.game': data.stats.game += Number(req.body.game)
-             },
+            },
           }
         ).then(result => {
           if (result.modifiedCount > 0) {
@@ -373,5 +383,40 @@ router.post('/lose/:token', (req, res) => {
     })
 })
 
+// ROUTE AMIS
+router.get('/allfriends/:token', (req, res) => {
+  User.findOne({ token: req.params.token })
+    .populate('friends')
+    .then(data => {
+      if (data) {
+        console.log('data')
+        res.json({ result: true, data: data.friends })
+      }
+    })
+})
+
+router.post('/addfriend/:token', (req, res) => {
+  User.updateOne({ token: req.params.token },
+    { $push: { friends: new mongoose.Types.ObjectId(req.body.friends) } })
+    .then(data => {
+      if (data) {
+        res.json({ result: true, message: 'Ami ajouté!' })
+      } else {
+        res.json({ result: false, message: 'Erreur dans la demande' })
+      }
+    })
+})
+
+router.post('/removefriend/:token', (req, res) => {
+  User.updateOne({ token: req.params.token },
+    { $pull: { friends: new mongoose.Types.ObjectId(req.body.friends) } })
+    .then(data => {
+      if (data) {
+        res.json({ result: true, message: 'Ami supprimé!' })
+      } else {
+        res.json({ result: false, message: 'Erreur dans la demande' })
+      }
+    })
+})
 
 module.exports = router;
