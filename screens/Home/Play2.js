@@ -421,7 +421,8 @@ export default function Play2({ navigation }) {
                                         if (isDead) return;
 
                                         if (phase === "night-vote") {
-                                            if (myRole === "devops" && !hasInspected) {
+                                            if (myRole === "devops" && !hasInspected && !item.isDead && !item.DevOpsSeeU) {
+                                              
                                                 socket.emit("send_message_devops", {
                                                     username: 'DevOps',
                                                     message: `${item.username} est ${item.role}`,
