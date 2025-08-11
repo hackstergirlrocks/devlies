@@ -1,4 +1,4 @@
-import { StyleSheet, SafeAreaView, Button, ScrollView, Text, View, Image, TouchableOpacity, ImageBackground, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { StyleSheet, SafeAreaView, Button, ScrollView, FlatList, Text, View, Image, TouchableOpacity, ImageBackground, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import React, { useEffect, useState, useRef } from "react";
 import { useFonts } from 'expo-font'
 import { useDispatch } from 'react-redux';
@@ -421,8 +421,7 @@ export default function Play2({ navigation }) {
                                         if (isDead) return;
 
                                         if (phase === "night-vote") {
-                                            if (myRole === "devops" && !hasInspected && !item.isDead && !item.DevOpsSeeU) {
-                                              
+                                            if (myRole === "devops" && !hasInspected) {
                                                 socket.emit("send_message_devops", {
                                                     username: 'DevOps',
                                                     message: `${item.username} est ${item.role}`,
@@ -475,7 +474,7 @@ export default function Play2({ navigation }) {
                                             {/* Slot fixe pour l’icône de rôle */}
                                             <View style={styles.roleSlot}>
                                                 {myRole !== null && (
-                                                    (item.token === user.token || item.isDead || item.DevOpsSeeU || (myRole === "hacker" && item.role === "hacker")) && (
+                                                    (item.token === user.token || item.isDead || (myRole === "hacker" && item.role === "hacker")) && (
                                                         <Image style={styles.logoRole} source={roleImages[item.role]} />
                                                     )
                                                 )}
