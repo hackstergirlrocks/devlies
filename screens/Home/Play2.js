@@ -9,7 +9,7 @@ import io from "socket.io-client";
 import { useSelector } from 'react-redux';
 import skins from "../../constants/skins";
 
-const socket = io("http://192.168.1.2:3001");
+const socket = io("http://192.168.100.87:3001");
 
 export default function Play2({ navigation }) {
     const dispatch = useDispatch();
@@ -371,9 +371,9 @@ export default function Play2({ navigation }) {
                                 </TouchableOpacity>
                             </View>
                         </View>
-                        <View>
+                        <View style={[styles.topPart]}>
                             {countdown !== null && !gameStarted && (
-                                <Text style={styles.texte}>
+                                <Text style={[styles.texte]}>
                                     La partie commence dans {countdown} secondes ⏳
                                 </Text>
                             )}
@@ -439,19 +439,39 @@ export default function Play2({ navigation }) {
                                     <View style={styles.main}>
                                         <Text style={styles.username}>{index + 1} - {item.username}</Text>
                                         <Image style={styles.skin} source={skins[item.skin].require} />
-                                        <View style={styles.roleetvote}>
+                                        {/* <View style={styles.roleetvote}>
 
                                             {(phase === "vote" && gameStarted || phase === "night-vote" && myRole === 'hacker') && (
-                                                <Text style={styles.vote}>
+                                                <Text style={[styles.vote, { minWidth: 20 }]}>
                                                     {votes[item.username] || 0}
                                                 </Text>
                                             )}
+
                                             {myRole !== null && (
                                                 (item.token === user.token || item.isDead || (myRole === "hacker" && item.role === "hacker")) && (
                                                     <Image style={styles.logoRole} source={roleImages[item.role]} />
                                                 )
                                             )}
 
+
+                                        </View> */}
+
+                                        <View style={styles.roleetvote}>
+                                            {/* Slot fixe pour l’icône de rôle */}
+                                            <View style={styles.roleSlot}>
+                                                {myRole !== null && (
+                                                    (item.token === user.token || item.isDead || (myRole === "hacker" && item.role === "hacker")) && (
+                                                        <Image style={styles.logoRole} source={roleImages[item.role]} />
+                                                    )
+                                                )}
+                                            </View>
+
+                                            {/* Vote toujours à droite */}
+                                            <Text style={[styles.vote, { minWidth: 20, textAlign: 'center' }]}>
+                                                {((phase === "vote" && gameStarted) || (phase === "night-vote" && myRole === 'hacker'))
+                                                    ? (votes[item.username] || 0)
+                                                    : ""}
+                                            </Text>
                                         </View>
 
 
@@ -639,24 +659,25 @@ const styles = StyleSheet.create({
     chara: {
         width: 100,
         height: 90,
-        backgroundColor: 'rgba(242, 44, 44, 0.56)',
+       // backgroundColor: 'rgba(242, 44, 44, 0.56)',
         padding: 0,
         margin: 0,
     },
     middle: {
-        //backgroundColor: 'rgba(57, 44, 242, 0.56)',
+       // backgroundColor: 'rgba(57, 44, 242, 0.56)',
         flexDirection: 'row',
         height: 360,
         flexWrap: 'wrap',
-        top: 45,
+        top: 35,
+        minHeight: 360,
     },
     texte: {
         top: 30,
         textAlign: 'center',
-        // backgroundColor: 'rgba(191, 16, 16, 0.5)',
+       // backgroundColor: 'rgba(48, 16, 191, 0.5)',
         fontFamily: 'Minecraft',
         fontSize: 17,
-        height: 20,
+        height: 30,
         width: 390,
     },
     messagesChat: {
@@ -665,6 +686,7 @@ const styles = StyleSheet.create({
     },
 
     main: {
+
         borderColor: 'black',
         borderWidth: 2,
         width: 97.5,
@@ -685,21 +707,49 @@ const styles = StyleSheet.create({
         height: 17,
         fontFamily: 'Minecraft',
     },
+    // roleetvote: {
+    //     // justifyContent: 'space-between',
+    //     // alignItems: 'flex-end',
+    //     // flexDirection: 'row',
+    //     // top: -90,
+    //     // width: '100%',
+    //     // height: '100%',
+    //     // // backgroundColor: 'rgba(25, 0, 0, 0.5)'
+    //     flexDirection: 'row',
+    //     justifyContent: 'space-between', // Rôle à gauche, vote à droite
+    //     alignItems: 'center',
+    //     top: -60,
+    //     width: '100%',
+    //     height: '100%',
+    // },
     roleetvote: {
-
-        justifyContent: 'space-between',
-        alignItems: 'flex-end',
         flexDirection: 'row',
-        top: -90,
+        justifyContent: 'space-between', // gauche = slot rôle, droite = vote
+        alignItems: 'center',
+        top: -60,
         width: '100%',
         height: '100%',
-        // backgroundColor: 'rgba(25, 0, 0, 0.5)'
+    },
+    roleSlot: {
+        width: 25,   // même largeur que logoRole
+        height: 25,  // idem
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    logoRole: {
+        width: 25,
+        height: 25,
     },
     vote: {
+        fontWeight: 'bold',
         color: "red",
-        fontWeight: "bold",
-
+        fontFamily: 'Minecraft',
     },
+    // vote: {
+    //     color: "red",
+    //     fontWeight: "bold",
+
+    // },
     logoRole: {
         width: 25,
         height: 25,
@@ -707,5 +757,10 @@ const styles = StyleSheet.create({
     },
     inputChatFix: {
         flexDirection: 'row'
-    }
+    },
+    topPart: {
+        height: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });
