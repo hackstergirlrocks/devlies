@@ -29,6 +29,9 @@ export default function Play2({ navigation }) {
     const user = useSelector((state) => state.user.value);
     const scrollViewRef = useRef();
 
+  const [pressPlay, setPressPlay] = useState(false);
+
+
     const [connected, setConnected] = useState(false);
     const [users, setUsers] = useState([]);
 
@@ -127,7 +130,7 @@ export default function Play2({ navigation }) {
     }, [])
 
 
-       useEffect(() => {
+    useEffect(() => {
         console.log(myRole)
 
 
@@ -378,7 +381,19 @@ export default function Play2({ navigation }) {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             {!connected ? (
                 <ImageBackground style={styles.background} source={require('../../assets/HomePage/desk-home-page-bigger.png')}>
-                    <Button style={styles.btnStart} title="Rejoindre le lobby" onPress={joinLobby} />
+                    {/* <Button style={styles.btnStart} title="Rejoindre le lobby" onPress={joinLobby} /> */}
+                    <TouchableOpacity
+                        style={styles.switchPage}
+                        activeOpacity={1}
+                        onPressIn={() => setPressPlay(true)}
+                        onPressOut={() => setPressPlay(false)}
+                        onPress={joinLobby}
+                    >
+                        {pressPlay
+                            ? <Image style={styles.btn} source={require('../../assets/btn/play-btn-down.png')} />
+                            : <Image style={styles.btn} source={require('../../assets/btn/play-btn.png')} />
+                        }
+                    </TouchableOpacity>
                 </ImageBackground>
             ) : (
                 <View style={{ flex: 1 }}>
