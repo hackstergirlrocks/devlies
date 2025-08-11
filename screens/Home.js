@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, Modal } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, Modal, TextInput } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useFonts } from 'expo-font'
+import ProfilModal from './ProfilModal';
 
 import skins from "../constants/skins";;
 
@@ -53,13 +54,19 @@ export default function App({ navigation }) {
 
   // modal (pop-up) visible ou non
   const [modalVisibleAmi, setModalVisibleAmi] = useState(false)
+  const [modalVisibleProfilAmi, setModalVisibleProfilAmi] = useState(false)
   const [modalVisibleInfo, setModalVisibleInfo] = useState(false)
   const [modalVisibleProfile, setModalVisibleProfile] = useState(false)
+
   const [infoPlayer, setInfoPlayer] = useState([])
   const [infoGame, setInfoGame] = useState(0)
   const [infoWin, setInfoWin] = useState(0)
   const [infoLose, setInfoLose] = useState(0)
   const [datePlayer, setDatePlayer] = useState()
+
+  const [selectedFriend, setSelectedFriend] = useState(null)
+  const [infoAmi, setInfoAmi] = useState([])
+  const [msgBack, setMsgBack] = useState('')
 
   // useEffect, récupère toutes infos de l'user grâce à son token. Rappelle à chaque ouverture du modal Profile
   useEffect(() => {
@@ -113,6 +120,44 @@ export default function App({ navigation }) {
     navigation.navigate('Shop')
   }
 
+  useEffect(() => {
+    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allfriends/` + user.token)
+      .then((response) => response.json())
+      .then((data) => {
+        setInfoAmi(data.data)
+      });
+  }, [modalVisibleProfilAmi])
+
+  const addAmi = () => {
+    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/addfriend/` + user.token, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ friends: selectedFriend._id })
+    }).then(response => response.json())
+      .then(data => {
+        setMsgBack(data.message)
+
+        setTimeout(() => {
+          setMsgBack('');
+      }, 3000);
+      })
+  }
+
+  const removeAmi = () => {
+    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/removefriend/` + user.token, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ friends: selectedFriend._id })
+    }).then(response => response.json())
+      .then(data => {
+        setMsgBack(data.message)
+
+        setTimeout(() => {
+          setMsgBack('');
+      }, 3000);
+      })
+  }
+
   return (
     <ImageBackground style={styles.container} source={require('../assets/HomePage/desk-home-page-bigger.png')}>
       {/* Menu en haut a droite */}
@@ -134,22 +179,47 @@ export default function App({ navigation }) {
             <TouchableOpacity style={{ width: 150 }} onPress={() => setModalVisibleAmi(!modalVisibleAmi)}>
             </TouchableOpacity>
             <ImageBackground source={require('../assets/HomePage/pop-up-ami.png')} resizeMode='contain' style={styles.imageAmi}>
+              <TextInput style={{ top: 60, fontFamily: 'Minecraft', fontSize: 23, left: 20 }} value='Recherche un joueur'></TextInput>
               <View style={{ width: 260, height: 850, alignItems: 'center', justifyContent: 'flex-start', gap: 10 }} >
-                <ImageBackground source={require('../assets/HomePage/pop-up-ami-input.png')} style={{ top: 45 }}>
-                  <View style={{ backgroundColor: 'rgba(45, 98, 150, 0)', height: 55, width: 240, justifyContent: 'center', left: 10 }}>
-                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20, bottom: 5 }}>OnlyGuts_</Text>
-                  </View>
-                </ImageBackground>
-                <ImageBackground source={require('../assets/HomePage/pop-up-ami-input.png')} style={{ top: 45 }}>
-                  <View style={{ backgroundColor: 'rgba(45, 98, 150, 0)', height: 55, width: 240, justifyContent: 'center', left: 10 }}>
-                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20, bottom: 5 }}>Etiolate</Text>
-                  </View>
-                </ImageBackground>
-                <ImageBackground source={require('../assets/HomePage/pop-up-ami-input.png')} style={{ top: 45 }}>
-                  <View style={{ backgroundColor: 'rgba(45, 98, 150, 0)', height: 55, width: 240, justifyContent: 'center', left: 10 }}>
-                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20, bottom: 5 }}>Shner, Proust et Wifi</Text>
-                  </View>
-                </ImageBackground>
+                {infoAmi.map((ami) =>
+                  <ImageBackground key={ami.username} source={require('../assets/HomePage/pop-up-ami-input.png')} style={{ top: 70 }}>
+                    <View style={{ backgroundColor: 'rgba(45, 98, 150, 0)', height: 55, width: 240, justifyContent: 'center', left: 10 }}>
+                      <TouchableOpacity onPress={() => {
+                        setSelectedFriend(ami)
+                        setModalVisibleProfilAmi(!modalVisibleProfilAmi)
+                      }}>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: 20, bottom: 5 }} >{ami.username}</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </ImageBackground>
+                )}
+
+                {/* POP UP PROFIL AMI (voir ProfilModal.js) */}
+                {selectedFriend && (
+                  <ProfilModal
+                    visible={modalVisibleProfilAmi}
+                    onClose={() => setModalVisibleProfilAmi(!modalVisibleProfilAmi)}
+
+                    skinUser={skins[selectedFriend.skin_use]?.require}
+                    infoPlayer={{
+                      username: selectedFriend.username,
+                      level: selectedFriend.level,
+                      experience: selectedFriend.experience
+                    }}
+                    infoGame={selectedFriend.stats.game}
+                    infoWin={selectedFriend.stats.win}
+                    infoLose={selectedFriend.stats.lose}
+                    datePlayer={selectedFriend.created}
+
+                    styles={styles}
+                    message={msgBack}
+
+                    isFriend={infoAmi.some(ami => ami.username === selectedFriend.username)}
+                    onAddAmi={() => addAmi(selectedFriend._id)}
+                    onRemoveAmi={() => removeAmi(selectedFriend._id)}
+                  />
+                )}
+
               </View>
             </ImageBackground>
           </View>
@@ -191,63 +261,19 @@ export default function App({ navigation }) {
           }
         </TouchableOpacity>
 
-        {/* POP-UP PROFIL */}
-        <Modal
-          animationType="slide"
-          transparent={true}
+        {/* POP-UP PROFIL (voir ProfilModal.js) */}
+        <ProfilModal
           visible={modalVisibleProfile}
-          onRequestClose={() => {
-            setModalVisibleProfile(!modalVisibleProfile);
-          }}>
-          <ImageBackground source={require('../assets/HomePage/pop-up-windows-final.png')} resizeMode='contain' style={styles.image}>
-            <View>
-              <TouchableOpacity onPress={() => openProfile()} style={{ width: 330, bottom: 12, left: 27 }}>
-                <Image source={require('../assets/HomePage/croix-bleu-pop-up.png')} style={{ left: 10, height: 22, width: 22 }} />
-              </TouchableOpacity>
-            </View>
-            <View style={{ width: 330, height: 515, justifyContent: 'center', left: 30 }}>
-              <View>
-                <View style={[styles.infoUser, { flexDirection: 'row', height: 170 }]}>
-                  <ImageBackground source={require('../assets/HomePage/icone-pop-up-windows-final.png')} style={styles.encardskin}>
-                    <Image style={styles.skinuser} source={skinUser} />
-                  </ImageBackground>
-                  <View style={{ alignItems: 'center', justifyContent: 'center', width: 125, height: 150 }}>
-                    <Text style={{ fontFamily: 'Minecraft', fontSize: '25' }}>{infoPlayer.username}</Text>
-                    <Text style={{ fontFamily: 'Minecraft', fontSize: '20' }}>level {infoPlayer.level}</Text>
-                    <Text style={{ fontFamily: 'Minecraft', fontSize: '20' }}>{infoPlayer.experience} xp</Text>
-                  </View>
-                </View>
-              </View>
-              <View style={{ width: 330, height: 345, justifyContent: 'center', gap: 10 }}>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Image source={require('../assets/HomePage/icone-coin.png')} style={styles.icone} />
-                  <Text style={{ fontFamily: 'Minecraft', fontSize: '20', left: 30 }}>{infoPlayer.coins <= 1 ? `${infoPlayer.coins} coin` : `${infoPlayer.coins} coins`}</Text>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Image source={require('../assets/HomePage/icone-manette.png')} style={styles.icone} />
-                  <Text style={{ fontFamily: 'Minecraft', fontSize: '20', left: 30 }}>{infoGame <= 1 ? `${infoGame} game` : `${infoGame} games`}</Text>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Image source={require('../assets/HomePage/icone-coupe.png')} style={styles.icone} />
-                  <Text style={{ fontFamily: 'Minecraft', fontSize: '20', left: 30 }}>{infoWin <= 1 ? `${infoWin} win` : `${infoWin} wins`}</Text>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Image source={require('../assets/HomePage/icone-crane.png')} style={styles.icone} />
-                  <Text style={{ fontFamily: 'Minecraft', fontSize: '20', left: 30 }}>{infoLose <= 1 ? `${infoLose} lose` : `${infoLose} loses`}</Text>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Image source={require('../assets/HomePage/icone-horloge.png')} style={styles.icone} />
-                  <Text style={{ fontFamily: 'Minecraft', fontSize: '20', left: 30 }}>
-                    {(() => {
-                      const date = new Date(datePlayer);
-                      return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
-                    })()}
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </ImageBackground>
-        </Modal>
+          onClose={() => setModalVisibleProfile(false)}
+          skinUser={skinUser}
+          infoPlayer={infoPlayer}
+          infoGame={infoGame}
+          infoWin={infoWin}
+          infoLose={infoLose}
+          datePlayer={datePlayer}
+          styles={styles}
+        />
+
 
         {/* SKIN BUTTON */}
         <TouchableOpacity
