@@ -6,7 +6,7 @@ import { login, logout, setSkin } from '../../reducers/user';
 import { useAudioPlayer } from 'expo-audio';
 import { playMusic, pauseMusic, toggleMusic } from "../../constants/music";
 import { useSelector } from 'react-redux';
-import { setMusic } from '../../reducers/user';
+import { setMusic, setUsername } from '../../reducers/user';
 
 
 export default function Parametres({ navigation }) {
@@ -80,6 +80,7 @@ export default function Parametres({ navigation }) {
                         setChangeUsername('')
                         setErrorUsername('')
                         setValid('Username changed successfully !')
+                        dispatch(setUsername(data.username));
 
                         setTimeout(() => {
                             setValid('');
