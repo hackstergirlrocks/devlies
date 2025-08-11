@@ -19,39 +19,44 @@ export default function Parametres({ navigation }) {
 
     const dispatch = useDispatch();
 
+    //setteur de confirmation pour les boutons
     const [pressPassword, setPressPassword] = useState('');
     const [pressUsername, setPressUsername] = useState('');
     const [pressEmail, setPressEmail] = useState('');
     const [pressLogout, setPressLogout] = useState(false);
 
+    //setteur de changement de username, password, email
     const [changeUsername, setChangeUsername] = useState('');
     const [changePassword, setChangePassword] = useState('');
     const [changeNewPassword, setChangeNewPassword] = useState('');
     const [changeEmail, setChangeEmail] = useState('');
 
+    //setteur pour messages d'erreurs
     const [errorUsername, setErrorUsername] = useState('');
     const [errorEmail, setErrorEmail] = useState('');
     const [errorPassword, setErrorPassword] = useState('');
 
+    //regex pour bonne forme d'email et pour éviter les charactères spéciaux dans l'username
     const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const PSEUDO_REGEX = /^[A-Za-z0-9]+$/;
 
+    //message de validation
     const [valid, setValid] = useState('');
 
+    //setteur pour la masique
     const [pressSound, setPressSound] = useState(false)
     const [isPressed, setPressed] = useState(true)
 
-
+    // font Minecraft
     const [fontsLoaded] = useFonts({
         'Minecraft': require('../../assets/fonts/Minecraft.ttf'),
     });
-
-
 
     if (!fontsLoaded) {
         return null;
     }
 
+    //function on/off musique
     const ChangeSound = () => {
         setPressSound(!pressSound)
         setPressed(!isPressed)
@@ -68,6 +73,8 @@ export default function Parametres({ navigation }) {
         }
     }
 
+// fonction pour changer le nom d'utilisateur
+
     const functionUsername = () => {
         if (PSEUDO_REGEX.test(changeUsername)) {
             fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/changeusername/${user.token}`, {
@@ -81,7 +88,7 @@ export default function Parametres({ navigation }) {
                         setErrorUsername('')
                         setValid('Username changed successfully !')
                         dispatch(setUsername(changeUsername));
-
+// messages d'erreur et de validité de 3 secondes
                         setTimeout(() => {
                             setValid('');
                             setErrorUsername('');
@@ -95,6 +102,7 @@ export default function Parametres({ navigation }) {
                     }
                 });
         } else {
+//pas de charactère spéciaux autorisés
             setErrorUsername('Username not valid, no special characters')
             setTimeout(() => {
                 setErrorUsername('');
@@ -102,8 +110,9 @@ export default function Parametres({ navigation }) {
         }
     }
 
-
+//fonction pour changer l'email de l'utilisateur
     const functionEmail = () => {
+        //regex pour forme email
         if (EMAIL_REGEX.test(changeEmail)) {
             fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/changeemail/${user.token}`, {
                 method: 'PUT',
@@ -112,6 +121,7 @@ export default function Parametres({ navigation }) {
             }).then(response => response.json())
                 .then(data => {
                     if (data.result) {
+                        //message d'erreur et de validité de 3 secondes
                         setChangeEmail('')
                         setValid('Email changed successfully !')
                         setErrorEmail('')
@@ -135,15 +145,17 @@ export default function Parametres({ navigation }) {
         }
     }
 
-
+//fonction pour changer le mot de passe
     const functionPassword = () => {
         fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/changepassword/${user.token}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
+            //vérification de l'ancien password pour bien validé
             body: JSON.stringify({ password: changePassword, newpassword: changeNewPassword }),
         }).then(response => response.json())
             .then(data => {
                 if (data.result) {
+                    //message d'erreur ou de validité de 3 secondes
                     setChangeNewPassword('')
                     setChangePassword('')
                     setValid('Password changed successfully !')
@@ -162,7 +174,7 @@ export default function Parametres({ navigation }) {
             });
     }
 
-
+//fonction logout
     const Logout = () => {
         dispatch(logout({ token: null }));
         navigation.navigate('Waiting')
