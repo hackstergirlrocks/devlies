@@ -9,7 +9,7 @@ import io from "socket.io-client";
 import { useSelector } from 'react-redux';
 import skins from "../../constants/skins";
 
-const socket = io("http://192.168.100.87:3001");
+const socket = io(`http://${process.env.EXPO_PUBLIC_API_URL2}:3001`);
 
 export default function Play2({ navigation }) {
     const dispatch = useDispatch();
@@ -24,8 +24,6 @@ export default function Play2({ navigation }) {
     if (!fontsLoaded) {
         return null;
     }
-
-
 
 
     const user = useSelector((state) => state.user.value);
@@ -57,6 +55,8 @@ export default function Play2({ navigation }) {
 
     const [myRole, setMyRole] = useState(null);
     const [isDead, setIsDead] = useState(false);
+    const [devOpsSeeU, setDevOpsSeeU] = useState(false);
+
     const [myName, setMyName] = useState(null);
 
     const [hasInspected, setHasInspected] = useState(false);
@@ -93,6 +93,7 @@ export default function Play2({ navigation }) {
                 role: myRole
                 // image: require("../../assets/victory.png")
             });
+            console.log('fin game')
             socket.emit("stopGame");
         } else if (hackers.length >= others.length) {
             // socket.emit("send_message", {
@@ -110,6 +111,8 @@ export default function Play2({ navigation }) {
                 // image: require("../../assets/victory.png")
             });
             socket.emit("stopGame");
+            console.log('fin game')
+
         }
     }, [users]);
 
@@ -182,12 +185,13 @@ export default function Play2({ navigation }) {
 
         socket.on("updateUsers", (usersList) => {
             setUsers(usersList);
-
+            console.log(usersList)
             const me = usersList.find(u => u.username === user.username);
             if (me) {
                 setMyRole(me.role);
                 setIsDead(me.isDead);
                 setMyName(me.username);
+                setDevOpsSeeU(me.devOpsSeeU)
 
             }
         });
@@ -279,8 +283,6 @@ export default function Play2({ navigation }) {
 
 
     const joinLobby = () => {
-        const roles = ['hacker', 'devops'];
-        const randomRole = roles[Math.floor(Math.random() * roles.length)];
 
         socket.emit("joinLobby", {
             token: user.token,
@@ -303,12 +305,19 @@ export default function Play2({ navigation }) {
     };
 
     const voteFor = (targetUsername) => {
-        if (isDead || targetUsername === myName) return;
+        const result = users.filter((u) => u.username === targetUsername);
+        if (isDead || targetUsername === myName, result[0].isDead) return;
+        console.log(targetUsername)
+
+        // console.log('t mort ? ', result[0].isDead);
 
         const isSameTarget = votedTarget === targetUsername;
-        console.log('Phase', phase)
-        console.log('isSameTarget', votedTarget, targetUsername)
+        // console.log('Phase', phase)
+        // console.log('isSameTarget', votedTarget, targetUsername)
         // console.log(votedTarget, targetUsername)
+
+        if (Date.now() - lastClickTime < 200) return;
+        lastClickTime = Date.now();
 
         if (phase === "vote") {
             if (isSameTarget) {
@@ -316,6 +325,7 @@ export default function Play2({ navigation }) {
                 setHasVoted(false);
                 setVotedTarget(null);
             } else {
+                socket.emit("unvotePlayer", votedTarget);
                 socket.emit("votePlayer", targetUsername);
                 setHasVoted(true);
                 setVotedTarget(targetUsername);
@@ -325,9 +335,9 @@ export default function Play2({ navigation }) {
                 socket.emit("unvotePlayerNight", targetUsername);
                 setHasVoted(false);
                 console.log('unVote Player')
-
                 setVotedTarget(null);
             } else {
+                socket.emit("unvotePlayerNight", votedTarget);
                 socket.emit("votePlayerNight", targetUsername);
                 setHasVoted(true);
                 console.log('Vote Player')
@@ -335,6 +345,8 @@ export default function Play2({ navigation }) {
             }
         }
     };
+
+    let lastClickTime = 0;
 
     const roleImages = {
         hacker: require('../../assets/HomePage/hacker.png'),
@@ -411,10 +423,12 @@ export default function Play2({ navigation }) {
                                         if (phase === "night-vote") {
                                             if (myRole === "devops" && !hasInspected) {
                                                 socket.emit("send_message_devops", {
-                                                    username: '🔧 DevOps',
+                                                    username: 'DevOps',
                                                     message: `${item.username} est ${item.role}`,
                                                     role: 'devops',
                                                 });
+                                                socket.emit("devops_see_you", item.id);
+
                                                 setHasInspected(true);
                                             } else if (myRole === "hacker" && (item.role !== 'hacker' || votedTarget === item.username)) {
                                                 voteFor(item.username);
@@ -448,7 +462,7 @@ export default function Play2({ navigation }) {
                                             )}
 
                                             {myRole !== null && (
-                                                (item.token === user.token || item.isDead || (myRole === "hacker" && item.role === "hacker")) && (
+                                                (item.token === user.token || item.isDead || (item.DevOpsSeeU === true && myRole === 'devops') || (myRole === "hacker" && item.role === "hacker")) && (
                                                     <Image style={styles.logoRole} source={roleImages[item.role]} />
                                                 )
                                             )}
@@ -473,10 +487,7 @@ export default function Play2({ navigation }) {
                                                     : ""}
                                             </Text>
                                         </View>
-
-
                                     </View>
-
                                 </TouchableOpacity>
 
                             ))}
