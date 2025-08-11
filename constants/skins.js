@@ -60,7 +60,7 @@ const skins = {
         displayName: 'Toto mort',
         require: require("../assets/Skin/toto-dead-big.png"),
         price: 20,
-        description: "Toto... mais mort."
+        description: "Dead and Cold"
     },
     "requin": {
         name: "requin",
