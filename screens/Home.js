@@ -86,6 +86,26 @@ export default function App({ navigation }) {
     }
   }, [modalVisibleProfile]);
 
+    // useEffect pour récupérer tous ses amis, restart à chaque fois qu'on ferme le modal profil Ami
+    useEffect(() => {
+      if (modalVisibleAmi) {
+        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allfriends/` + user.token)
+          .then(response => response.json())
+          .then(data => {
+            setInfoAmi(data.data)
+          });
+      }
+    }, [modalVisibleProfilAmi])
+
+      // useEffect pour récupèrer tous les membres
+  useEffect(() => {
+    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allusers`)
+      .then(response => response.json())
+      .then(data => {
+        setAllUsers(data.users)
+      })
+  }, [])
+
   // quand ouvre la modal, reviens sur la page 1 par défaut
   const openInfo = () => {
     setPressInfo(false)
@@ -127,17 +147,6 @@ export default function App({ navigation }) {
     navigation.navigate('Shop')
   }
 
-  // useEffect pour récupérer tous ses amis, restart à chaque fois qu'on ferme le modal profil Ami
-  useEffect(() => {
-    if (modalVisibleAmi) {
-      fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allfriends/` + user.token)
-        .then(response => response.json())
-        .then(data => {
-          setInfoAmi(data.data)
-        });
-    }
-  }, [modalVisibleProfilAmi])
-
   // fetch pour ajouter un ami
   const addAmi = () => {
     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/addfriend/` + user.token, {
@@ -154,7 +163,7 @@ export default function App({ navigation }) {
       })
   }
 
-  // fetch pour remove un ami
+  // fetch pour supprimer un ami
   const removeAmi = () => {
     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/removefriend/` + user.token, {
       method: 'POST',
@@ -169,15 +178,6 @@ export default function App({ navigation }) {
         }, 3000);
       })
   }
-
-  // useEffect pour récupèrer tous les membres
-  useEffect(() => {
-    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allusers`)
-      .then(response => response.json())
-      .then(data => {
-        setAllUsers(data.users)
-      })
-  }, [])
 
   return (
     <ImageBackground style={styles.container} source={require('../assets/HomePage/desk-home-page-bigger.png')}>
