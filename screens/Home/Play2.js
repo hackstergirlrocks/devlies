@@ -93,7 +93,7 @@ export default function Play2({ navigation }) {
                 role: myRole
                 // image: require("../../assets/victory.png")
             });
-            console.log('fin game')
+            // console.log('fin game')
             socket.emit("stopGame");
         } else if (hackers.length >= others.length) {
             // socket.emit("send_message", {
@@ -111,20 +111,27 @@ export default function Play2({ navigation }) {
                 // image: require("../../assets/victory.png")
             });
             socket.emit("stopGame");
-            console.log('fin game')
+            // console.log('fin game')
 
         }
     }, [users]);
 
 
     useEffect(() => {
-   
-            for (let i = 0; i < 150; i++) {
-                socket.emit("send_message", { username: 'OnlyGuts', message: 'FF' });
-            }
- 
+
+        for (let i = 0; i < 150; i++) {
+            socket.emit("send_message", { username: 'OnlyGuts', message: 'FF' });
+        }
+
 
     }, [])
+
+
+       useEffect(() => {
+        console.log(myRole)
+
+
+    }, [myRole])
 
 
 
@@ -192,7 +199,7 @@ export default function Play2({ navigation }) {
 
         socket.on("updateUsers", (usersList) => {
             setUsers(usersList);
-            console.log(usersList)
+            // console.log(usersList)
             const me = usersList.find(u => u.username === user.username);
             if (me) {
                 setMyRole(me.role);
@@ -202,6 +209,9 @@ export default function Play2({ navigation }) {
 
             }
         });
+
+
+
 
         socket.on("chat_history", (history) => {
             setMessages(history.map(msg => ({
@@ -314,7 +324,7 @@ export default function Play2({ navigation }) {
     const voteFor = (targetUsername) => {
         const result = users.filter((u) => u.username === targetUsername);
         if (isDead || targetUsername === myName, result[0].isDead) return;
-        console.log(targetUsername)
+        // console.log(targetUsername)
 
         // console.log('t mort ? ', result[0].isDead);
 
@@ -341,13 +351,13 @@ export default function Play2({ navigation }) {
             if (isSameTarget) {
                 socket.emit("unvotePlayerNight", targetUsername);
                 setHasVoted(false);
-                console.log('unVote Player')
+                // console.log('unVote Player')
                 setVotedTarget(null);
             } else {
                 socket.emit("unvotePlayerNight", votedTarget);
                 socket.emit("votePlayerNight", targetUsername);
                 setHasVoted(true);
-                console.log('Vote Player')
+                // console.log('Vote Player')
                 setVotedTarget(targetUsername);
             }
         }
