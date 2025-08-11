@@ -35,9 +35,11 @@ const START_COUNTDOWN = 5;
 // --- Données ---
 let users = [
 
-    { id: 0, username: 'Bot_0', skin: 'han', role: 'hacker', isDead: false, DevOpsSeeU: false },
-    { id: 1, username: 'Bot_1', skin: 'han', role: 'dev', isDead: false, DevOpsSeeU: false},
-    { id: 2, username: 'Bot_2', skin: 'cat', role: 'dev', isDead: false, DevOpsSeeU: false },
+    { id: 0, username: 'Bot_1', skin: 'xxx', role: 'hacker', isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 1, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 2, username: 'Bot_3', skin: 'cat', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 3, username: 'Bot_4', skin: 'cat', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+
     // { id: 3, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false, DevOpsSeeU: false },
 
 
@@ -98,10 +100,11 @@ function resetGame(io) {
     };
 
     users = [
-     { id: 0, username: 'Bot_0', skin: 'han', role: 'hacker', isDead: false, DevOpsSeeU: false },
-    { id: 1, username: 'Bot_1', skin: 'han', role: 'dev', isDead: false, DevOpsSeeU: false},
-    { id: 2, username: 'Bot_2', skin: 'cat', role: 'dev', isDead: false, DevOpsSeeU: false },
-    // { id: 3, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false, DevOpsSeeU: false },
+        { id: 0, username: 'Bot_1', skin: 'xxx', role: 'hacker', isDead: false, DevOpsSeeU: false, protected: false },
+        { id: 1, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+        { id: 2, username: 'Bot_3', skin: 'cat', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+        { id: 3, username: 'Bot_4', skin: 'cat', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+        // { id: 3, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false, DevOpsSeeU: false },
 
 
         // { id: 0, username: 'Bot_0', skin: 'demon', role: 'hacker', isDead: false },
@@ -233,10 +236,19 @@ function endNightVoting(io) {
         else if (count === maxVotes && eliminated !== null) { eliminated = null; }
     }
 
+
+
+
     if (eliminated) {
+
         io.emit('playerEliminatedNight', eliminated);
         const idx = users.findIndex(u => u.username === eliminated);
-        if (idx !== -1) {
+
+        const user = users.find(u => u.id === idx);
+
+
+        console.log(user.protected)
+        if (idx !== -1 && !user.protected) {
             users[idx].isDead = true;
             users[idx].skin = 'ghost';
         }
@@ -245,6 +257,12 @@ function endNightVoting(io) {
         io.emit('noEliminationNight');
     }
 
+    const userPropro = users.find(u => u.protected === true);
+    if (userPropro) {
+   userPropro.protected = false
+    }
+ 
+    console.log(userPropro)
     startPhase(io, 'day');
 }
 
@@ -258,7 +276,7 @@ io.on('connection', (socket) => {
             return;
         }
 
-        if (users.length === 5) return; // limite simple
+        if (users.length === 6) return; // limite simple
 
         const exists = users.some(u => u.username === player.username);
         if (exists) return;
@@ -271,6 +289,7 @@ io.on('connection', (socket) => {
             role: player.role, // null au début
             isDead: false,
             DevOpsSeeU: false,
+            protected: false,
         });
 
         io.emit('updateUsers', users);
@@ -292,9 +311,9 @@ io.on('connection', (socket) => {
                     users = users.map(u => {
                         // if (!u.role) return { ...u, role: 'devops' };
                         // return u;
-                 
-                        return !u.role ? { ...u, role: Math.random() < 0.5 ? 'hacker' : 'devops' } : u;
-                    
+
+                        return !u.role ? { ...u, role: Math.random() < 0.5 ? 'hacker' : 'chatgpt' } : u;
+
                     });
 
                     io.emit('updateUsers', users);
@@ -334,7 +353,7 @@ io.on('connection', (socket) => {
         io.emit('receive_message_devops', data);
     });
 
-    
+
     // Chat hacker
     socket.on('send_message_hacker', (data) => {
         const me = users.find(u => String(u.id) === String(socket.id));
@@ -344,13 +363,23 @@ io.on('connection', (socket) => {
     });
 
 
-    
+
     socket.on('devops_see_you', (data) => {
         const user = users.find(u => String(u.id) === String(data));
         if (user?.isDead) return;
-          user.DevOpsSeeU = true  
+        user.DevOpsSeeU = true
         console.log(users)
         io.emit('updateUsers', users);
+
+    });
+
+    socket.on('chatgpt_protect', (data) => {
+        const user = users.find(u => String(u.id) === String(data));
+        if (user?.isDead) return;
+        user.protected = true
+        // console.log(users)
+        io.emit('updateUsers', users);
+        console.log(data);
 
     });
 

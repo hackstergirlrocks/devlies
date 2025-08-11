@@ -192,7 +192,7 @@ router.post('/addskin', (req, res) => {
 router.post('/buySkin/:token', (req, res) => {
   User.findOne({ token: req.params.token })
     .then(data => {
-      if (data.coins > req.body.coins) {
+      if (data.coins >= req.body.coins) {
         User.updateOne(
           { token: req.params.token },
           {
