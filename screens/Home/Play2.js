@@ -29,7 +29,7 @@ export default function Play2({ navigation }) {
     const user = useSelector((state) => state.user.value);
     const scrollViewRef = useRef();
 
-  const [pressPlay, setPressPlay] = useState(false);
+    const [pressPlay, setPressPlay] = useState(false);
 
 
     const [connected, setConnected] = useState(false);
@@ -40,7 +40,6 @@ export default function Play2({ navigation }) {
 
     const [messagesDevOps, setMessagesDevOps] = useState([]);
     const [messagesHacker, setMessagesHacker] = useState([]);
-
 
     const [message, setMessage] = useState("");
     const [messageHacker, setMessageHacker] = useState("");
@@ -202,7 +201,7 @@ export default function Play2({ navigation }) {
 
         socket.on("updateUsers", (usersList) => {
             setUsers(usersList);
-            // console.log(usersList)
+             console.log(usersList)
             const me = usersList.find(u => u.username === user.username);
             if (me) {
                 setMyRole(me.role);
@@ -326,8 +325,8 @@ export default function Play2({ navigation }) {
 
     const voteFor = (targetUsername) => {
         const result = users.filter((u) => u.username === targetUsername);
-        if (isDead || targetUsername === myName, result[0].isDead) return;
-        // console.log(targetUsername)
+        if (isDead || targetUsername === myName || result[0].isDead) return;
+        console.log(targetUsername, myName)
 
         // console.log('t mort ? ', result[0].isDead);
 
@@ -368,11 +367,12 @@ export default function Play2({ navigation }) {
 
     let lastClickTime = 0;
 
-    
+
     const roleImages = {
         hacker: require('../../assets/HomePage/hacker.png'),
         dev: require('../../assets/HomePage/devjunior.png'),
         devops: require('../../assets/HomePage/devops.png'),
+        chatgpt: require('../../assets/HomePage/chatgpt.png')
     };
 
 
@@ -466,6 +466,9 @@ export default function Play2({ navigation }) {
                                                 setHasInspected(true);
                                             } else if (myRole === "hacker" && (item.role !== 'hacker' || votedTarget === item.username)) {
                                                 voteFor(item.username);
+                                            } else if (myRole === "chatgpt") {
+                                                console.log(item.id)
+                                                socket.emit("chatgpt_protect", item.id);
                                             }
 
                                         } else if (phase === "vote") {
@@ -479,7 +482,8 @@ export default function Play2({ navigation }) {
                                         (
                                             phase === "night-vote" &&
                                             myRole !== "devops" &&
-                                            myRole !== "hacker"
+                                            myRole !== "hacker" &&
+                                            myRole !== "chatgpt"
                                         )
                                     }
 
@@ -516,7 +520,7 @@ export default function Play2({ navigation }) {
 
                                             {/* Vote toujours à droite */}
                                             <Text style={[styles.vote, { minWidth: 20, textAlign: 'center' }]}>
-                                                {((phase === "vote" && gameStarted) || (phase === "night-vote" && myRole === 'hacker'))
+                                                {(((phase === "vote" && gameStarted) || (phase === "night-vote" && myRole === 'hacker')) && !item.isDead)
                                                     ? (votes[item.username] || 0)
                                                     : ""}
                                             </Text>
