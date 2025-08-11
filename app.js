@@ -29,34 +29,34 @@ const io = new Server(server, { cors: { origin: '*' } });
 
 // --- Paramètres ---
 const DAY_DURATION = 5;
-const VOTE_DURATION = 15;
+const VOTE_DURATION = 5;
 const START_COUNTDOWN = 5;
 
 // --- Données ---
 let users = [
 
-    // { id: 0, username: 'Bot_0', skin: 'han', role: 'hacker', isDead: false },
+    { id: 0, username: 'Bot_0', skin: 'han', role: 'hacker', isDead: false, DevOpsSeeU: false },
+    { id: 1, username: 'Bot_1', skin: 'han', role: 'dev', isDead: false, DevOpsSeeU: false},
+    { id: 2, username: 'Bot_2', skin: 'cat', role: 'dev', isDead: false, DevOpsSeeU: false },
+    // { id: 3, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false, DevOpsSeeU: false },
+
+
+    // { id: 0, username: 'Bot_0', skin: 'demon', role: 'hacker', isDead: false },
     // { id: 1, username: 'Bot_1', skin: 'han', role: 'dev', isDead: false },
-    // { id: 2, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false },
-    // { id: 3, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false },
+    // { id: 2, username: 'Bot_2', skin: 'duck', role: 'dev', isDead: false },
+    // { id: 3, username: 'Bot_3', skin: 'emo', role: 'dev', isDead: false },
+    // { id: 4, username: 'Bot_4', skin: 'garfield', role: 'dev', isDead: false },
+    // { id: 5, username: 'Bot_5', skin: 'dealos', role: 'dev', isDead: false },
+    // { id: 6, username: 'Bot_6', skin: 'pichu', role: 'dev', isDead: false },
+    // { id: 7, username: 'Bot_7', skin: 'nosferatu', role: 'dev', isDead: false },
+    // { id: 8, username: 'Bot_8', skin: 'plant', role: 'dev', isDead: false },
+    // { id: 9, username: 'Bot_9', skin: 'puck', role: 'dev', isDead: false },
+    // { id: 10, username: 'Bot_10', skin: 'steve', role: 'dev', isDead: false },
+    // { id: 11, username: 'Bot_11', skin: 'toto-dead', role: 'dev', isDead: false },
+    // { id: 12, username: 'Bot_12', skin: 'stitch', role: 'dev', isDead: false },
 
-
-    { id: 0, username: 'Bot_0', skin: 'demon', role: 'hacker', isDead: false },
-    { id: 1, username: 'Bot_1', skin: 'han', role: 'dev', isDead: false },
-    { id: 2, username: 'Bot_2', skin: 'duck', role: 'dev', isDead: false },
-    { id: 3, username: 'Bot_3', skin: 'emo', role: 'dev', isDead: false },
-    { id: 4, username: 'Bot_4', skin: 'garfield', role: 'dev', isDead: false },
-    { id: 5, username: 'Bot_5', skin: 'dealos', role: 'dev', isDead: false },
-    { id: 6, username: 'Bot_6', skin: 'pichu', role: 'dev', isDead: false },
-    { id: 7, username: 'Bot_7', skin: 'nosferatu', role: 'dev', isDead: false },
-    { id: 8, username: 'Bot_8', skin: 'plant', role: 'dev', isDead: false },
-    { id: 9, username: 'Bot_9', skin: 'puck', role: 'dev', isDead: false },
-    { id: 10, username: 'Bot_10', skin: 'steve', role: 'dev', isDead: false },
-    { id: 11, username: 'Bot_11', skin: 'toto-dead', role: 'dev', isDead: false },
-    { id: 12, username: 'Bot_12', skin: 'stitch', role: 'dev', isDead: false },
-
-    { id: 13, username: 'Bot_13', skin: 'wolf', role: 'dev', isDead: false },
-    { id: 14, username: 'Bot_14', skin: 'zombie', role: 'dev', isDead: false },
+    // { id: 13, username: 'Bot_13', skin: 'wolf', role: 'dev', isDead: false },
+    // { id: 14, username: 'Bot_14', skin: 'zombie', role: 'dev', isDead: false },
 
 
 ];
@@ -98,28 +98,28 @@ function resetGame(io) {
     };
 
     users = [
-        // { id: 0, username: 'Bot_0', skin: 'han', role: 'hacker', isDead: false },
+     { id: 0, username: 'Bot_0', skin: 'han', role: 'hacker', isDead: false, DevOpsSeeU: false },
+    { id: 1, username: 'Bot_1', skin: 'han', role: 'dev', isDead: false, DevOpsSeeU: false},
+    { id: 2, username: 'Bot_2', skin: 'cat', role: 'dev', isDead: false, DevOpsSeeU: false },
+    // { id: 3, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false, DevOpsSeeU: false },
+
+
+        // { id: 0, username: 'Bot_0', skin: 'demon', role: 'hacker', isDead: false },
         // { id: 1, username: 'Bot_1', skin: 'han', role: 'dev', isDead: false },
-        // { id: 2, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false },
-        // { id: 3, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false },
+        // { id: 2, username: 'Bot_2', skin: 'duck', role: 'dev', isDead: false },
+        // { id: 3, username: 'Bot_3', skin: 'emo', role: 'dev', isDead: false },
+        // { id: 4, username: 'Bot_4', skin: 'garfield', role: 'dev', isDead: false },
+        // { id: 5, username: 'Bot_5', skin: 'dealos', role: 'dev', isDead: false },
+        // { id: 6, username: 'Bot_6', skin: 'pichu', role: 'dev', isDead: false },
+        // { id: 7, username: 'Bot_7', skin: 'nosferatu', role: 'dev', isDead: false },
+        // { id: 8, username: 'Bot_8', skin: 'plant', role: 'dev', isDead: false },
+        // { id: 9, username: 'Bot_9', skin: 'puck', role: 'dev', isDead: false },
+        // { id: 10, username: 'Bot_10', skin: 'steve', role: 'dev', isDead: false },
+        // { id: 11, username: 'Bot_11', skin: 'toto-dead', role: 'dev', isDead: false },
+        // { id: 12, username: 'Bot_12', skin: 'stitch', role: 'dev', isDead: false },
 
-
-        { id: 0, username: 'Bot_0', skin: 'demon', role: 'hacker', isDead: false },
-        { id: 1, username: 'Bot_1', skin: 'han', role: 'dev', isDead: false },
-        { id: 2, username: 'Bot_2', skin: 'duck', role: 'dev', isDead: false },
-        { id: 3, username: 'Bot_3', skin: 'emo', role: 'dev', isDead: false },
-        { id: 4, username: 'Bot_4', skin: 'garfield', role: 'dev', isDead: false },
-        { id: 5, username: 'Bot_5', skin: 'dealos', role: 'dev', isDead: false },
-        { id: 6, username: 'Bot_6', skin: 'pichu', role: 'dev', isDead: false },
-        { id: 7, username: 'Bot_7', skin: 'nosferatu', role: 'dev', isDead: false },
-        { id: 8, username: 'Bot_8', skin: 'plant', role: 'dev', isDead: false },
-        { id: 9, username: 'Bot_9', skin: 'puck', role: 'dev', isDead: false },
-        { id: 10, username: 'Bot_10', skin: 'steve', role: 'dev', isDead: false },
-        { id: 11, username: 'Bot_11', skin: 'toto-dead', role: 'dev', isDead: false },
-        { id: 12, username: 'Bot_12', skin: 'stitch', role: 'dev', isDead: false },
-
-        { id: 13, username: 'Bot_13', skin: 'wolf', role: 'dev', isDead: false },
-        { id: 14, username: 'Bot_14', skin: 'zombie', role: 'dev', isDead: false },
+        // { id: 13, username: 'Bot_13', skin: 'wolf', role: 'dev', isDead: false },
+        // { id: 14, username: 'Bot_14', skin: 'zombie', role: 'dev', isDead: false },
 
 
     ];
@@ -270,6 +270,7 @@ io.on('connection', (socket) => {
             skin: player.skin,
             role: player.role, // null au début
             isDead: false,
+            DevOpsSeeU: false,
         });
 
         io.emit('updateUsers', users);
@@ -289,10 +290,11 @@ io.on('connection', (socket) => {
 
                     // Attribution simple de rôle si null
                     users = users.map(u => {
-                        if (!u.role) return { ...u, role: 'hacker' };
-                        return u;
-                        // variante random:
-                        // return !u.role ? { ...u, role: Math.random() < 0.5 ? 'hacker' : 'devops' } : u;
+                        // if (!u.role) return { ...u, role: 'devops' };
+                        // return u;
+                 
+                        return !u.role ? { ...u, role: Math.random() < 0.5 ? 'hacker' : 'devops' } : u;
+                    
                     });
 
                     io.emit('updateUsers', users);
@@ -332,12 +334,24 @@ io.on('connection', (socket) => {
         io.emit('receive_message_devops', data);
     });
 
+    
     // Chat hacker
     socket.on('send_message_hacker', (data) => {
         const me = users.find(u => String(u.id) === String(socket.id));
         if (me?.isDead) return;
         chatHistoryHacker.push(data);
         io.emit('receive_message_hacker', data);
+    });
+
+
+    
+    socket.on('devops_see_you', (data) => {
+        const user = users.find(u => String(u.id) === String(data));
+        if (user?.isDead) return;
+          user.DevOpsSeeU = true  
+        console.log(users)
+        io.emit('updateUsers', users);
+
     });
 
     // Votes jour
