@@ -237,6 +237,20 @@ const skins = {
         price: 1000,
         description: "GRIFFIIIIIIIIIIIIIITH!!!!!!!!"
     },
+    "lilpeep": {
+        name: "lilpeep",
+        displayName: 'Peep',
+        require: require("../assets/Skin/lil-peep-big.png"),
+        price: 1000,
+        description: "Beamer Boy"
+    },
+    "xxx": {
+        name: "xxx",
+        displayName: 'XXX',
+        require: require("../assets/Skin/xxx-big.png"),
+        price: 1000,
+        description: ""
+    },
 };
 
 export default skins;

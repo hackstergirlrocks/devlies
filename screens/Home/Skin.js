@@ -127,10 +127,10 @@ export default function App({ navigation }) {
 
                 >
                     <Image style={styles.flecheHaut} source={require('../../assets/btn/icone-fleche-retour.png')} />
-                    <Button
+                    {/* <Button
                         title={"Ajouter tous les skins"}
                         onPress={addAllSkins}
-                    />
+                    /> */}
                 </TouchableOpacity>
             </View>
 
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     flecheHaut: {
         width: 75,
         height: 60,
-        marginLeft: 20,
+        left: -30
     },
     topPart: {
         //backgroundColor: 'rgba(255, 99, 71, 0.5)',
