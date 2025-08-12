@@ -74,7 +74,7 @@ export default function App({ navigation }) {
   // useEffect, récupère toutes infos de l'user grâce à son token. Rappelle à chaque ouverture du modal Profile
 
   useEffect(() => {setSearchUser('')}, [modalVisibleAmi])
-  
+
   useEffect(() => {
     if (modalVisibleProfile) {
       fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/` + user.token)
@@ -107,6 +107,7 @@ export default function App({ navigation }) {
       .then(data => {
         setAllUsers(data.users)
       })
+      
   }, [])
 
   // quand ouvre la modal, reviens sur la page 1 par défaut
