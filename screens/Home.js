@@ -72,6 +72,9 @@ export default function App({ navigation }) {
   const [allUsers, setAllUsers] = useState([])
 
   // useEffect, récupère toutes infos de l'user grâce à son token. Rappelle à chaque ouverture du modal Profile
+
+  useEffect(() => {setSearchUser('')}, [modalVisibleAmi])
+  
   useEffect(() => {
     if (modalVisibleProfile) {
       fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/` + user.token)

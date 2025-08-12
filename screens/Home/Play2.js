@@ -439,10 +439,10 @@ export default function Play2({ navigation }) {
                             )}
                             {gameStarted && (
                                 <Text style={styles.texte}>
-                                    {phase === "day" && "🌞 Jour"}
-                                    {phase === "night" && "🌙 Nuit"}
-                                    {phase === "vote" && "🗳️ Vote"}
-                                    {phase === "night-vote" && "🌒 Nuit"} ({phaseTime} s)
+                                    {phase === "day" && "Jour"}
+                                    {phase === "night" && "Nuit"}
+                                    {phase === "vote" && "Vote"}
+                                    {phase === "night-vote" && "Nuit"} ({phaseTime} s)
                                 </Text>
                             )}
                             {/* <Text style={styles.texte}>Les votes commencent dans 37 secondes...</Text> */}
@@ -734,7 +734,7 @@ const styles = StyleSheet.create({
         minHeight: 360,
     },
     texte: {
-        top: 30,
+        top: 38,
         textAlign: 'center',
         // backgroundColor: 'rgba(48, 16, 191, 0.5)',
         fontFamily: 'Minecraft',
