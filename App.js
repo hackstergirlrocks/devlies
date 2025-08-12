@@ -16,6 +16,8 @@ import Parametres from './screens/Home/Parametres';
 import Shop from './screens/Home/Shop'
 import Play2 from './screens/Home/Play2';
 import GameOver from './screens/Home/GameOver';
+import Test from './screens/Home/TestIdinarouille';
+
 
 
 import Skin from './screens/Home/Skin';
@@ -50,9 +52,11 @@ export default function App() {
             <Stack.Screen name="Play2" component={Play2} />
             <Stack.Screen name="Shop" component={Shop} />
             <Stack.Screen name="GameOver" component={GameOver} />
+            <Stack.Screen name="Test" component={Test} />
 
 
-            
+
+
             {/*<Stack.Screen name="TabNavigator" component={TabNavigator} />  */}
           </Stack.Navigator>
         </NavigationContainer>

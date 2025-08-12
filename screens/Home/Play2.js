@@ -1,4 +1,4 @@
-import { StyleSheet, SafeAreaView, Button, ScrollView, Text, View, Image, TouchableOpacity, ImageBackground, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { StyleSheet, SafeAreaView, Button, Modal, ScrollView, Text, View, Image, TouchableOpacity, ImageBackground, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import React, { useEffect, useState, useRef } from "react";
 import { useFonts } from 'expo-font'
 import { useDispatch } from 'react-redux';
@@ -65,7 +65,7 @@ export default function Play2({ navigation }) {
 
     const [votedTarget, setVotedTarget] = useState(null);
 
-
+    const [modalVisibleGPT, setModalVisibleGPT] = useState(false);
 
 
     useEffect(() => {
@@ -119,14 +119,14 @@ export default function Play2({ navigation }) {
     }, [users]);
 
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        for (let i = 0; i < 150; i++) {
-            socket.emit("send_message", { username: 'OnlyGuts', message: 'FF' });
-        }
+    //     for (let i = 0; i < 150; i++) {
+    //         socket.emit("send_message", { username: 'OnlyGuts', message: 'FF' });
+    //     }
 
 
-    }, [])
+    // }, [])
 
 
     useEffect(() => {
@@ -201,7 +201,7 @@ export default function Play2({ navigation }) {
 
         socket.on("updateUsers", (usersList) => {
             setUsers(usersList);
-             console.log(usersList)
+            console.log(usersList)
             const me = usersList.find(u => u.username === user.username);
             if (me) {
                 setMyRole(me.role);
@@ -211,8 +211,6 @@ export default function Play2({ navigation }) {
 
             }
         });
-
-
 
 
         socket.on("chat_history", (history) => {
@@ -399,6 +397,23 @@ export default function Play2({ navigation }) {
             ) : (
                 <View style={{ flex: 1 }}>
 
+                    {/* <Modal
+                        style={styles.modalChatGPT}
+                        animationType='fade'
+                        transparent={true}
+                        visible={modalVisibleGPT}
+                        onRequestClose={() => {
+                            setModalVisibleGPT(!modalVisibleGPT);
+                        }}>
+                        <View style={styles.modal}>
+                            <View style={styles.modalSeconde}>
+                                <Image style={styles.btn} source={require('../../assets/btn/play-btn-down.png')} />
+                            </View>
+                        </View>
+
+                    </Modal> */}
+
+
                     <ImageBackground style={styles.container} source={require('../../assets/game/in-game-page-bigger.png')}>
 
                         <View style={styles.nav}>
@@ -512,7 +527,7 @@ export default function Play2({ navigation }) {
                                             {/* Slot fixe pour l’icône de rôle */}
                                             <View style={styles.roleSlot}>
                                                 {myRole !== null && (
-                                                    (item.token === user.token || item.isDead || item.DevOpsSeeU || (myRole === "hacker" && item.role === "hacker")) && (
+                                                    (item.token === user.token || item.isDead || item.DevOpsSeeU && myRole === 'devops' || (myRole === "hacker" && item.role === "hacker")) && (
                                                         <Image style={styles.logoRole} source={roleImages[item.role]} />
                                                     )
                                                 )}
@@ -545,16 +560,14 @@ export default function Play2({ navigation }) {
                                             onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
                                         >
 
-                                            {(phase === "vote" || phase === "day") &&
-
-                                                messages.map((msg, index) => (
+                                            {messages.map((msg, index) => {
+                                                if (myRole === 'hacker' && phase === 'night-vote') return null;
+                                                return (
                                                     <Text key={index} style={[styles.messagesChat, { color: msg.color }]}>
-
                                                         {msg.message}
-
                                                     </Text>
-                                                ))
-                                            }
+                                                );
+                                            })}
                                             {myRole === 'devops' &&
                                                 messagesDevOps.map((msg, index) => (
                                                     <Text key={index} style={[styles.messagesChat, { color: msg.color }]}>
@@ -812,4 +825,21 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    modal: {
+        justifyContent: 'center',
+        alignItems: 'center',
+
+        height: '100%',
+        backgroundColor: 'rgba(190, 47, 47, 0.5)',
+    },
+    modalChatGPT: {
+        flex: 1,
+    },
+    modalSeconde: {
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 25,
+
+    }
 });

@@ -249,7 +249,7 @@ const skins = {
         displayName: 'XXX',
         require: require("../assets/Skin/xxx-big.png"),
         price: 1000,
-        description: ""
+        description: "Jahseh in the moonlight"
     },
 };
 
