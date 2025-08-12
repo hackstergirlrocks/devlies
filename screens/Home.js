@@ -106,6 +106,8 @@ export default function App({ navigation }) {
       })
   }, [])
 
+console.log(allUsers)
+
   // quand ouvre la modal, reviens sur la page 1 par défaut
   const openInfo = () => {
     setPressInfo(false)
