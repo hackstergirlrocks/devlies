@@ -72,14 +72,20 @@ export default function Play2({ navigation }) {
     const [votedTarget, setVotedTarget] = useState(null);
 
     const [modalVisibleGPT, setModalVisibleGPT] = useState(false);
-    const [modalVisibleRole, setModalVisibleRole] = useState(true)
+    const [modalVisibleRole, setModalVisibleRole] = useState(false)
     const [modalVisibleInfo, setModalVisibleInfo] = useState(false)
     const [modalVisibleLeave, setModalVisibleLeave] = useState(false)
 
     // set time out, ferme pop-up au bout de 5 secondes
-    setTimeout(() => {
-        setModalVisibleRole(false);
-    }, 5000);
+    useEffect(() => {
+        if (gameStarted === true) {
+            setModalVisibleRole(true);
+            setTimeout(() => {
+                setModalVisibleRole(false);
+            }, 5000);
+        }
+    }, [gameStarted])
+
 
 
     useEffect(() => {
@@ -385,20 +391,24 @@ export default function Play2({ navigation }) {
 
 
     const Check = () => {
-        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/forfeit/:token`, {
+        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/forfeit/${user.token}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ lose: 1, game: 1 }),
         }).then(response => response.json())
             .then(data => {
                 if (data.result) {
-                    setModalVisibleLeave(false);
-                    navigation.navigate('Home')
-                    setPressCheck(false)
+            
                 }
             });
+
+
+        setPressCheck(false)
         setPressNext(false)
-        console.log('next pressed');
+        socket.emit("leaveLobby");
+        setConnected(false);
+        setModalVisibleLeave(false);
+
     }
 
 
@@ -456,7 +466,7 @@ export default function Play2({ navigation }) {
                                                 onPressOut={() => setPressCheck(false)}
                                                 onPress={() => {
                                                     Check();
-                                                    navigation.navigate('Home');
+
                                                 }}
                                             >
                                                 {pressCheck
@@ -482,7 +492,9 @@ export default function Play2({ navigation }) {
 
                             <View style={styles.iconeDroite}>
                                 <TouchableOpacity onPress={() => setModalVisibleInfo(!modalVisibleInfo)}>
-                                    <Image style={styles.icone} source={require('../../assets/btn/icone-role.png')} />
+                                    {gameStarted &&
+                                        <Image style={styles.icone} source={require('../../assets/btn/icone-role.png')} />
+                                    }
                                 </TouchableOpacity>
 
                                 {/* MODAL INFO DU ROLE */}
@@ -1035,7 +1047,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         margin: 25,
-
     },
     bouclier: {
         bottom: 120,
