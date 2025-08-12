@@ -205,6 +205,21 @@ export default function App({ navigation }) {
       })
   }
 
+  const acceptInvit = () => {
+    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/addfriend/` + user.token, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ friends: selectedFriend._id })
+    }).then(response => response.json())
+      .then(data => {
+        setMsgBack(data.message)
+
+        setTimeout(() => {
+          setMsgBack('');
+        }, 3000);
+      })
+  }
+
   const removeInvit = () => {
     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/deleterequest/` + user.token, {
       method: 'POST',
@@ -349,12 +364,18 @@ export default function App({ navigation }) {
                         // si c'est moi, pseudo égal à celui du redux
                         isMe={selectedFriend._id === user._id}
                         // si j'ai demandé en ami
-                        isRequest={sendRequest.some(user => user._id === selectedFriend._id)}
+                        isSend={sendRequest.some(user => user._id === selectedFriend._id)}
+                        // si il m'a demandé en ami
+                        isRequest={requestFriends.some(user => user._id === selectedFriend._id)}
 
                         // fonction ajouter/delete ami avec id_ du joueur sélectionné
                         onAddAmi={() => addAmi(selectedFriend._id)}
                         onRemoveAmi={() => removeAmi(selectedFriend._id)}
                         onRemoveInvit={() => removeInvit(selectedFriend._id)}
+                        onAcceptInvit={() => {
+                          acceptInvit(selectedFriend._id),
+                          setModalVisibleProfilAmi(!modalVisibleProfilAmi)
+                        }}
                       />
                     )}
 

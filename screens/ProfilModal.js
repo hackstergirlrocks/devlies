@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, Text, Image, TouchableOpacity, ImageBackground } from 'react-native';
+import { Modal, View, Text, Image, TouchableOpacity, ImageBackground, StyleSheet } from 'react-native';
 
 export default function ProfilModal({
     visible,
@@ -17,7 +17,9 @@ export default function ProfilModal({
     message,
     isMe,
     isRequest,
-    onRemoveInvit
+    onRemoveInvit,
+    isSend,
+    onAcceptInvit
 }) {
     return (
         <Modal
@@ -67,28 +69,27 @@ export default function ProfilModal({
                                 text={infoPlayer.coins <= 1 ? `${infoPlayer.coins} coin` : `${infoPlayer.coins} coins`}
                                 styles={styles}
                             />
-                        )
-                            :
-                            (
-                                isFriend ? (
-                                    <TouchableOpacity onPress={onRemoveAmi}>
-                                        <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 15, bottom: 25, color: 'green' }}>{message}</Text>
-                                        <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 20, bottom: 15, color: 'brown' }}>Supprimer de la liste d'ami</Text>
-                                    </TouchableOpacity>
-                                ) : (
-                                    isRequest ? (
-                                        <TouchableOpacity onPress={onRemoveInvit}>
-                                            <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 15, bottom: 25, color: 'green' }}>{message}</Text>
-                                            <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 20, bottom: 15, color: 'brown' }}>Supprimer l'invitation d'ami</Text>
-                                        </TouchableOpacity>
-                                    ) : (
-                                        <TouchableOpacity onPress={onAddAmi}>
-                                            <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 15, bottom: 25, color: 'green' }}>{message}</Text>
-                                            <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 20, bottom: 15, color: 'green' }}>Ajouter en ami</Text>
-                                        </TouchableOpacity>
-                                    )
-                                )
-                            )}
+                        ) : isFriend ? (
+                            <TouchableOpacity onPress={onRemoveAmi}>
+                                <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 15, bottom: 25, color: 'green' }}>{message}</Text>
+                                <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 20, bottom: 15, color: 'brown' }}>Supprimer de la liste d'ami</Text>
+                            </TouchableOpacity>
+                        ) : isSend ? (
+                            <TouchableOpacity onPress={onRemoveInvit}>
+                                <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 15, bottom: 25, color: 'green' }}>{message}</Text>
+                                <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 20, bottom: 15, color: 'brown' }}>Supprimer l'invitation d'ami</Text>
+                            </TouchableOpacity>
+                        ) : isRequest ? (
+                            <TouchableOpacity onPress={onAcceptInvit}>
+                                <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 15, bottom: 25, color: 'green' }}>{message}</Text>
+                                <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 20, bottom: 15, color: 'blue' }}>Accepter l'invitation</Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity onPress={onAddAmi}>
+                                <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 15, bottom: 25, color: 'green' }}>{message}</Text>
+                                <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 20, bottom: 15, color: 'blue' }}>Ajouter en ami</Text>
+                            </TouchableOpacity>
+                        )}
                         <StatItem
                             icon={require('../assets/HomePage/icone-manette.png')}
                             text={infoGame <= 1 ? `${infoGame} game` : `${infoGame} games`}
