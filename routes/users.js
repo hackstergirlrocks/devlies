@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const mongoose = require("mongoose");
 
 /* GET users listing. */
 require('../models/connection');
@@ -8,6 +9,14 @@ const { checkBody } = require('../modules/users')
 
 const uid2 = require('uid2');
 const bcrypt = require('bcrypt');
+
+// Récupère tous les users
+router.get('/allusers', async (req, res) => {
+  User.find()
+    .then(data => {
+      res.json({ result: true, users: data })
+    })
+});
 
 // ROUTE CONNEXION-INSCRIPTION
 /* Route SignUp/Inscription */
@@ -377,5 +386,42 @@ router.post('/lose/:token', (req, res) => {
     })
 })
 
+// ROUTE AMIS
+/* route pour voir ses amis */
+router.get('/allfriends/:token', (req, res) => {
+  User.findOne({ token: req.params.token })
+    .populate('friends')
+    .then(data => {
+      if (data) {
+        res.json({ result: true, data: data.friends })
+      }
+    })
+})
+
+/* route pour ajouter un ami */
+router.post('/addfriend/:token', (req, res) => {
+  User.updateOne({ token: req.params.token },
+    { $push: { friends: new mongoose.Types.ObjectId(req.body.friends) } })
+    .then(data => {
+      if (data) {
+        res.json({ result: true, message: 'Ami ajoute!' })
+      } else {
+        res.json({ result: false, message: 'Erreur dans la demande' })
+      }
+    })
+})
+
+/* route pour supprimer un ami */
+router.post('/removefriend/:token', (req, res) => {
+  User.updateOne({ token: req.params.token },
+    { $pull: { friends: new mongoose.Types.ObjectId(req.body.friends) } })
+    .then(data => {
+      if (data) {
+        res.json({ result: true, message: 'Ami supprime!' })
+      } else {
+        res.json({ result: false, message: 'Erreur dans la demande' })
+      }
+    })
+})
 
 module.exports = router;

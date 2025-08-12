@@ -19,7 +19,7 @@ const userSchema = mongoose.Schema({
     game: Number
   },
   skins: [],
-  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
   settings: {
     sound_music: Number,
     sound_effect: Number
