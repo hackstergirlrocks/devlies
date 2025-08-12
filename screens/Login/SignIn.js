@@ -68,7 +68,7 @@ export default function App({ navigation }) {
                 <View style={styles.inputs}>
                     <Text style={styles.error}>{error}</Text>
                     <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                        <TextInput style={[styles.username, { textAlign: 'center' }]} onChangeText={(value) => setSignInUsername(value)} value={signInUsername} placeholderTextColor="black" placeholder='email/username'></TextInput>
+                        <TextInput  keyboardType="email-address" style={[styles.username, { textAlign: 'center' }]} onChangeText={(value) => setSignInUsername(value)} value={signInUsername} placeholderTextColor="black" placeholder='email/username'></TextInput>
                     </ImageBackground>
 
                     <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
