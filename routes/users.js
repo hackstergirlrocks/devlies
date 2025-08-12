@@ -485,7 +485,7 @@ router.post('/addfriend/:token', (req, res) => {
           return User.updateOne(
             { _id: req.body.friends },
             {
-              $pull: { request_friends: new mongoose.Types.ObjectId(data._id) },
+              $pull: { send_friends: new mongoose.Types.ObjectId(data._id) },
               $push: { friends: new mongoose.Types.ObjectId(data._id) }
             }
           )
