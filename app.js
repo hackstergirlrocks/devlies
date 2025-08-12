@@ -35,10 +35,20 @@ const START_COUNTDOWN = 5;
 // --- Données ---
 let users = [
 
-    { id: 0, username: 'Bot_1', skin: 'xxx', role: 'hacker', isDead: false, DevOpsSeeU: false, protected: false },
-    { id: 1, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 0, username: 'Bot_1', skin: 'xxx', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 1, username: 'Bot_2', skin: 'han', role: 'chatgpt', isDead: false, DevOpsSeeU: false, protected: false },
     { id: 2, username: 'Bot_3', skin: 'cat', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
-    { id: 3, username: 'Bot_4', skin: 'cat', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 3, username: 'Bot_4', skin: 'basic', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 4, username: 'Bot_5', skin: 'plant', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 5, username: 'Bot_6', skin: 'nosferatu', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 6, username: 'Bot_7', skin: 'wolf', role: 'hacker', isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 7, username: 'Bot_8', skin: 'clown', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 8, username: 'Bot_9', skin: 'duck', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 9, username: 'Bot_10', skin: 'steve', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 10, username: 'Bot_11', skin: 'pichu', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 11, username: 'Bot_12', skin: 'emo', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 12, username: 'Bot_13', skin: 'mafia', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 13, username: 'Bot_14', skin: 'requin', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
 
     // { id: 3, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false, DevOpsSeeU: false },
 
@@ -100,10 +110,21 @@ function resetGame(io) {
     };
 
     users = [
-        { id: 0, username: 'Bot_1', skin: 'xxx', role: 'hacker', isDead: false, DevOpsSeeU: false, protected: false },
-        { id: 1, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+        { id: 0, username: 'Bot_1', skin: 'xxx', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+        { id: 1, username: 'Bot_2', skin: 'han', role: 'chatgpt', isDead: false, DevOpsSeeU: false, protected: false },
         { id: 2, username: 'Bot_3', skin: 'cat', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
-        { id: 3, username: 'Bot_4', skin: 'cat', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+        { id: 3, username: 'Bot_4', skin: 'basic', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+        { id: 4, username: 'Bot_5', skin: 'plant', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+        { id: 5, username: 'Bot_6', skin: 'nosferatu', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+        { id: 6, username: 'Bot_7', skin: 'wolf', role: 'hacker', isDead: false, DevOpsSeeU: false, protected: false },
+        { id: 7, username: 'Bot_8', skin: 'clown', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+        { id: 8, username: 'Bot_9', skin: 'duck', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+        { id: 9, username: 'Bot_10', skin: 'steve', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+        { id: 10, username: 'Bot_11', skin: 'pichu', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+        { id: 11, username: 'Bot_12', skin: 'emo', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+        { id: 12, username: 'Bot_13', skin: 'mafia', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+        { id: 13, username: 'Bot_14', skin: 'requin', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+
         // { id: 3, username: 'Bot_2', skin: 'han', role: 'dev', isDead: false, DevOpsSeeU: false },
 
 
@@ -259,9 +280,9 @@ function endNightVoting(io) {
 
     const userPropro = users.find(u => u.protected === true);
     if (userPropro) {
-   userPropro.protected = false
+        userPropro.protected = false
     }
- 
+
     console.log(userPropro)
     startPhase(io, 'day');
 }
@@ -311,8 +332,8 @@ io.on('connection', (socket) => {
                     users = users.map(u => {
                         // if (!u.role) return { ...u, role: 'devops' };
                         // return u;
-
-                        return !u.role ? { ...u, role: Math.random() < 0.5 ? 'hacker' : 'chatgpt' } : u;
+                   
+                        return !u.role ? { ...u, role: Math.random() < 0.5 ? 'hacker' : 'devops' } : u;
 
                     });
 

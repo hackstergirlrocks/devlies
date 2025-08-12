@@ -115,6 +115,8 @@ router.post('/signin', (req, res) => {
     ).then(() => {
       if (data && bcrypt.compareSync(req.body.password, data.password)) {
         res.json({ result: true, token: newToken, skin: data.skin_use, username: data.username });
+      } else {
+        res.json({ result: false, error: 'Password incorrect' });
       }
     });
     if (!data) {
@@ -330,11 +332,12 @@ router.post('/win/:token', (req, res) => {
         User.updateOne(
           { token: req.params.token },
           {
-            $set: { coins: data.coins += Number(req.body.coins),
+            $set: {
+              coins: data.coins += Number(req.body.coins),
               experience: data.experience += Number(req.body.experience),
               'stats.win': data.stats.win += Number(req.body.win),
               'stats.game': data.stats.game += Number(req.body.game)
-             },
+            },
           }
         ).then(result => {
           if (result.modifiedCount > 0) {
@@ -356,11 +359,12 @@ router.post('/lose/:token', (req, res) => {
         User.updateOne(
           { token: req.params.token },
           {
-            $set: { coins: data.coins += Number(req.body.coins),
+            $set: {
+              coins: data.coins += Number(req.body.coins),
               experience: data.experience += Number(req.body.experience),
               'stats.lose': data.stats.lose += Number(req.body.lose),
               'stats.game': data.stats.game += Number(req.body.game)
-             },
+            },
           }
         ).then(result => {
           if (result.modifiedCount > 0) {
