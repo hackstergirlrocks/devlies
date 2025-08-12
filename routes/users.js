@@ -386,6 +386,30 @@ router.post('/lose/:token', (req, res) => {
     })
 })
 
+//Route abandon de game
+router.post('/forfeit/:token', (req, res) => {
+  User.findOne({ token: req.params.token })
+    .then(data => {
+      if (data) {
+        User.updateOne(
+          { token: req.params.token },
+          {
+            $set: {
+              'stats.lose': data.stats.lose += Number(req.body.lose),
+              'stats.game': data.stats.game += Number(req.body.game)
+            },
+          }
+        ).then(result => {
+          if (result.modifiedCount > 0) {
+            res.json({ result: true, message: 'Stats de ff modifiées avec succès !' });
+          } else {
+            res.json({ result: false, message: "Pas de modification de stats de ff..." });
+          }
+        })
+      }
+    })
+})
+
 // ROUTE AMIS
 /* route pour voir ses amis */
 router.get('/allfriends/:token', (req, res) => {
