@@ -63,6 +63,7 @@ export default function Play2({ navigation }) {
 
     const [hasInspected, setHasInspected] = useState(false);
 
+
     const [votedTarget, setVotedTarget] = useState(null);
 
     const [modalVisibleGPT, setModalVisibleGPT] = useState(false);
@@ -129,11 +130,7 @@ export default function Play2({ navigation }) {
     // }, [])
 
 
-    useEffect(() => {
-        console.log(myRole)
 
-
-    }, [myRole])
 
 
 
@@ -201,7 +198,7 @@ export default function Play2({ navigation }) {
 
         socket.on("updateUsers", (usersList) => {
             setUsers(usersList);
-            console.log(usersList)
+            // console.log(usersList)
             const me = usersList.find(u => u.username === user.username);
             if (me) {
                 setMyRole(me.role);
@@ -324,7 +321,7 @@ export default function Play2({ navigation }) {
     const voteFor = (targetUsername) => {
         const result = users.filter((u) => u.username === targetUsername);
         if (isDead || targetUsername === myName || result[0].isDead) return;
-        console.log(targetUsername, myName)
+        // console.log(targetUsername, myName)
 
         // console.log('t mort ? ', result[0].isDead);
 
@@ -482,7 +479,8 @@ export default function Play2({ navigation }) {
                                             } else if (myRole === "hacker" && (item.role !== 'hacker' || votedTarget === item.username)) {
                                                 voteFor(item.username);
                                             } else if (myRole === "chatgpt") {
-                                                console.log(item.id)
+                                                // console.log(item.id)
+                                                console.log('jte propro suka mon reuf')
                                                 socket.emit("chatgpt_protect", item.id);
                                             }
 
@@ -539,6 +537,15 @@ export default function Play2({ navigation }) {
                                                     ? (votes[item.username] || 0)
                                                     : ""}
                                             </Text>
+
+
+                                        </View>
+                                        <View style={styles.bouclier}>
+                                            {myRole !== null && (
+                                                (myRole === 'chatgpt' && phase === "night-vote" && item.protected ) && (
+                                                    <Image style={styles.logoRole} source={require('../../assets/btn/icone-bouclier.png')} />
+                                                )
+                                            )}
                                         </View>
                                     </View>
                                 </TouchableOpacity>
@@ -841,5 +848,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         margin: 25,
 
-    }
+    },
+    bouclier: {
+        bottom: 120,
+    },
 });
