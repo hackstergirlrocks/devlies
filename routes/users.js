@@ -417,18 +417,49 @@ router.get('/allfriends/:token', (req, res) => {
     .populate('friends')
     .then(data => {
       if (data) {
-        res.json({ result: true, data: data.friends })
+        res.json({ result: true, friends: data.friends })
       }
     })
 })
 
-/* route pour ajouter un ami */
-router.post('/addfriend/:token', (req, res) => {
+/* route pour voir toutes ses demandes d'amis */
+router.get('/allrequestfriends/:token', (req, res) => {
+  User.findOne({ token: req.params.token })
+    .populate('request_friends')
+    .then(data => {
+      res.json({ result: true, request: data.request_friends })
+    })
+})
+
+/* route pour voir les demandes d'amis envoyées */
+router.get('/requestsend/:token', (req, res) => {
+  User.findOne({ token: req.params.token })
+    .populate('send_friends')
+    .then(data => {
+      res.json({ result: true, request_send: data.send_friends })
+    })
+})
+
+/* route pour supprimer sa demande d'ami */
+router.post('/deleterequest/:token', (req, res) => {
   User.updateOne({ token: req.params.token },
-    { $push: { friends: new mongoose.Types.ObjectId(req.body.friends) } })
+    { $pull: { send_friends: new mongoose.Types.ObjectId(req.body.friends) } })
     .then(data => {
       if (data) {
-        res.json({ result: true, message: 'Ami ajoute!' })
+        res.json({ result: true, message: 'Invitation annulee!' })
+      } else {
+        res.json({ result: false, message: 'Erreur dans la suppression' })
+      }
+    })
+})
+
+/* route pour demander quelqu'un en ami */
+router.post('/requestfriend/:token', (req, res) => {
+  User.updateOne({ token: req.params.token },
+    { $push: { send_friends: new mongoose.Types.ObjectId(req.body.friends) } })
+    .then(data => {
+      if (data) {
+        res.json({ result: true, message: 'Invitation envoyee' })
       } else {
         res.json({ result: false, message: 'Erreur dans la demande' })
       }
@@ -443,10 +474,10 @@ router.post('/removefriend/:token', (req, res) => {
       if (data) {
         res.json({ result: true, message: 'Ami supprime!' })
       } else {
-        res.json({ result: false, message: 'Erreur dans la demande' })
+        res.json({ result: false, message: 'Erreur dans la suppression' })
       }
     })
-   
+
 })
 
 module.exports = router;
