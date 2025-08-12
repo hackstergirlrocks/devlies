@@ -249,8 +249,9 @@ export default function App({ navigation }) {
                   {displayRequest && (
                     <Text>ici</Text>
                   )}
-                
+                  {displayRequest && (
                 <TextInput style={{ top: 80, fontFamily: 'Minecraft', fontSize: 23, left: 20 }} placeholder='Recherche un joueur' onChangeText={setSearchUser} value={searchUser}></TextInput>
+                  )}
                 <View style={{ width: 260, height: 850, alignItems: 'center', justifyContent: 'flex-start', gap: 10, top: 10 }}>
                   {/* si pas de recherche,alors */}
                   {searchUser.length === 0
