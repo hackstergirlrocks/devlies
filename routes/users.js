@@ -442,42 +442,44 @@ router.get('/requestsend/:token', (req, res) => {
 
 /* route pour supprimer sa demande d'ami */
 router.post('/deleterequest/:token', (req, res) => {
-  User.updateOne({ token: req.params.token },
-    { $pull: { send_friends: new mongoose.Types.ObjectId(req.body.friends) } })
+  User.findOne({ token: req.params.token }, '_id')
     .then(data => {
-      if (data) {
-        res.json({ result: true, message: 'Invitation annulee!' })
-      } else {
-        res.json({ result: false, message: 'Erreur dans la suppression' })
-      }
+      return User.updateOne({ _id: data._id }, { $pull: { send_friends: new mongoose.Types.ObjectId(req.body.friends) } })
+        .then(() => {
+          return User.updateOne({ _id: req.body.friends }, { $pull: { request_friends: new mongoose.Types.ObjectId(data._id) } })
+        })
+        .then(() => {
+          res.json({ result: true, message: 'Invitation annulee!' })
+        })
     })
 })
 
 /* route pour demander quelqu'un en ami */
 router.post('/requestfriend/:token', (req, res) => {
-  User.updateOne({ token: req.params.token },
-    { $push: { send_friends: new mongoose.Types.ObjectId(req.body.friends) } })
+  User.findOne({ token: req.params.token }, '_id')
     .then(data => {
-      if (data) {
-        res.json({ result: true, message: 'Invitation envoyee' })
-      } else {
-        res.json({ result: false, message: 'Erreur dans la demande' })
-      }
+      return User.updateOne({ _id: data._id }, { $push: { send_friends: new mongoose.Types.ObjectId(req.body.friends) } })
+        .then(() => {
+          return User.updateOne({ _id: req.body.friends }, { $push: { request_friends: new mongoose.Types.ObjectId(data._id) } })
+        })
+        .then(() => {
+          res.json({ result: true, message: 'Invitation envoyee' })
+        })
     })
 })
 
 /* route pour supprimer un ami */
 router.post('/removefriend/:token', (req, res) => {
-  User.updateOne({ token: req.params.token },
-    { $pull: { friends: new mongoose.Types.ObjectId(req.body.friends) } })
+  User.findOne({ token: req.params.token }, '_id')
     .then(data => {
-      if (data) {
-        res.json({ result: true, message: 'Ami supprime!' })
-      } else {
-        res.json({ result: false, message: 'Erreur dans la suppression' })
-      }
+      return User.updateOne({ _id: data._id }, { $pull: { friends: new mongoose.Types.ObjectId(req.body.friends) } })
+        .then(() => {
+          return User.updateOne({ _id: req.body.friends }, { $pull: { friends: new mongoose.Types.ObjectId(data._id) } })
+        })
+        .then(() => {
+          res.json({ result: true, message: 'Ami supprime!' })
+        })
     })
-
 })
 
 module.exports = router;
