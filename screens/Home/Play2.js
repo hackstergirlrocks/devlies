@@ -32,6 +32,11 @@ export default function Play2({ navigation }) {
     const [pressPlay, setPressPlay] = useState(false);
 
 
+    const [pressCroix, setPressCroix] = useState(false);
+    const [pressCheck, setPressCheck] = useState(false);
+    const [pressNext, setPressNext] = useState(false);
+
+
     const [connected, setConnected] = useState(false);
     const [users, setUsers] = useState([]);
 
@@ -379,6 +384,23 @@ export default function Play2({ navigation }) {
     };
 
 
+    const Check = () => {
+        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/forfeit/:token`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ lose: 1, game: 1 }),
+        }).then(response => response.json())
+            .then(data => {
+                if (data.result) {
+                    setModalVisibleLeave(false);
+                    navigation.navigate('Home')
+                    setPressCheck(false)
+                }
+            });
+        setPressNext(false)
+        console.log('next pressed');
+    }
+
 
 
     return (
@@ -428,11 +450,30 @@ export default function Play2({ navigation }) {
                                             <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 12, color: 'gray' }}>Cela comptera comme une defaite et vous n'aurez ni coins, ni experience</Text>
                                         </View>
                                         <View style={{ flexDirection: 'row', gap: 20 }}>
-                                            <TouchableOpacity>
-                                                <Image source={require('../../assets/btn/btn-check.png')} style={{ height: 50, width: 50 }} />
+                                            <TouchableOpacity
+                                                activeOpacity={1}
+                                                onPressIn={() => setPressCheck(true)}
+                                                onPressOut={() => setPressCheck(false)}
+                                                onPress={() => {
+                                                    Check();
+                                                    navigation.navigate('Home');
+                                                }}
+                                            >
+                                                {pressCheck
+                                                    ? <Image style={styles.btnC} source={require('../../assets/btn/btn-check-down.png')} />
+                                                    : <Image style={styles.btnC} source={require('../../assets/btn/btn-check.png')} />
+                                                }
                                             </TouchableOpacity>
-                                            <TouchableOpacity>
-                                                <Image source={require('../../assets/btn/btn-croix.png')} style={{ height: 50, width: 50 }} />
+                                            <TouchableOpacity
+                                                activeOpacity={1}
+                                                onPressIn={() => setPressCroix(true)}
+                                                onPressOut={() => setPressCroix(false)}
+                                                onPress={() => setModalVisibleLeave(!modalVisibleLeave)}>
+
+                                                {pressCroix
+                                                    ? <Image style={styles.btnC} source={require('../../assets/btn/btn-croix-down.png')} />
+                                                    : <Image style={styles.btnC} source={require('../../assets/btn/btn-croix.png')} />
+                                                }
                                             </TouchableOpacity>
                                         </View>
                                     </View>
@@ -634,7 +675,7 @@ export default function Play2({ navigation }) {
                                         </View>
                                         <View style={styles.bouclier}>
                                             {myRole !== null && (
-                                                (myRole === 'chatgpt' && phase === "night-vote" && item.protected ) && (
+                                                (myRole === 'chatgpt' && phase === "night-vote" && item.protected) && (
                                                     <Image style={styles.logoRole} source={require('../../assets/btn/icone-bouclier.png')} />
                                                 )
                                             )}
@@ -999,4 +1040,8 @@ const styles = StyleSheet.create({
     bouclier: {
         bottom: 120,
     },
+    btnC: {
+        width: 50,
+        height: 50,
+    }
 });
