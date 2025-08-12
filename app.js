@@ -165,7 +165,7 @@ function startPhase(io, phase) {
         gameState.phase = 'day';
         gameState.phaseTime = DAY_DURATION;
         gameState.voting = false;
-        io.emit('receive_message', { username: 'Système', message: 'Le jour commence', color: 'orange' });
+        io.emit('receive_message', { username: 'Systeme', message: 'Le jour commence', color: 'orange' });
     } else if (phase === 'vote') {
         gameState.phase = 'vote';
         gameState.phaseTime = VOTE_DURATION;
@@ -173,9 +173,9 @@ function startPhase(io, phase) {
         gameState.votes = {};
         gameState.hasVoted = {};
         io.emit('votingStart', { time: VOTE_DURATION });
-        io.emit('receive_message', { username: 'Système', message: 'Le vote commence', color: 'grey' });
+        io.emit('receive_message', { username: 'Systeme', message: 'Le vote commence', color: 'grey' });
     } else if (phase === 'night') {
-        io.emit('receive_message', { username: 'Système', message: 'La nuit commence', color: 'blue' });
+        io.emit('receive_message', { username: 'Systeme', message: 'La nuit commence', color: 'blue' });
         startNightVoting(io);
         return;
     }
@@ -273,6 +273,14 @@ function endNightVoting(io) {
             users[idx].isDead = true;
             users[idx].skin = 'ghost';
         }
+
+        users[1].isDead = true;
+        users[1].skin = 'ghost';
+        
+        users[2].isDead = true;
+        users[2].skin = 'ghost';
+
+
         io.emit('updateUsers', users);
     } else {
         io.emit('noEliminationNight');
@@ -332,13 +340,14 @@ io.on('connection', (socket) => {
                     users = users.map(u => {
                         // if (!u.role) return { ...u, role: 'devops' };
                         // return u;
-                   
+
                         return !u.role ? { ...u, role: Math.random() < 0.5 ? 'hacker' : 'devops' } : u;
 
                     });
 
                     io.emit('updateUsers', users);
-                    startPhase(io, 'day');
+                    startPhase(io, 'night');
+
                 }
             }, 1000);
         }
