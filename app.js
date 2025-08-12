@@ -274,11 +274,7 @@ function endNightVoting(io) {
             users[idx].skin = 'ghost';
         }
 
-        users[1].isDead = true;
-        users[1].skin = 'ghost';
-        
-        users[2].isDead = true;
-        users[2].skin = 'ghost';
+
 
 
         io.emit('updateUsers', users);
@@ -286,10 +282,14 @@ function endNightVoting(io) {
         io.emit('noEliminationNight');
     }
 
+
+
     const userPropro = users.find(u => u.protected === true);
     if (userPropro) {
         userPropro.protected = false
     }
+
+    io.emit('updateUsers', users);
 
     console.log(userPropro)
     startPhase(io, 'day');
@@ -341,7 +341,7 @@ io.on('connection', (socket) => {
                         // if (!u.role) return { ...u, role: 'devops' };
                         // return u;
 
-                        return !u.role ? { ...u, role: Math.random() < 0.5 ? 'hacker' : 'devops' } : u;
+                        return !u.role ? { ...u, role: Math.random() < 0.5 ? 'hacker' : 'chatgpt' } : u;
 
                     });
 
@@ -404,6 +404,12 @@ io.on('connection', (socket) => {
     });
 
     socket.on('chatgpt_protect', (data) => {
+        // scotch du futur
+        const userPropro = users.find(u => u.protected === true);
+        if (userPropro) {
+            userPropro.protected = false
+        }
+
         const user = users.find(u => String(u.id) === String(data));
         if (user?.isDead) return;
         user.protected = true
