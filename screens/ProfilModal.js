@@ -15,7 +15,9 @@ export default function ProfilModal({
     onAddAmi,
     onRemoveAmi,
     message,
-    isMe
+    isMe,
+    isRequest,
+    onRemoveInvit
 }) {
     return (
         <Modal
@@ -74,10 +76,17 @@ export default function ProfilModal({
                                         <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 20, bottom: 15, color: 'brown' }}>Supprimer de la liste d'ami</Text>
                                     </TouchableOpacity>
                                 ) : (
-                                    <TouchableOpacity onPress={onAddAmi}>
-                                        <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 15, bottom: 25, color: 'green' }}>{message}</Text>
-                                        <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 20, bottom: 15, color: 'green' }}>Ajouter en ami</Text>
-                                    </TouchableOpacity>
+                                    isRequest ? (
+                                        <TouchableOpacity onPress={onRemoveInvit}>
+                                            <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 15, bottom: 25, color: 'green' }}>{message}</Text>
+                                            <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 20, bottom: 15, color: 'brown' }}>Supprimer l'invitation d'ami</Text>
+                                        </TouchableOpacity>
+                                    ) : (
+                                        <TouchableOpacity onPress={onAddAmi}>
+                                            <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 15, bottom: 25, color: 'green' }}>{message}</Text>
+                                            <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 20, bottom: 15, color: 'green' }}>Ajouter en ami</Text>
+                                        </TouchableOpacity>
+                                    )
                                 )
                             )}
                         <StatItem
