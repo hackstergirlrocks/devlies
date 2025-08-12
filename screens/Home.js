@@ -121,7 +121,7 @@ export default function App({ navigation }) {
       .then(data => {
         setRequestFriends(data.request)
       })
-  }, [])
+  }, [modalVisibleAmi])
 
   // useEffect pour récupèrer toutes les demandes d'amis envoyées
   useEffect(() => {
@@ -246,17 +246,16 @@ export default function App({ navigation }) {
                   <TouchableOpacity style={{ top: 60 }} onPress={() => setDisplayRequest(!displayRequest)}>
                     <Text style={{ fontFamily: 'Minecraft', fontSize: 23, left: 20 }}>Demande d'ami : {requestFriends.length}</Text>
                   </TouchableOpacity>
-                  {displayRequest && (
-                    <Text>ici</Text>
-                  )}
-                  {displayRequest && (
+
+                  {/* si je n'ai pas appuyé sur la liste d'ami, je peux rechercher */}
+                  {!displayRequest && (
                     <TextInput style={{ top: 80, fontFamily: 'Minecraft', fontSize: 23, left: 20 }} placeholder='Recherche un joueur' onChangeText={setSearchUser} value={searchUser}></TextInput>
                   )}
                   <View style={{ width: 260, height: 850, alignItems: 'center', justifyContent: 'flex-start', gap: 10, top: 10 }}>
-                    {/* si pas de recherche,alors */}
 
-
-                    {displayRequest && (
+                    {/* si je n'ai pas appuyé sur la liste demande d'ami */}
+                    {!displayRequest ? (
+                      // si pas de recherche,alors
                       searchUser.length === 0
                         // montre la liste d'ami
                         ? infoAmi.map(ami =>
@@ -277,7 +276,8 @@ export default function App({ navigation }) {
                             </View>
                           </ImageBackground>
                         )
-               
+
+                        // montre la liste des membres filtrés
                         : allUsers
                           .filter(user => user.username.toLowerCase().includes(searchUser.toLowerCase()))
                           .map(user =>
@@ -298,7 +298,28 @@ export default function App({ navigation }) {
                               </View>
                             </ImageBackground>
                           )
-                    )}
+                    )
+                      :
+                      (
+                        requestFriends.map(user =>
+                          <ImageBackground
+                            key={user.username}
+                            source={require('../assets/HomePage/pop-up-ami-input.png')}
+                            style={{ top: 70 }}
+                          >
+                            <View style={{ height: 55, width: 240, justifyContent: 'center', left: 10 }}>
+                              <TouchableOpacity onPress={() => {
+                                setSelectedFriend(user);
+                                setModalVisibleProfilAmi(!modalVisibleProfilAmi);
+                              }}>
+                                <Text style={{ fontFamily: 'Minecraft', fontSize: 20, bottom: 5 }}>
+                                  {user.username}
+                                </Text>
+                              </TouchableOpacity>
+                            </View>
+                          </ImageBackground>
+                        ))}
+
 
 
                     {/* POP UP PROFIL AMI (voir ProfilModal.js) */}
