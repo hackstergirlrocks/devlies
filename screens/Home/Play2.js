@@ -434,7 +434,7 @@ export default function Play2({ navigation }) {
                         <View style={[styles.topPart]}>
                             {countdown !== null && !gameStarted && (
                                 <Text style={[styles.texte]}>
-                                    La partie commence dans {countdown} secondes ⏳
+                                    La partie commence dans {countdown} secondes
                                 </Text>
                             )}
                             {gameStarted && (

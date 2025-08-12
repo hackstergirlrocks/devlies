@@ -43,7 +43,7 @@ export default function App({ navigation }) {
                     dispatch(login({ token: data.token }));
                     dispatch(setSkin({ skin: data.skin }));
                     dispatch(setUsername(data.username));
-                    
+
                     setError('')
                     console.log(data.token)
                     navigation.navigate('Home')
@@ -88,7 +88,7 @@ export default function App({ navigation }) {
                         </ImageBackground>
 
                         <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
-                            <TextInput style={[styles.email, { textAlign: 'center' }]} onChangeText={(value) => setSignUpEmail(value)} value={signUpEmail} placeholderTextColor="black" placeholder='email'
+                            <TextInput keyboardType="email-address" style={[styles.email, { textAlign: 'center' }]} onChangeText={(value) => setSignUpEmail(value)} value={signUpEmail} placeholderTextColor="black" placeholder='email'
 
                             ></TextInput>
                         </ImageBackground>
