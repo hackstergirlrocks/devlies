@@ -437,7 +437,7 @@ export default function App({ navigation }) {
                       <View>
                         <Image source={require('../assets/HomePage/chatgpt.png')} style={styles.role} />
                         <Text style={{ fontFamily: 'Minecraft', fontSize: '20', textDecorationLine: 'underline' }}>ChatGPT :</Text>
-                        <Text style={{ fontFamily: 'Minecraft', fontSize: '17' }}>ChatGPT a deux actions speciales : il peut sauver un Dev pirate ou eliminer un joueur de son choix. Comme ses pouvoirs sont limites, il doit les utiliser au bon moment.</Text>
+                        <Text style={{ fontFamily: 'Minecraft', fontSize: '17' }}>Chaque nuit, il choisit un joueur a proteger. Si les Hackers ciblent ce joueur, leur attaque échoue. Son but est de garder les Devs le plus longtemps possible.</Text>
                       </View>
                     </View>
                   </View>

@@ -66,6 +66,14 @@ export default function Play2({ navigation }) {
     const [votedTarget, setVotedTarget] = useState(null);
 
     const [modalVisibleGPT, setModalVisibleGPT] = useState(false);
+    const [modalVisibleRole, setModalVisibleRole] = useState(true)
+    const [modalVisibleInfo, setModalVisibleInfo] = useState(false)
+    const [modalVisibleLeave, setModalVisibleLeave] = useState(false)
+
+    // set time out, ferme pop-up au bout de 5 secondes
+    setTimeout(() => {
+        setModalVisibleRole(false);
+    }, 5000);
 
 
     useEffect(() => {
@@ -397,35 +405,119 @@ export default function Play2({ navigation }) {
             ) : (
                 <View style={{ flex: 1 }}>
 
-                    {/* <Modal
-                        style={styles.modalChatGPT}
-                        animationType='fade'
-                        transparent={true}
-                        visible={modalVisibleGPT}
-                        onRequestClose={() => {
-                            setModalVisibleGPT(!modalVisibleGPT);
-                        }}>
-                        <View style={styles.modal}>
-                            <View style={styles.modalSeconde}>
-                                <Image style={styles.btn} source={require('../../assets/btn/play-btn-down.png')} />
-                            </View>
-                        </View>
-
-                    </Modal> */}
-
-
                     <ImageBackground style={styles.container} source={require('../../assets/game/in-game-page-bigger.png')}>
 
                         <View style={styles.nav}>
                             <TouchableOpacity
-                                onPress={() => leaveLobby}
+                                onPress={() => setModalVisibleLeave(!modalVisibleLeave)}
                                 activeOpacity={1}>
                                 <Image style={styles.fleche} source={require('../../assets/btn/icone-fleche-retour.png')} />
                             </TouchableOpacity>
+
+                            <Modal
+                                animationType="slide"
+                                transparent={true}
+                                visible={modalVisibleLeave}
+                                onRequestClose={() => {
+                                    setModalVisibleLeave(!modalVisibleLeave);
+                                }}>
+                                <ImageBackground source={require('../../assets/game/pop-up-leave.png')} resizeMode='contain' style={{ flex: 1, justifyContent: 'center' }}>
+                                    <TouchableOpacity onPress={() => setModalVisibleLeave(!modalVisibleLeave)} style={{ width: 322, height: 23, left: 32, bottom: 11 }}>
+                                        <Image source={require('../../assets/HomePage/croix-bleu-pop-up.png')} style={{ bottom: 39, height: 22, width: 22, right: 123 }} />
+                                    </TouchableOpacity>
+                                    <View style={{ alignItems: 'center', justifyContent: 'center', width: 290, height: 275, left: 53 }}>
+                                        <View style={{ height: 100, alignItems: 'center', justifyContent: 'center' }}>
+                                            <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 18, paddingBottom: 10 }}>Voulez-vous vraiment quitter la partie en cours?</Text>
+                                            <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 12, color: 'gray' }}>Cela comptera comme une defaite et vous n'aurez ni coins, ni experience</Text>
+                                        </View>
+                                        <View style={{ flexDirection: 'row', gap: 20 }}>
+                                            <TouchableOpacity>
+                                                <Image source={require('../../assets/btn/btn-check.png')} style={{ height: 50, width: 50 }} />
+                                            </TouchableOpacity>
+                                            <TouchableOpacity>
+                                                <Image source={require('../../assets/btn/btn-croix.png')} style={{ height: 50, width: 50 }} />
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                </ImageBackground>
+                            </Modal>
+
                             <View style={styles.iconeDroite}>
-                                <TouchableOpacity onPress={joinLobby}>
+                                <TouchableOpacity onPress={() => setModalVisibleInfo(!modalVisibleInfo)}>
                                     <Image style={styles.icone} source={require('../../assets/btn/icone-role.png')} />
                                 </TouchableOpacity>
+
+                                {/* MODAL INFO DU ROLE */}
+                                <Modal
+                                    animationType="slide"
+                                    transparent={true}
+                                    visible={modalVisibleInfo}
+                                    onRequestClose={() => {
+                                        setModalVisibleInfo(!modalVisibleInfo);
+                                    }}>
+                                    <ImageBackground source={require('../../assets/HomePage/pop-up-windows.png')} resizeMode='contain' style={{ flex: 1, justifyContent: 'center' }}>
+                                        <TouchableOpacity onPress={() => setModalVisibleInfo(!modalVisibleInfo)} style={{ width: 322, height: 23, left: 32, bottom: 11 }}>
+                                            <Image source={require('../../assets/HomePage/croix-bleu-pop-up.png')} style={{ bottom: 39, height: 22, width: 22, right: 123 }} />
+                                        </TouchableOpacity>
+                                        {/* explication si je suis hacker */}
+                                        {myRole === 'hacker' &&
+                                            <View style={{ justifyContent: 'center', alignItems: 'center', width: 320, left: 35, height: 500 }}>
+
+                                                <View style={{ width: 320, height: 250, justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Vous etes Hacker</Text>
+                                                    <Image source={require('../../assets/HomePage/hacker.png')} />
+                                                </View>
+                                                <View style={{ width: 300, height: 250, alignItems: 'center' }}>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 18, textDecorationLine: 'underline', paddingBottom: 5, color: 'red' }}>But du role :</Text>
+                                                    <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 17 }}>Il cherche a prendre le controle du projet en piratant tous les Devs. Chaque nuit, il choisit une cible a pirater avec les autres Hackers, et le jour il fait tout pour paraitre innocent et orienter les votes contre les Devs.</Text>
+                                                </View>
+                                            </View>
+                                        }
+                                        {/* explication si je suis devops */}
+                                        {myRole === 'devops' &&
+                                            <View style={{ justifyContent: 'center', alignItems: 'center', width: 320, left: 35, height: 500 }}>
+
+                                                <View style={{ width: 320, height: 250, justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Vous etes Dev Ops</Text>
+                                                    <Image source={require('../../assets/HomePage/devops.png')} />
+                                                </View>
+                                                <View style={{ width: 300, height: 250, alignItems: 'center' }}>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 18, textDecorationLine: 'underline', paddingBottom: 5, color: 'red' }}>But du role :</Text>
+                                                    <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 17 }}>Il utilise ses competences techniques pour reperer les infiltrés. Chaque nuit, il 'scan' un joueur pour savoir s’il est Hacker ou Dev. Son but est d’aider les Devs a cibler les bons suspects, tout en restant discret pour ne pas être elimine.</Text>
+                                                </View>
+                                            </View>
+                                        }
+                                        {/* explication si je suis chatgpt */}
+                                        {myRole === 'chatgpt' &&
+                                            <View style={{ justifyContent: 'center', alignItems: 'center', width: 320, left: 35, height: 500 }}>
+
+                                                <View style={{ width: 320, height: 250, justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Vous etes ChatGPT</Text>
+                                                    <Image source={require('../../assets/HomePage/chatgpt.png')} />
+                                                </View>
+                                                <View style={{ width: 300, height: 250, alignItems: 'center' }}>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 18, textDecorationLine: 'underline', paddingBottom: 5, color: 'red' }}>But du role :</Text>
+                                                    <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 17 }}>Il protege l’equipe en choisissant chaque nuit un joueur a soigner. Si ce joueur est pirate par les Hackers, il repare son code. Son but est de preserver les Devs et prolonger le projet jusqu’a ce que tous les hackers soient demasques.</Text>
+                                                </View>
+                                            </View>
+                                        }
+                                        {/* explication si je suis dev */}
+                                        {myRole === 'dev' &&
+                                            <View style={{ justifyContent: 'center', alignItems: 'center', width: 320, left: 35, height: 500 }}>
+
+                                                <View style={{ width: 320, height: 250, justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Vous etes Dev Junior</Text>
+                                                    <Image source={require('../../assets/HomePage/devjunior.png')} />
+                                                </View>
+                                                <View style={{ width: 300, height: 250, alignItems: 'center' }}>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 18, textDecorationLine: 'underline', paddingBottom: 5, color: 'red' }}>But du role :</Text>
+                                                    <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 17 }}>Son objectif est de proteger le projet en aidant l’équipe a reperer les Hackers. Il observe, participe aux discussions et vote chaque jour pour eliminer les suspects, en s’appuyant sur les indices laisses par les autres joueurs.</Text>
+                                                </View>
+                                            </View>
+                                        }
+                                    </ImageBackground>
+                                </Modal>
+
                                 <TouchableOpacity onPress={stopGame}>
                                     <Image style={styles.icone} source={require('../../assets/btn/icone-friends.png')} />
                                 </TouchableOpacity>
@@ -544,6 +636,61 @@ export default function Play2({ navigation }) {
                                 </TouchableOpacity>
 
                             ))}
+                            {/* Pop-up rôle qui reste 5 secondes */}
+                            <Modal
+                                animationType="slide"
+                                transparent={true}
+                                visible={modalVisibleRole}
+                                onRequestClose={() => {
+                                    setModalVisibleRole(!modalVisibleRole);
+                                }}>
+                                <ImageBackground source={require('../../assets/game/role-pop-up.png')} resizeMode='contain' style={{ flex: 1, justifyContent: 'center' }}>
+                                    {/* si je suis hacker */}
+                                    {myRole === 'hacker' &&
+                                        <View>
+                                            <View style={{ width: 300, justifyContent: 'center', alignItems: 'center', left: 45, height: 150 }}>
+                                                <Image source={require('../../assets/HomePage/hacker.png')} />
+                                            </View>
+                                            <View>
+                                                <Text style={{ color: 'rgb(124, 168, 110)', fontFamily: 'Minecraft', width: 300, left: 45, textAlign: 'center', height: 70, fontSize: 25 }}>Vous etes Hacker!</Text>
+                                            </View>
+                                        </View>
+                                    }
+                                    {/* si je suis devops */}
+                                    {myRole === 'devops' &&
+                                        <View>
+                                            <View style={{ width: 300, justifyContent: 'center', alignItems: 'center', left: 45, height: 150 }}>
+                                                <Image source={require('../../assets/HomePage/devops.png')} />
+                                            </View>
+                                            <View>
+                                                <Text style={{ color: 'rgb(124, 168, 110)', fontFamily: 'Minecraft', width: 300, left: 45, textAlign: 'center', height: 70, fontSize: 25 }}>Vous etes Dev Ops!</Text>
+                                            </View>
+                                        </View>
+                                    }
+                                    {/* si je suis chatgpt */}
+                                    {myRole === 'chatgpt' &&
+                                        <View>
+                                            <View style={{ width: 300, justifyContent: 'center', alignItems: 'center', left: 45, height: 150 }}>
+                                                <Image source={require('../../assets/HomePage/chatgpt.png')} />
+                                            </View>
+                                            <View>
+                                                <Text style={{ color: 'rgb(124, 168, 110)', fontFamily: 'Minecraft', width: 300, left: 45, textAlign: 'center', height: 70, fontSize: 25 }}>Vous etes ChatGPT!</Text>
+                                            </View>
+                                        </View>
+                                    }
+                                    {/* si je suis devjunior */}
+                                    {myRole === 'dev' &&
+                                        <View>
+                                            <View style={{ width: 300, justifyContent: 'center', alignItems: 'center', left: 45, height: 150 }}>
+                                                <Image source={require('../../assets/HomePage/devjunior.png')} />
+                                            </View>
+                                            <View>
+                                                <Text style={{ color: 'rgb(124, 168, 110)', fontFamily: 'Minecraft', width: 300, left: 45, textAlign: 'center', height: 70, fontSize: 25 }}>Vous etes Dev Junior!</Text>
+                                            </View>
+                                        </View>
+                                    }
+                                </ImageBackground>
+                            </Modal>
                         </View>
                         <KeyboardAvoidingView
                             style={{ flex: 1 }}
