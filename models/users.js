@@ -20,6 +20,7 @@ const userSchema = mongoose.Schema({
   },
   skins: [],
   friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
+  request_friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
   settings: {
     sound_music: Number,
     sound_effect: Number

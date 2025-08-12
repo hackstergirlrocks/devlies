@@ -446,6 +446,7 @@ router.post('/removefriend/:token', (req, res) => {
         res.json({ result: false, message: 'Erreur dans la demande' })
       }
     })
+   
 })
 
 module.exports = router;
