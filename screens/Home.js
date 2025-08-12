@@ -243,84 +243,101 @@ export default function App({ navigation }) {
             <ImageBackground source={require('../assets/HomePage/pop-up-ami.png')} resizeMode='contain' style={styles.imageAmi}>
               <ScrollView >
                 <View>
-                <TouchableOpacity style={{ top: 60 }} onPress={() => setDisplayRequest(!displayRequest)}>
-                  <Text style={{ fontFamily: 'Minecraft', fontSize: 23, left: 20 }}>Demande d'ami : {requestFriends.length}</Text>
-                </TouchableOpacity>
+                  <TouchableOpacity style={{ top: 60 }} onPress={() => setDisplayRequest(!displayRequest)}>
+                    <Text style={{ fontFamily: 'Minecraft', fontSize: 23, left: 20 }}>Demande d'ami : {requestFriends.length}</Text>
+                  </TouchableOpacity>
                   {displayRequest && (
                     <Text>ici</Text>
                   )}
                   {displayRequest && (
-                <TextInput style={{ top: 80, fontFamily: 'Minecraft', fontSize: 23, left: 20 }} placeholder='Recherche un joueur' onChangeText={setSearchUser} value={searchUser}></TextInput>
+                    <TextInput style={{ top: 80, fontFamily: 'Minecraft', fontSize: 23, left: 20 }} placeholder='Recherche un joueur' onChangeText={setSearchUser} value={searchUser}></TextInput>
                   )}
-                <View style={{ width: 260, height: 850, alignItems: 'center', justifyContent: 'flex-start', gap: 10, top: 10 }}>
-                  {/* si pas de recherche,alors */}
-                  {searchUser.length === 0
-                    // montre la liste d'ami
-                    ? infoAmi.map((ami =>
-                      <ImageBackground key={ami.username} source={require('../assets/HomePage/pop-up-ami-input.png')} style={{ top: 70 }}>
-                        <View style={{ height: 55, width: 240, justifyContent: 'center', left: 10 }}>
-                          <TouchableOpacity onPress={() => {
-                            setSelectedFriend(ami)
-                            setModalVisibleProfilAmi(!modalVisibleProfilAmi)
-                          }}>
-                            <Text style={{ fontFamily: 'Minecraft', fontSize: 20, bottom: 5 }} >{ami.username}</Text>
-                          </TouchableOpacity>
-                        </View>
-                      </ImageBackground>
-                    ))
-                    // si recherche, recherche dynamique
-                    : allUsers.filter(user => user.username.toLowerCase().includes(searchUser.toLocaleLowerCase()))
-                      .map(user =>
-                        <ImageBackground key={user.username} source={require('../assets/HomePage/pop-up-ami-input.png')} style={{ top: 70 }}>
-                          <View style={{ backgroundColor: 'rgba(45, 98, 150, 0)', height: 55, width: 240, justifyContent: 'center', left: 10 }}>
-                            <TouchableOpacity onPress={() => {
-                              setSelectedFriend(user)
-                              setModalVisibleProfilAmi(!modalVisibleProfilAmi)
-                            }}>
-                              <Text style={{ fontFamily: 'Minecraft', fontSize: 20, bottom: 5 }} >{user.username}</Text>
-                            </TouchableOpacity>
-                          </View>
-                        </ImageBackground>
-                      )
-                  }
+                  <View style={{ width: 260, height: 850, alignItems: 'center', justifyContent: 'flex-start', gap: 10, top: 10 }}>
+                    {/* si pas de recherche,alors */}
 
-                  {/* POP UP PROFIL AMI (voir ProfilModal.js) */}
-                  {selectedFriend && (
-                    <ProfilModal
-                      visible={modalVisibleProfilAmi}
-                      onClose={() => setModalVisibleProfilAmi(!modalVisibleProfilAmi)}
 
-                      // infos des joueurs
-                      skinUser={skins[selectedFriend.skin_use]?.require}
-                      infoPlayer={{
-                        username: selectedFriend.username,
-                        level: selectedFriend.level,
-                        experience: selectedFriend.experience,
-                        coins: selectedFriend.coins
-                      }}
-                      infoGame={selectedFriend.stats.game}
-                      infoWin={selectedFriend.stats.win}
-                      infoLose={selectedFriend.stats.lose}
-                      datePlayer={selectedFriend.created}
+                    {displayRequest && (
+                      searchUser.length === 0
+                        // montre la liste d'ami
+                        ? infoAmi.map(ami =>
+                          <ImageBackground
+                            key={ami.username}
+                            source={require('../assets/HomePage/pop-up-ami-input.png')}
+                            style={{ top: 70 }}
+                          >
+                            <View style={{ height: 55, width: 240, justifyContent: 'center', left: 10 }}>
+                              <TouchableOpacity onPress={() => {
+                                setSelectedFriend(ami);
+                                setModalVisibleProfilAmi(!modalVisibleProfilAmi);
+                              }}>
+                                <Text style={{ fontFamily: 'Minecraft', fontSize: 20, bottom: 5 }}>
+                                  {ami.username}
+                                </Text>
+                              </TouchableOpacity>
+                            </View>
+                          </ImageBackground>
+                        )
+               
+                        : allUsers
+                          .filter(user => user.username.toLowerCase().includes(searchUser.toLowerCase()))
+                          .map(user =>
+                            <ImageBackground
+                              key={user.username}
+                              source={require('../assets/HomePage/pop-up-ami-input.png')}
+                              style={{ top: 70 }}
+                            >
+                              <View style={{ backgroundColor: 'rgba(45, 98, 150, 0)', height: 55, width: 240, justifyContent: 'center', left: 10 }}>
+                                <TouchableOpacity onPress={() => {
+                                  setSelectedFriend(user);
+                                  setModalVisibleProfilAmi(!modalVisibleProfilAmi);
+                                }}>
+                                  <Text style={{ fontFamily: 'Minecraft', fontSize: 20, bottom: 5 }}>
+                                    {user.username}
+                                  </Text>
+                                </TouchableOpacity>
+                              </View>
+                            </ImageBackground>
+                          )
+                    )}
 
-                      styles={styles}
-                      message={msgBack}
 
-                      // si il est dans le tableau ami
-                      isFriend={infoAmi.some(ami => ami._id === selectedFriend._id)}
-                      // si c'est moi, pseudo égal à celui du redux
-                      isMe={selectedFriend._id === user._id}
-                      // si j'ai demandé en ami
-                      isRequest={sendRequest.some(user => user._id === selectedFriend._id)}
+                    {/* POP UP PROFIL AMI (voir ProfilModal.js) */}
+                    {selectedFriend && (
+                      <ProfilModal
+                        visible={modalVisibleProfilAmi}
+                        onClose={() => setModalVisibleProfilAmi(!modalVisibleProfilAmi)}
 
-                      // fonction ajouter/delete ami avec id_ du joueur sélectionné
-                      onAddAmi={() => addAmi(selectedFriend._id)}
-                      onRemoveAmi={() => removeAmi(selectedFriend._id)}
-                      onRemoveInvit={() => removeInvit(selectedFriend._id)}
-                    />
-                  )}
+                        // infos des joueurs
+                        skinUser={skins[selectedFriend.skin_use]?.require}
+                        infoPlayer={{
+                          username: selectedFriend.username,
+                          level: selectedFriend.level,
+                          experience: selectedFriend.experience,
+                          coins: selectedFriend.coins
+                        }}
+                        infoGame={selectedFriend.stats.game}
+                        infoWin={selectedFriend.stats.win}
+                        infoLose={selectedFriend.stats.lose}
+                        datePlayer={selectedFriend.created}
 
-                </View>
+                        styles={styles}
+                        message={msgBack}
+
+                        // si il est dans le tableau ami
+                        isFriend={infoAmi.some(ami => ami._id === selectedFriend._id)}
+                        // si c'est moi, pseudo égal à celui du redux
+                        isMe={selectedFriend._id === user._id}
+                        // si j'ai demandé en ami
+                        isRequest={sendRequest.some(user => user._id === selectedFriend._id)}
+
+                        // fonction ajouter/delete ami avec id_ du joueur sélectionné
+                        onAddAmi={() => addAmi(selectedFriend._id)}
+                        onRemoveAmi={() => removeAmi(selectedFriend._id)}
+                        onRemoveInvit={() => removeInvit(selectedFriend._id)}
+                      />
+                    )}
+
+                  </View>
                 </View>
               </ScrollView>
             </ImageBackground>
