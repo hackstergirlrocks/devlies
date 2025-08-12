@@ -440,6 +440,20 @@ router.get('/requestsend/:token', (req, res) => {
     })
 })
 
+/* route pour demander quelqu'un en ami */
+router.post('/requestfriend/:token', (req, res) => {
+  User.findOne({ token: req.params.token }, '_id')
+    .then(data => {
+      return User.updateOne({ _id: data._id }, { $push: { send_friends: new mongoose.Types.ObjectId(req.body.friends) } })
+        .then(() => {
+          return User.updateOne({ _id: req.body.friends }, { $push: { request_friends: new mongoose.Types.ObjectId(data._id) } })
+        })
+        .then(() => {
+          res.json({ result: true, message: 'Invitation envoyee' })
+        })
+    })
+})
+
 /* route pour supprimer sa demande d'ami */
 router.post('/deleterequest/:token', (req, res) => {
   User.findOne({ token: req.params.token }, '_id')
@@ -454,16 +468,28 @@ router.post('/deleterequest/:token', (req, res) => {
     })
 })
 
-/* route pour demander quelqu'un en ami */
-router.post('/requestfriend/:token', (req, res) => {
+/* route pour accepter un ami */
+router.post('/addfriend/:token', (req, res) => {
   User.findOne({ token: req.params.token }, '_id')
     .then(data => {
-      return User.updateOne({ _id: data._id }, { $push: { send_friends: new mongoose.Types.ObjectId(req.body.friends) } })
+      return User.updateOne(
+        { _id: data._id },
+        {
+          $pull: { request_friends: new mongoose.Types.ObjectId(req.body.friends) },
+          $push: { friends: new mongoose.Types.ObjectId(req.body.friends) }
+        }
+      )
         .then(() => {
-          return User.updateOne({ _id: req.body.friends }, { $push: { request_friends: new mongoose.Types.ObjectId(data._id) } })
-        })
-        .then(() => {
-          res.json({ result: true, message: 'Invitation envoyee' })
+          return User.updateOne(
+            { _id: req.body.friends },
+            {
+              $pull: { request_friends: new mongoose.Types.ObjectId(data._id) },
+              $push: { friends: new mongoose.Types.ObjectId(data._id) }
+            }
+          )
+            .then(() => {
+              res.json({ result: true, message: 'Demande acceptee!' })
+            })
         })
     })
 })
