@@ -63,6 +63,8 @@ router.post('/signup', (req, res) => {
                 },
                 skins: ['basic', 'cat'],
                 friends: [],
+                request_friends: [],
+                send_friends: [],
                 settings: {
                   sound_music: 0,
                   sound_effect: 0
