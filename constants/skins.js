@@ -11,7 +11,7 @@ const skins = {
         displayName: 'Employe',
         require: require("../assets/Skin/employe-mcdo-big.png"),
         price: 5,
-        description: "Burger, frite, coca?"
+        description: "Burger, frites, coca?"
     },
     "cat": {
         name: "cat",
@@ -33,6 +33,13 @@ const skins = {
         require: require("../assets/Skin/dealos-big.png"),
         price: 10,
         description: "Tu veux un seudi mon reuf ?"
+    },
+      "tigre": {
+        name: "tigre",
+        displayName: 'Tigre',
+        require: require("../assets/Skin/tigre-big.png"),
+        price: 10,
+        description: "Un grrr"
     },
     "lunette": {
         name: "lunette",
@@ -62,26 +69,40 @@ const skins = {
         price: 20,
         description: "Dead and Cold"
     },
+      "capybara": {
+        name: "capybara",
+        displayName: 'Capybara',
+        require: require("../assets/Skin/capybara-big.png"),
+        price: 20,
+        description: "Il est chill"
+    },
+      "souris": {
+        name: "souris",
+        displayName: 'Souris',
+        require: require("../assets/Skin/souris-big.png"),
+        price: 20,
+        description: "Ou est Tom ??"
+    },
     "requin": {
         name: "requin",
         displayName: 'Requin',
         require: require("../assets/Skin/requin-big.png"),
         price: 21,
-        description: "Un requin spécial..."
+        description: "Un requin special..."
     },
     "mafia": {
         name: "mafia",
         displayName: 'Mafia',
         require: require("../assets/Skin/mafia-big.png"),
         price: 40,
-        description: "Le parrain de la pègre."
+        description: "Le parrain de la pegre."
     },
     "clown": {
         name: "clown",
         displayName: 'Clown',
         require: require("../assets/Skin/clown-big.png"),
         price: 50,
-        description: "Un clown drôle... ou terrifiant."
+        description: "Un clown drole... ou terrifiant."
     },
     "pichu": {
         name: "pichu",
@@ -90,6 +111,13 @@ const skins = {
         price: 50,
         description: "Pikachu etait pas dispo."
     },
+     "lapin": {
+        name: "lapin",
+        displayName: 'Lapinou',
+        require: require("../assets/Skin/lapin-big.png"),
+        price: 50,
+        description: "Quoi de neuf docteur ?"
+    },
     "roi": {
         name: "roi",
         displayName: 'Roi',
@@ -97,12 +125,26 @@ const skins = {
         price: 50,
         description: "Le roi de ce royaume."
     },
+    "elephant": {
+        name: "elephant",
+        displayName: 'Elephant',
+        require: require("../assets/Skin/elephant-big.png"),
+        price: 50,
+        description: "Babar mais gris et aigri..."
+    },
     "ghost": {
         name: "ghost",
         displayName: 'Fantome',
         require: require("../assets/Skin/ghost-big.png"),
         price: 80,
         description: "RIP"
+    },
+     "loutre": {
+        name: "loutre",
+        displayName: 'Loutre',
+        require: require("../assets/Skin/loutre-big.png"),
+        price: 80,
+        description: "Choupinoupinette"
     },
     "nosferatu": {
         name: "nosferatu",
@@ -125,6 +167,13 @@ const skins = {
         price: 90,
         description: "Jena Li."
     },
+      "lion": {
+        name: "lion",
+        displayName: 'Lion',
+        require: require("../assets/Skin/lion-big.png"),
+        price: 90,
+        description: "Il a mis les doigts dans la prise..."
+    },
     "ange": {
         name: "ange",
         displayName: 'Ange',
@@ -144,7 +193,21 @@ const skins = {
         displayName: 'Toto',
         require: require("../assets/Skin/toto-en-fumence-big.png"),
         price: 100,
-        description: "Toto, mais il a fumé un truc."
+        description: "Toto, mais il a fume un truc."
+    },
+     "panda": {
+        name: "panda",
+        displayName: 'Panda',
+        require: require("../assets/Skin/panda-big.png"),
+        price: 100,
+        description: "En manque de bambou."
+    },
+     "raton": {
+        name: "raton",
+        displayName: 'Raton',
+        require: require("../assets/Skin/raton-big.png"),
+        price: 100,
+        description: "Un raton tres hygienique."
     },
     "kotaro": {
         name: "kotaro",
@@ -207,7 +270,14 @@ const skins = {
         displayName: 'Steve',
         require: require("../assets/Skin/steve-retarded-big.png"),
         price: 250,
-        description: "Un Steve un peu... spécial."
+        description: "Un Steve un peu... special."
+    },
+      "poisson-steve": {
+        name: "poisson-steve",
+        displayName: 'Poisson Steve',
+        require: require("../assets/Skin/poisoon-steve-big.png"),
+        price: 250,
+        description: "Un poisson un peu... special."
     },
     "han": {
         name: "han",
