@@ -114,7 +114,7 @@ function resetGame(io) {
         { id: 0, username: 'Bot_1', skin: 'xxx', role: 'devops', isDead: false, DevOpsSeeU: false, protected: false },
         { id: 1, username: 'Bot_2', skin: 'han', role: 'chatgpt', isDead: false, DevOpsSeeU: false, protected: false },
         { id: 2, username: 'Bot_3', skin: 'cat', role: 'hacker', isDead: false, DevOpsSeeU: false, protected: false },
-        // { id: 3, username: 'Bot_4', skin: 'basic', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+        { id: 3, username: 'Bot_4', skin: 'basic', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
         // { id: 4, username: 'Bot_5', skin: 'plant', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
         // { id: 5, username: 'Bot_6', skin: 'nosferatu', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
         // { id: 6, username: 'Bot_7', skin: 'wolf', role: 'hacker', isDead: false, DevOpsSeeU: false, protected: false },
@@ -336,12 +336,43 @@ io.on('connection', (socket) => {
                     io.emit('gameStarted');
 
                     // Attribution simple de rôle si null
-                    users = users.map(u => {
-                        // if (!u.role) return { ...u, role: 'devops' };
-                        // return u;
+                    // on vide les rôles
+                    users = users.map(u => ({ ...u, role: null }));
 
-                        return !u.role ? { ...u, role: Math.random() < 0.5 ? 'devops' : 'devops' } : u;
+                    // combien de hackers (1 pour 3 gentils)
+                    let nbHackers = Math.floor(users.length / 4);
+                    if (nbHackers < 1 && users.length > 1) nbHackers = 1;
 
+                    // liste des index possibles
+                    let indexes = Array.from({ length: users.length }, (_, i) => i);
+
+                    // fonction pour prendre un index au hasard
+                    function pickRandomIndex() {
+                        const randomPos = Math.floor(Math.random() * indexes.length);
+                        return indexes.splice(randomPos, 1)[0];
+                    }
+
+                    // choisir les hackers
+                    for (let i = 0; i < nbHackers; i++) {
+                        let idx = pickRandomIndex();
+                        users[idx].role = "hacker";
+                    }
+
+                    // choisir 1 devops
+                    if (indexes.length > 0) {
+                        let idx = pickRandomIndex();
+                        users[idx].role = "devops";
+                    }
+
+                    // choisir 1 chatgpt
+                    if (indexes.length > 0) {
+                        let idx = pickRandomIndex();
+                        users[idx].role = "chatgpt";
+                    }
+
+                    // le reste en dev
+                    indexes.forEach(idx => {
+                        users[idx].role = "dev";
                     });
 
                     io.emit('updateUsers', users);
