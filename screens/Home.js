@@ -347,7 +347,7 @@ export default function App({ navigation }) {
                         onClose={() => setModalVisibleProfilAmi(!modalVisibleProfilAmi)}
 
                         // infos des joueurs
-                        skinUser={skins[selectedFriend.skin_use]?.require}
+                        skinUser={skins.find(skin => skin.name === selectedFriend.skin_use)?.require}
                         infoPlayer={{
                           username: selectedFriend.username,
                           level: selectedFriend.level,
