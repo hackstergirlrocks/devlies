@@ -96,14 +96,12 @@ export default function App({ navigation }) {
 
   // useEffect pour récupérer tous ses amis, restart à chaque fois qu'on ferme le modal profil Ami
   useEffect(() => {
-    if (modalVisibleAmi) {
-      fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allfriends/` + user.token)
-        .then(response => response.json())
-        .then(data => {
-          setInfoAmi(data.friends)
-        });
-    }
-  }, [modalVisibleProfilAmi])
+    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allfriends/` + user.token)
+      .then(response => response.json())
+      .then(data => {
+        setInfoAmi(data.friends)
+      });
+  }, [modalVisibleProfilAmi, modalVisibleAmi])
 
   // useEffect pour récupèrer tous les membres
   useEffect(() => {
@@ -121,7 +119,7 @@ export default function App({ navigation }) {
       .then(data => {
         setRequestFriends(data.request)
       })
-  }, [modalVisibleAmi])
+  }, [modalVisibleAmi, modalVisibleProfilAmi])
 
   // useEffect pour récupèrer toutes les demandes d'amis envoyées
   useEffect(() => {
@@ -192,6 +190,21 @@ export default function App({ navigation }) {
   // fetch pour supprimer un ami
   const removeAmi = () => {
     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/removefriend/` + user.token, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ friends: selectedFriend._id })
+    }).then(response => response.json())
+      .then(data => {
+        setMsgBack(data.message)
+
+        setTimeout(() => {
+          setMsgBack('');
+        }, 3000);
+      })
+  }
+
+  const acceptInvit = () => {
+    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/addfriend/` + user.token, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ friends: selectedFriend._id })
@@ -344,17 +357,23 @@ export default function App({ navigation }) {
                         styles={styles}
                         message={msgBack}
 
-                        // si il est dans le tableau ami
-                        isFriend={infoAmi.some(ami => ami._id === selectedFriend._id)}
                         // si c'est moi, pseudo égal à celui du redux
-                        isMe={selectedFriend._id === user._id}
+                        isMe={String(selectedFriend._id) === String(user._id)}
+                        // si il est dans le tableau ami
+                        isFriend={(infoAmi || []).some(ami => String(ami._id) === String(selectedFriend._id))}
                         // si j'ai demandé en ami
-                        isRequest={sendRequest.some(user => user._id === selectedFriend._id)}
+                        isSend={(sendRequest || []).some(user => String(user._id) === String(selectedFriend._id))}
+                        // si il m'a demandé en ami
+                        isRequest={(requestFriends || []).some(user => String(user._id) === String(selectedFriend._id))}
 
                         // fonction ajouter/delete ami avec id_ du joueur sélectionné
                         onAddAmi={() => addAmi(selectedFriend._id)}
                         onRemoveAmi={() => removeAmi(selectedFriend._id)}
                         onRemoveInvit={() => removeInvit(selectedFriend._id)}
+                        onAcceptInvit={() => {
+                          acceptInvit(selectedFriend._id),
+                            setModalVisibleProfilAmi(!modalVisibleProfilAmi)
+                        }}
                       />
                     )}
 
@@ -380,7 +399,7 @@ export default function App({ navigation }) {
           onPressIn={() => setPressPlay(true)}
           onPressOut={() => setPressPlay(false)}
           onPress={() => navigation.navigate('Play2')}
-        > 
+        >
           {pressPlay
             ? <Image style={styles.btn} source={require('../assets/btn/play-btn-down.png')} />
             : <Image style={styles.btn} source={require('../assets/btn/play-btn.png')} />
