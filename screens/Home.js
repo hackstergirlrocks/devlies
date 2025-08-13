@@ -363,13 +363,13 @@ export default function App({ navigation }) {
                         message={msgBack}
 
                         // si c'est moi, pseudo égal à celui du redux
-                        isMe={String(selectedFriend._id) === String(user._id)}
+                        isMe={selectedFriend._id === user._id}
                         // si il est dans le tableau ami
-                        isFriend={(infoAmi || []).some(ami => String(ami._id) === String(selectedFriend._id))}
+                        isFriend={infoAmi.some(ami => ami._id === selectedFriend._id)}
                         // si j'ai demandé en ami
-                        isSend={(sendRequest || []).some(user => String(user._id) === String(selectedFriend._id))}
+                        isSend={sendRequest.some(user => user._id === selectedFriend._id)}
                         // si il m'a demandé en ami
-                        isRequest={(requestFriends || []).some(user => String(user._id) === String(selectedFriend._id))}
+                        isRequest={requestFriends.some(user => user._id === selectedFriend._id)}
 
                         // fonction ajouter/delete ami avec id_ du joueur sélectionné
                         onAddAmi={() => addAmi(selectedFriend._id)}
