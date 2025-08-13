@@ -268,13 +268,11 @@ function endNightVoting(io) {
         const user = users.find(u => u.id === idx);
 
 
-        console.log(user.protected)
+        // console.log(user.protected)
         if (idx !== -1 && !user.protected) {
             users[idx].isDead = true;
             users[idx].skin = 'ghost';
         }
-
-
 
 
         io.emit('updateUsers', users);

@@ -10,6 +10,8 @@ const { checkBody } = require('../modules/users')
 const uid2 = require('uid2');
 const bcrypt = require('bcrypt');
 
+
+
 // Récupère tous les users
 router.get('/allusers', async (req, res) => {
   User.find()
@@ -335,46 +337,95 @@ router.get('/:token', (req, res) => {
     })
 })
 
+
+
 /* modifie statistique et infos après une WIN ! */
 router.post('/win/:token', (req, res) => {
-  User.findOne({ token: req.params.token })
-    .then(data => {
-      if (data) {
-        User.updateOne(
-          { token: req.params.token },
-          {
-            $set: {
-              coins: data.coins += Number(req.body.coins),
-              experience: data.experience += Number(req.body.experience),
-              'stats.win': data.stats.win += Number(req.body.win),
-              'stats.game': data.stats.game += Number(req.body.game)
-            },
-          }
-        ).then(result => {
-          if (result.modifiedCount > 0) {
-            res.json({ result: true, message: 'Stats de win modifiées avec succès !' });
-          } else {
-            res.json({ result: false, message: "Pas de modification de stats de win..." });
-          }
-        })
-        console.log(data);
+
+  User.findOne({ token: req.params.token }).then(user => {
+    function getLevelFromXP(xp) {
+      let level = 1;
+      let nextLevelXP = 100;
+      while (xp >= nextLevelXP) {
+        level++;
+        nextLevelXP = 100 * (level ** 2);
       }
-    })
-})
+      return level;
+    }
+
+
+    let coins = user.coins || 0;
+    let xp = user.experience || 0;
+    let win = user.stats.win || 0;
+    let game = user.stats.game || 0;
+
+    coins += Number(req.body.coins) || 0;
+    xp += Number(req.body.experience) || 0;
+    win += Number(req.body.win) || 0;
+    game += Number(req.body.game) || 0;
+
+
+    let level = getLevelFromXP(xp);
+
+    User.updateOne(
+      { token: req.params.token },
+      {
+        $set: {
+          coins: coins,
+          experience: xp,
+          level: level,
+          'stats.win': win,
+          'stats.game': game
+        }
+      }
+    ).then(result => {
+      if (result.modifiedCount > 0) {
+        res.json({ result: true, message: "Stats de win modifiées !" });
+      } else {
+        res.json({ result: false, message: "Rien n'a changé..." });
+      }
+    });
+
+  })
+});
 
 /* modifie statistique et infos après une LOSE ! */
 router.post('/lose/:token', (req, res) => {
   User.findOne({ token: req.params.token })
     .then(data => {
       if (data) {
+        function getLevelFromXP(xp) {
+          let level = 1;
+          let nextLevelXP = 100;
+          while (xp >= nextLevelXP) {
+            level++;
+            nextLevelXP = 100 * (level ** 2);
+          }
+          return level;
+        }
+
+
+        let coins = user.coins || 0;
+        let xp = user.experience || 0;
+        let win = user.stats.win || 0;
+        let game = user.stats.game || 0;
+
+        coins += Number(req.body.coins) || 0;
+        xp += Number(req.body.experience) || 0;
+        win += Number(req.body.win) || 0;
+        game += Number(req.body.game) || 0;
+
+
+        let level = getLevelFromXP(xp);
         User.updateOne(
           { token: req.params.token },
           {
             $set: {
-              coins: data.coins += Number(req.body.coins),
-              experience: data.experience += Number(req.body.experience),
-              'stats.lose': data.stats.lose += Number(req.body.lose),
-              'stats.game': data.stats.game += Number(req.body.game)
+              coins: coins,
+              experience: xp,
+              level: level,
+              'stats.win': win,
+              'stats.game': game
             },
           }
         ).then(result => {
