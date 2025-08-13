@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
+import { useSelector } from 'react-redux';
+
 
 const GameOverScreen = ({ route, navigation }) => {
+  const user = useSelector((state) => state.user.value);
+
+
   const { result, role, xpEarned, rolewin } = route.params;
   const [message, setMessage] = useState('')
   const [image, setImage] = useState(null)
@@ -13,26 +18,26 @@ const GameOverScreen = ({ route, navigation }) => {
   useEffect(() => {
 
     if (rolewin === 'dev') {
-      if (role === 'devops' || role === 'dev') {
+      if (role === 'devops' || role === 'dev' || role === 'chatgpt') {
         setMessage('tu as win')
-        giveXpAndCoin(500, 10)
+        giveXpAndCoinWin(500, 10)
         setImage(require('../../assets/GameOver/win-dev.png'))
 
       } else {
         setMessage('tu as perdu')
-        giveXpAndCoin(150, 3)
+        giveXpAndCoinLose(150, 3)
         setImage(require('../../assets/GameOver/game-over-hacker.png'))
 
       }
     } else {
       if (role === 'hacker') {
         setMessage('tu as win')
-        giveXpAndCoin(600, 15)
+        giveXpAndCoinWin(600, 15)
         setImage(require('../../assets/GameOver/win-hacker.png'))
 
       } else {
         setMessage('tu as perdu')
-        giveXpAndCoin(250, 5)
+        giveXpAndCoinLose(250, 5)
         setImage(require('../../assets/GameOver/game-over-dev.png'))
 
 
@@ -40,8 +45,32 @@ const GameOverScreen = ({ route, navigation }) => {
     }
   }, [])
 
-  function giveXpAndCoin(xp, coins) {
-    // console.log(xp, coins)
+  function giveXpAndCoinWin(xp, coins) {
+    console.log(xp, coins)
+    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/win/${user.token}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ coins: coins, experience: xp, win: 1, game: 1 }),
+    }).then(response => response.json())
+      .then(data => {
+        if (data.result) {
+
+        }
+      });
+  }
+
+  function giveXpAndCoinLose(xp, coins) {
+    console.log(xp, coins)
+    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/lose/${user.token}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ coins: coins, experience: xp, win: 1, game: 1 }),
+    }).then(response => response.json())
+      .then(data => {
+        if (data.result) {
+  
+        }
+      });
   }
 
   const OutMenu = () => {
@@ -85,6 +114,7 @@ const GameOverScreen = ({ route, navigation }) => {
           }
         </TouchableOpacity>
 
+    
       </View>
 
       {/* <Text>mon role : {role} / role win : {rolewin}</Text> */}
