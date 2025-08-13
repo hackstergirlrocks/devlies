@@ -25,7 +25,7 @@ const GameOverScreen = ({ route, navigation }) => {
     if (rolewin === 'dev') {
       if (role === 'devops' || role === 'dev' || role === 'chatgpt') {
         setMessage('tu as win')
-        giveXpAndCoinWin(2500, 10)
+        giveXpAndCoinWin(500, 10)
         setImage(require('../../assets/GameOver/win-dev.png'))
         setXP(500)
         setCoins(10)
