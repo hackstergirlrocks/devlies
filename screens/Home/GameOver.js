@@ -14,6 +14,11 @@ const GameOverScreen = ({ route, navigation }) => {
   const [menu, setPressMenu] = useState(false)
 
 
+  const [xp, setXP] = useState(0)
+  const [coins, setCoins] = useState(0)
+
+
+
 
   useEffect(() => {
 
@@ -22,25 +27,28 @@ const GameOverScreen = ({ route, navigation }) => {
         setMessage('tu as win')
         giveXpAndCoinWin(500, 10)
         setImage(require('../../assets/GameOver/win-dev.png'))
-
+        setXP(500)
+        setCoins(10)
       } else {
         setMessage('tu as perdu')
         giveXpAndCoinLose(150, 3)
         setImage(require('../../assets/GameOver/game-over-hacker.png'))
-
+        setXP(150)
+        setCoins(3)
       }
     } else {
       if (role === 'hacker') {
         setMessage('tu as win')
         giveXpAndCoinWin(600, 15)
         setImage(require('../../assets/GameOver/win-hacker.png'))
-
+        setXP(600)
+        setCoins(15)
       } else {
         setMessage('tu as perdu')
         giveXpAndCoinLose(250, 5)
         setImage(require('../../assets/GameOver/game-over-dev.png'))
-
-
+        setXP(250)
+        setCoins(5)
       }
     }
   }, [])
@@ -68,7 +76,7 @@ const GameOverScreen = ({ route, navigation }) => {
     }).then(response => response.json())
       .then(data => {
         if (data.result) {
-  
+
         }
       });
   }
@@ -89,9 +97,7 @@ const GameOverScreen = ({ route, navigation }) => {
 
 
       <Image source={image} />
-      <Text>
-        {xpEarned}{result}
-      </Text>
+      <Text>XP : {xp} / Coin : {coins}</Text>
       <View style={styles.btn}>
         <TouchableOpacity
           style={styles.switchPage}
@@ -117,7 +123,7 @@ const GameOverScreen = ({ route, navigation }) => {
           }
         </TouchableOpacity>
 
-    
+
       </View>
 
       {/* <Text>mon role : {role} / role win : {rolewin}</Text> */}
