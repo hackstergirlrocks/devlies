@@ -18,7 +18,12 @@ export default function App({ navigation }) {
   useEffect(() => {
     if (user.skin) {
       setSkinPlayer(user.skin);
-      setSkinUser(skins[user.skin].require);
+
+      // on cherche dans l'array le skin correspondant
+      const skinObj = skins.find(s => s.name === user.skin);
+      if (skinObj) {
+        setSkinUser(skinObj.require);
+      }
     }
   }, [user.skin]);
 

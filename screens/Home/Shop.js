@@ -46,7 +46,10 @@ export default function Shop({ navigation }) {
     let skinCommun = infoSkin.filter(name => (skinList.includes(name)))
 
     // filtre qui permet de savoir les skins que l'user n'a pas
-    const filtreSkin = Object.entries(skins).filter(([key, image]) => !skinCommun.includes(image.name))
+    const filtreSkin = Object.entries(skins).filter(([key, image]) =>
+        !skinCommun.includes(image.name) && image.name !== "ghost"
+    );
+
 
     // écriture
     const [fontsLoaded] = useFonts({
@@ -170,7 +173,7 @@ export default function Shop({ navigation }) {
                                                 onPressOut={() => setPressValid(false)}
                                             >
                                                 {pressValid
-                                                // bouton pressé ou non
+                                                    // bouton pressé ou non
                                                     ? <Image source={require('../../assets/btn/btn-check-down.png')} style={{ height: 50, width: 50 }} />
                                                     : <Image source={require('../../assets/btn/btn-check.png')} style={{ height: 50, width: 50 }} />
                                                 }
@@ -182,7 +185,7 @@ export default function Shop({ navigation }) {
                                                 onPressOut={() => setPressCroix(false)}
                                             >
                                                 {pressCroix
-                                                // bouton pressé ou non
+                                                    // bouton pressé ou non
                                                     ? <Image source={require('../../assets/btn/btn-croix-down.png')} style={{ height: 50, width: 50 }} />
                                                     : <Image source={require('../../assets/btn/btn-croix.png')} style={{ height: 50, width: 50 }} />
                                                 }

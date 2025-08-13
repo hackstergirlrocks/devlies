@@ -79,94 +79,6 @@ export default function Play2({ navigation }) {
     const [modalVisibleProfil, setModalVisibleProfil] = useState(false)
 
     const [selectedMember, setSelectedMember] = useState(null)
-    const [alreadyFriend, setAlreadyFriend] = useState(false)
-    const [requestFriends, setRequestFriends] = useState(false)
-    const [sendRequest, setSendRequest] = useState(false)
-
-    // useEffect pour récupérer tous ses amis, restart à chaque fois qu'on ferme le modal profil Ami
-    useEffect(() => {
-        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allfriends/` + user.token)
-            .then(response => response.json())
-            .then(data => {
-                setAlreadyFriend(alreadyFriend.some(ami => ami.username === data.username))
-            });
-
-        // useEffect pour récupèrer toutes les demandes d'amis reçues
-        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allrequestfriends/` + user.token)
-            .then(response => response.json())
-            .then(data => {
-                setRequestFriends(requestFriends.some(ami => ami.username === data.username))
-            })
-
-        // useEffect pour récupèrer toutes les demandes d'amis envoyées
-        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/requestsend/` + user.token)
-            .then(response => response.json())
-            .then(data => {
-                setSendRequest(sendRequest.some(ami => ami.username === data.username))
-            })
-    }, [modalVisibleMembreLobby, modalVisibleProfil])
-
-    // fetch pour ajouter un ami
-    const addAmi = () => {
-        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/requestfriend/` + user.token, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ friends: selectedMember._id })
-        }).then(response => response.json())
-            .then(data => {
-                setMsgBack(data.message)
-
-                setTimeout(() => {
-                    setMsgBack('');
-                }, 3000);
-            })
-    }
-
-    // fetch pour supprimer un ami
-    const removeAmi = () => {
-        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/removefriend/` + user.token, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ friends: selectedMember._id })
-        }).then(response => response.json())
-            .then(data => {
-                setMsgBack(data.message)
-
-                setTimeout(() => {
-                    setMsgBack('');
-                }, 3000);
-            })
-    }
-
-    const acceptInvit = () => {
-        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/addfriend/` + user.token, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ friends: selectedMember._id })
-        }).then(response => response.json())
-            .then(data => {
-                setMsgBack(data.message)
-
-                setTimeout(() => {
-                    setMsgBack('');
-                }, 3000);
-            })
-    }
-
-    const removeInvit = () => {
-        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/deleterequest/` + user.token, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ friends: selectedMember._id })
-        }).then(response => response.json())
-            .then(data => {
-                setMsgBack(data.message)
-
-                setTimeout(() => {
-                    setMsgBack('');
-                }, 3000);
-            })
-    }
 
     // set time out, ferme pop-up au bout de 5 secondes
     useEffect(() => {
@@ -176,6 +88,7 @@ export default function Play2({ navigation }) {
                 setModalVisibleRole(false);
             }, 5000);
         }
+
     }, [gameStarted])
 
 
@@ -388,6 +301,104 @@ export default function Play2({ navigation }) {
 
         return () => socket.off();
     }, []);
+
+    // // useEffect pour récupérer tous ses amis, restart à chaque fois qu'on ferme le modal profil Ami
+    // useEffect(() => {
+    //     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allfriends/` + user.token)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             setAlreadyFriend(data)
+    //         });
+    // }, [modalVisibleMembreLobby, modalVisibleProfil])
+
+    // // useEffect pour récupèrer toutes les demandes d'amis reçues
+    // useEffect(() => {
+    //     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allrequestfriends/` + user.token)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             setRequestFriends(data)
+    //         })
+    // }, [modalVisibleMembreLobby, modalVisibleProfil])
+
+    // // useEffect pour récupèrer toutes les demandes d'amis envoyées
+    // useEffect(() => {
+    //     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/requestsend/` + user.token)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             setSendRequest(data)
+    //         })
+    // }, [modalVisibleMembreLobby, modalVisibleProfil])
+
+    // // fetch pour ajouter un ami
+    // const addAmi = (memberID) => {
+    //     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/requestfriend/` + user.token, {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({ friends: memberID })
+    //     }).then(response => response.json())
+    //         .then(data => {
+    //             setMsgBack(data.message)
+
+    //             setTimeout(() => {
+    //                 setMsgBack('');
+    //             }, 3000);
+    //         })
+    // }
+
+    // const recupInfo = (tokenMember) => {
+    //     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/` + tokenMember)
+    //         .then(reponse => reponse.json())
+    //         .then(data => {
+    //             setInfoSelected(data)
+    //         })
+    // }
+
+    // // fetch pour supprimer un ami
+    // const removeAmi = (memberID) => {
+    //     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/removefriend/` + user.token, {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({ friends: memberID })
+    //     }).then(response => response.json())
+    //         .then(data => {
+    //             setMsgBack(data.message)
+
+    //             setTimeout(() => {
+    //                 setMsgBack('');
+    //             }, 3000);
+    //         })
+    // }
+
+    // const acceptInvit = (memberID) => {
+    //     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/addfriend/` + user.token, {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({ friends: memberID })
+    //     }).then(response => response.json())
+    //         .then(data => {
+    //             setMsgBack(data.message)
+
+    //             setTimeout(() => {
+    //                 setMsgBack('');
+    //             }, 3000);
+    //         })
+    // }
+
+    // const removeInvit = (memberID) => {
+    //     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/deleterequest/` + user.token, {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({ friends: memberID })
+    //     }).then(response => response.json())
+    //         .then(data => {
+    //             setMsgBack(data.message)
+
+    //             setTimeout(() => {
+    //                 setMsgBack('');
+    //             }, 3000);
+    //         })
+    // }
+
 
     const sendMessage = () => {
         if (message.trim() !== "") {
@@ -689,8 +700,8 @@ export default function Play2({ navigation }) {
                                                             >
                                                                 <View style={{ height: 55, width: 240, justifyContent: 'center', left: 10 }}>
                                                                     <TouchableOpacity onPress={() => {
-                                                                        setModalVisibleProfil(!modalVisibleProfil);
                                                                         setSelectedMember(member)
+                                                                        setModalVisibleProfil(!modalVisibleProfil)
                                                                     }}>
                                                                         <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>
                                                                             {member.username}
@@ -712,37 +723,16 @@ export default function Play2({ navigation }) {
                                             onRequestClose={() => {
                                                 setModalVisibleProfil(!modalVisibleProfil)
                                             }}>
-                                            <ImageBackground source={require('../../assets/HomePage/pop-up-windows-final2.png')} resizeMode='contain' style={styles.image}>
+                                            <ImageBackground source={require('../../assets/game/pop-up-leave.png')} resizeMode='contain' style={styles.image}>
                                                 <View>
-                                                    <TouchableOpacity onPress={() => setModalVisibleProfil(!modalVisibleProfil)} style={{ width: 330, bottom: 44 }}>
-                                                        <Image source={require('../../assets/HomePage/croix-bleu-pop-up.png')} style={{ left: 38, height: 22, width: 22, }} />
+                                                    <TouchableOpacity onPress={() => setModalVisibleProfil(!modalVisibleProfil)} style={{ width: 300, left: 43, bottom: 10 }}>
+                                                        <Image source={require('../../assets/HomePage/croix-bleu-pop-up.png')} style={{ height: 22, width: 22, left: 10 }} />
                                                     </TouchableOpacity>
                                                 </View>
                                                 <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                                                    <View style={{ justifyContent: 'center', alignItems: 'center', height: 280, width: 230, left: 5 }}>
-                                                        <Image source={skins[selectedMember.skin]?.require} style={{ width: 200, height: 200 }} />
+                                                    <View style={{ justifyContent: 'center', alignItems: 'center', height: 280, width: 230 }}>
+                                                        <Image source={skins.find(skin => skin.name === selectedMember.skin)?.require} style={{ width: 200, height: 200 }} />
                                                         <Text style={{ fontFamily: 'Minecraft', height: 30, width: 220, textAlign: 'center', bottom: 5 }}>{selectedMember.username}</Text>
-                                                    </View>
-                                                    <View style={{ height: 172, width: 325, top: 30, alignItems: 'center', justifyContent: 'center' }}>
-                                                        {alreadyFriend ? (
-                                                            <TouchableOpacity onPress={() => removeAmi()}>
-                                                                <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Supprimer de la liste d'ami</Text>
-                                                            </TouchableOpacity>
-                                                        ) : requestFriends ? (
-                                                            <TouchableOpacity onPress={() => acceptInvit()}>
-                                                                <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Accepter l'invitation</Text>
-                                                            </TouchableOpacity>
-                                                        ) : sendRequest ? (
-                                                            <TouchableOpacity onPress={() => removeInvit()}>
-                                                                <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Supprimer l'invitation d'ami</Text>
-                                                            </TouchableOpacity>
-                                                        ) : selectedMember.username === user.username ? (
-                                                            <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Ton profil</Text>
-                                                        ) : (
-                                                            <TouchableOpacity onPress={() => addAmi()}>
-                                                                <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Ajouter en ami</Text>
-                                                            </TouchableOpacity>
-                                                        )}
                                                     </View>
                                                 </View>
                                             </ImageBackground>
@@ -827,7 +817,10 @@ export default function Play2({ navigation }) {
                                 >
                                     <View style={styles.main}>
                                         <Text style={styles.username}>{index + 1} - {item.username}</Text>
-                                        <Image style={styles.skin} source={skins[item.skin].require} />
+                                        <Image
+                                            style={styles.skin}
+                                            source={skins.find(s => s.name === item.skin)?.require}
+                                        />
                                         {/* <View style={styles.roleetvote}>
 
                                             {(phase === "vote" && gameStarted || phase === "night-vote" && myRole === 'hacker') && (
@@ -1234,5 +1227,10 @@ const styles = StyleSheet.create({
     btnC: {
         width: 50,
         height: 50,
+    },
+    image: {
+        flex: 1,
+        justifyContent: 'center',
+        width: 385
     }
 });
