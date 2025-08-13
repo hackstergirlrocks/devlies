@@ -592,6 +592,11 @@ export default function Play2({ navigation }) {
                             </Modal>
 
                             <View style={styles.iconeDroite}>
+                                <TouchableOpacity onPress={() => stopGame()}>
+
+                                    <Image style={styles.icone} source={require('../../assets/btn/icone-role.png')} />
+
+                                </TouchableOpacity>
                                 <TouchableOpacity onPress={() => setModalVisibleInfo(!modalVisibleInfo)}>
                                     {gameStarted &&
                                         <Image style={styles.icone} source={require('../../assets/btn/icone-role.png')} />
@@ -842,8 +847,7 @@ export default function Play2({ navigation }) {
                                             {/* Slot fixe pour l’icône de rôle */}
                                             <View style={styles.roleSlot}>
                                                 {myRole !== null && (
-                                                    (item.token === user.token || item.isDead || item.DevOpsSeeU && myRole === 'devops' || (myRole === "hacker" && item.role === "hacker")) && (
-                                                        <Image style={styles.logoRole} source={roleImages[item.role]} />
+                                                    (item.token === user.token || item.isDead || item.DevOpsSeeU && myRole === 'devops' || (myRole === "hacker" && item.role === "hacker")) && (<Image style={styles.logoRole} source={roleImages[item.role]} />
                                                     )
                                                 )}
                                             </View>
