@@ -398,7 +398,7 @@ export default function Play2({ navigation }) {
         }).then(response => response.json())
             .then(data => {
                 if (data.result) {
-            
+
                 }
             });
 
@@ -496,7 +496,7 @@ export default function Play2({ navigation }) {
                                         <Image style={styles.icone} source={require('../../assets/btn/icone-role.png')} />
                                     }
                                 </TouchableOpacity>
- 
+
                                 {/* MODAL INFO DU ROLE */}
                                 <Modal
                                     animationType="slide"
@@ -648,7 +648,10 @@ export default function Play2({ navigation }) {
                                 >
                                     <View style={styles.main}>
                                         <Text style={styles.username}>{index + 1} - {item.username}</Text>
-                                        <Image style={styles.skin} source={skins[item.skin].require} />
+                                        <Image
+                                            style={styles.skin}
+                                            source={skins.find(s => s.name === item.skin)?.require}
+                                        />
                                         {/* <View style={styles.roleetvote}>
 
                                             {(phase === "vote" && gameStarted || phase === "night-vote" && myRole === 'hacker') && (

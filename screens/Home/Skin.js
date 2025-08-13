@@ -37,12 +37,13 @@ export default function App({ navigation }) {
 
     // Étape 1 : Filtrer et combiner les skins du joueur
     const combinedSkins = skinPlayerBdd
-        .filter((skinKey) => skins[skinKey]) // Ne garde que les skins existants
-        .map((skinKey) => ({
-            key: skinKey,
-            name: skins[skinKey].name,
-            image: skins[skinKey].require,
-            displayName: skins[skinKey].displayName,
+        .map((skinKey) => skins.find(s => s.name === skinKey)) // trouve le skin
+        .filter(Boolean) // enlève ceux qui n'existent pas
+        .map((skin) => ({
+            key: skin.name,
+            name: skin.name,
+            image: skin.require,
+            displayName: skin.displayName,
         }));
 
     // Étape 2 : Affichage des skins valides
@@ -52,6 +53,7 @@ export default function App({ navigation }) {
             <Text style={styles.textSkin}>{skin.displayName}</Text>
         </View>
     ));
+
 
     // Fonction pour changer de skin avec fleches
     const PlusSkin = () => {

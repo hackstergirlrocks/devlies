@@ -35,7 +35,6 @@ const GameOverScreen = ({ route, navigation }) => {
         setImage(require('../../assets/GameOver/game-over-hacker.png'))
         setXP(150)
         setCoins(3)
-
       }
     } else {
       if (role === 'hacker') {
@@ -44,15 +43,12 @@ const GameOverScreen = ({ route, navigation }) => {
         setImage(require('../../assets/GameOver/win-hacker.png'))
         setXP(600)
         setCoins(15)
-
       } else {
         setMessage('tu as perdu')
         giveXpAndCoinLose(250, 5)
         setImage(require('../../assets/GameOver/game-over-dev.png'))
         setXP(250)
         setCoins(5)
-
-
       }
     }
   }, [])
