@@ -107,6 +107,7 @@ function resetGame(io) {
         voting: false,
         votes: {},
         hasVoted: {},
+        
     };
 
     users = [
