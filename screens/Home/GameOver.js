@@ -97,7 +97,16 @@ const GameOverScreen = ({ route, navigation }) => {
 
 
       <Image source={image} />
-      <Text>XP : {xp} / Coin : {coins}</Text>
+      <View style={styles.rewardBoth}>
+        <View style={styles.reward}>
+          <Image source={require('../../assets/HomePage/icone-xp.gif')} style={styles.iconeXP}></Image>
+          <Text style={styles.textEndGame}> {xp}     </Text>
+        </View>
+        <View style={styles.reward}>
+          <Image source={require('../../assets/HomePage/animation-coin.gif')} style={styles.iconeCoin}></Image>
+          <Text style={styles.textEndGameCoin}>{coins}</Text>
+        </View>
+      </View>
       <View style={styles.btn}>
         <TouchableOpacity
           style={styles.switchPage}
@@ -148,6 +157,39 @@ const styles = StyleSheet.create({
   image: {
     width: 200,
     height: 60
-  }
+  },
+  textEndGame: {
+    fontFamily: 'Minecraft',
+    fontSize: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textEndGameCoin: {
+ fontFamily: 'Minecraft',
+    fontSize: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    left:-5,
+  },
+  iconeXP: {
+    width: 70,
+    height: 70,
+  },
+  iconeCoin: {
+    width: 70,
+    height: 70,
+  },
+  reward: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+
+  },
+  rewardBoth: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    }
+
 
 });
