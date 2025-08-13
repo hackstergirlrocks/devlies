@@ -89,6 +89,9 @@ const GameOverScreen = ({ route, navigation }) => {
 
 
       <Image source={image} />
+      <Text>
+        {xpEarned}{result}
+      </Text>
       <View style={styles.btn}>
         <TouchableOpacity
           style={styles.switchPage}
