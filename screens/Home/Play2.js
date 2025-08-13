@@ -496,7 +496,7 @@ export default function Play2({ navigation }) {
                                         <Image style={styles.icone} source={require('../../assets/btn/icone-role.png')} />
                                     }
                                 </TouchableOpacity>
-
+ 
                                 {/* MODAL INFO DU ROLE */}
                                 <Modal
                                     animationType="slide"
