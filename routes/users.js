@@ -392,8 +392,8 @@ router.post('/win/:token', (req, res) => {
 /* modifie statistique et infos après une LOSE ! */
 router.post('/lose/:token', (req, res) => {
   User.findOne({ token: req.params.token })
-    .then(data => {
-      if (data) {
+    .then(user => {
+      if (user) {
         function getLevelFromXP(xp) {
           let level = 1;
           let nextLevelXP = 100;
