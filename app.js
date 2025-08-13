@@ -110,7 +110,7 @@ function resetGame(io) {
     };
 
     users = [
-        { id: 0, username: 'Bot_1', skin: 'xxx', role: 'hacker', isDead: false, DevOpsSeeU: false, protected: false },
+        { id: 0, username: 'Bot_1', skin: 'xxx', role: 'devops', isDead: false, DevOpsSeeU: false, protected: false },
         { id: 1, username: 'Bot_2', skin: 'han', role: 'chatgpt', isDead: false, DevOpsSeeU: false, protected: false },
         { id: 2, username: 'Bot_3', skin: 'cat', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
         // { id: 3, username: 'Bot_4', skin: 'basic', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
@@ -339,7 +339,7 @@ io.on('connection', (socket) => {
                         // if (!u.role) return { ...u, role: 'devops' };
                         // return u;
 
-                        return !u.role ? { ...u, role: Math.random() < 0.5 ? 'devops' : 'chatgpt' } : u;
+                        return !u.role ? { ...u, role: Math.random() < 0.5 ? 'hacker' : 'hacker' } : u;
 
                     });
 
