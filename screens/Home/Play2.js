@@ -4,6 +4,7 @@ import { useFonts } from 'expo-font'
 import { useDispatch } from 'react-redux';
 import { login, setSkin } from '../../reducers/user';
 import Player from './Player'
+import ProfilModal from '../ProfilModal';
 
 import io from "socket.io-client";
 import { useSelector } from 'react-redux';
@@ -71,10 +72,101 @@ export default function Play2({ navigation }) {
 
     const [votedTarget, setVotedTarget] = useState(null);
 
-    const [modalVisibleGPT, setModalVisibleGPT] = useState(false);
     const [modalVisibleRole, setModalVisibleRole] = useState(false)
     const [modalVisibleInfo, setModalVisibleInfo] = useState(false)
     const [modalVisibleLeave, setModalVisibleLeave] = useState(false)
+    const [modalVisibleMembreLobby, setModalVisibleMembreLobby] = useState(false)
+    const [modalVisibleProfil, setModalVisibleProfil] = useState(false)
+
+    const [selectedMember, setSelectedMember] = useState(null)
+    const [alreadyFriend, setAlreadyFriend] = useState(false)
+    const [requestFriends, setRequestFriends] = useState(false)
+    const [sendRequest, setSendRequest] = useState(false)
+
+    // useEffect pour récupérer tous ses amis, restart à chaque fois qu'on ferme le modal profil Ami
+    useEffect(() => {
+        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allfriends/` + user.token)
+            .then(response => response.json())
+            .then(data => {
+                setAlreadyFriend(alreadyFriend.some(ami => ami.username === data.username))
+            });
+
+        // useEffect pour récupèrer toutes les demandes d'amis reçues
+        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allrequestfriends/` + user.token)
+            .then(response => response.json())
+            .then(data => {
+                setRequestFriends(requestFriends.some(ami => ami.username === data.username))
+            })
+
+        // useEffect pour récupèrer toutes les demandes d'amis envoyées
+        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/requestsend/` + user.token)
+            .then(response => response.json())
+            .then(data => {
+                setSendRequest(sendRequest.some(ami => ami.username === data.username))
+            })
+    }, [modalVisibleMembreLobby, modalVisibleProfil])
+
+    // fetch pour ajouter un ami
+    const addAmi = () => {
+        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/requestfriend/` + user.token, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ friends: selectedMember._id })
+        }).then(response => response.json())
+            .then(data => {
+                setMsgBack(data.message)
+
+                setTimeout(() => {
+                    setMsgBack('');
+                }, 3000);
+            })
+    }
+
+    // fetch pour supprimer un ami
+    const removeAmi = () => {
+        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/removefriend/` + user.token, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ friends: selectedMember._id })
+        }).then(response => response.json())
+            .then(data => {
+                setMsgBack(data.message)
+
+                setTimeout(() => {
+                    setMsgBack('');
+                }, 3000);
+            })
+    }
+
+    const acceptInvit = () => {
+        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/addfriend/` + user.token, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ friends: selectedMember._id })
+        }).then(response => response.json())
+            .then(data => {
+                setMsgBack(data.message)
+
+                setTimeout(() => {
+                    setMsgBack('');
+                }, 3000);
+            })
+    }
+
+    const removeInvit = () => {
+        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/deleterequest/` + user.token, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ friends: selectedMember._id })
+        }).then(response => response.json())
+            .then(data => {
+                setMsgBack(data.message)
+
+                setTimeout(() => {
+                    setMsgBack('');
+                }, 3000);
+            })
+    }
 
     // set time out, ferme pop-up au bout de 5 secondes
     useEffect(() => {
@@ -147,8 +239,6 @@ export default function Play2({ navigation }) {
 
 
     // }, [])
-
-
 
 
 
@@ -398,7 +488,7 @@ export default function Play2({ navigation }) {
         }).then(response => response.json())
             .then(data => {
                 if (data.result) {
-            
+
                 }
             });
 
@@ -568,9 +658,98 @@ export default function Play2({ navigation }) {
                                     </ImageBackground>
                                 </Modal>
 
-                                <TouchableOpacity onPress={stopGame}>
+                                <TouchableOpacity onPress={() => setModalVisibleMembreLobby(!modalVisibleMembreLobby)}>
                                     <Image style={styles.icone} source={require('../../assets/btn/icone-friends.png')} />
                                 </TouchableOpacity>
+
+                                <Modal
+                                    animationType='fade'
+                                    transparent={true}
+                                    visible={modalVisibleMembreLobby}
+                                    onRequestClose={() => {
+                                        setModalVisibleMembreLobby(!modalVisibleMembreLobby)
+                                    }}>
+                                    <View style={{ flexDirection: 'row' }}>
+                                        {/* view créée pour fermer la modal */}
+                                        <TouchableOpacity style={{ width: 150 }} onPress={() => setModalVisibleMembreLobby(!modalVisibleMembreLobby)}>
+                                        </TouchableOpacity>
+                                        <ImageBackground source={require('../../assets/HomePage/pop-up-ami.png')} resizeMode='contain' style={{ flex: 1, justifyContent: 'center', width: 380 }}>
+                                            <View style={{ width: 260, height: 850 }}>
+                                                <View style={{ height: 80, paddingBottom: 10, flexDirection: 'row', alignItems: 'flex-end' }}>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20, left: 20, color: 'white', textDecorationLine: 'underline' }}>Membres du lobby :</Text>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20, left: 25, color: 'white' }}>({users.length})</Text>
+                                                </View>
+                                                <View style={{ width: 260, height: 850, alignItems: 'center', justifyContent: 'flex-start', backgroundColor: 'rgba(54, 76, 134, 0)' }}>
+                                                    <ScrollView
+                                                        contentContainerStyle={{ alignItems: 'center', paddingBottom: 100 }}>
+                                                        {users.map(member =>
+                                                            <ImageBackground
+                                                                key={member.username}
+                                                                source={require('../../assets/HomePage/pop-up-ami-input.png')}
+                                                            >
+                                                                <View style={{ height: 55, width: 240, justifyContent: 'center', left: 10 }}>
+                                                                    <TouchableOpacity onPress={() => {
+                                                                        setModalVisibleProfil(!modalVisibleProfil);
+                                                                        setSelectedMember(member)
+                                                                    }}>
+                                                                        <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>
+                                                                            {member.username}
+                                                                        </Text>
+                                                                    </TouchableOpacity>
+                                                                </View>
+                                                            </ImageBackground>
+                                                        )}
+                                                    </ScrollView>
+                                                </View>
+                                            </View>
+                                        </ImageBackground>
+                                    </View>
+                                    {selectedMember && (
+                                        <Modal
+                                            animationType='slide'
+                                            transparent={true}
+                                            visible={modalVisibleProfil}
+                                            onRequestClose={() => {
+                                                setModalVisibleProfil(!modalVisibleProfil)
+                                            }}>
+                                            <ImageBackground source={require('../../assets/HomePage/pop-up-windows-final2.png')} resizeMode='contain' style={styles.image}>
+                                                <View>
+                                                    <TouchableOpacity onPress={() => setModalVisibleProfil(!modalVisibleProfil)} style={{ width: 330, bottom: 44 }}>
+                                                        <Image source={require('../../assets/HomePage/croix-bleu-pop-up.png')} style={{ left: 38, height: 22, width: 22, }} />
+                                                    </TouchableOpacity>
+                                                </View>
+                                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                                    <View style={{ justifyContent: 'center', alignItems: 'center', height: 280, width: 230, left: 5 }}>
+                                                        <Image source={skins[selectedMember.skin]?.require} style={{ width: 200, height: 200 }} />
+                                                        <Text style={{ fontFamily: 'Minecraft', height: 30, width: 220, textAlign: 'center', bottom: 5 }}>{selectedMember.username}</Text>
+                                                    </View>
+                                                    <View style={{ height: 172, width: 325, top: 30, alignItems: 'center', justifyContent: 'center' }}>
+                                                        {alreadyFriend ? (
+                                                            <TouchableOpacity onPress={() => removeAmi()}>
+                                                                <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Supprimer de la liste d'ami</Text>
+                                                            </TouchableOpacity>
+                                                        ) : requestFriends ? (
+                                                            <TouchableOpacity onPress={() => acceptInvit()}>
+                                                                <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Accepter l'invitation</Text>
+                                                            </TouchableOpacity>
+                                                        ) : sendRequest ? (
+                                                            <TouchableOpacity onPress={() => removeInvit()}>
+                                                                <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Supprimer l'invitation d'ami</Text>
+                                                            </TouchableOpacity>
+                                                        ) : selectedMember.username === user.username ? (
+                                                            <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Ton profil</Text>
+                                                        ) : (
+                                                            <TouchableOpacity onPress={() => addAmi()}>
+                                                                <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Ajouter en ami</Text>
+                                                            </TouchableOpacity>
+                                                        )}
+                                                    </View>
+                                                </View>
+                                            </ImageBackground>
+                                        </Modal>
+                                    )}
+                                </Modal>
+
                             </View>
                         </View>
                         <View style={[styles.topPart]}>
@@ -842,10 +1021,11 @@ export default function Play2({ navigation }) {
                                 </View>
                             </View>
                         </KeyboardAvoidingView>
-                    </ImageBackground>
-                </View>
-            )}
-        </TouchableWithoutFeedback>
+                    </ImageBackground >
+                </View >
+            )
+            }
+        </TouchableWithoutFeedback >
     );
 }
 
