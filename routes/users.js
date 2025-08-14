@@ -404,7 +404,6 @@ router.post('/lose/:token', (req, res) => {
           return level;
         }
 
-
         let coins = user.coins || 0;
         let xp = user.experience || 0;
         let win = user.stats.win || 0;
