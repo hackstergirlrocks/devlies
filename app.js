@@ -264,17 +264,12 @@ function endNightVoting(io) {
     if (eliminated) {
 
         io.emit('playerEliminatedNight', eliminated);
-        const idx = users.findIndex(u => u.username === eliminated);
+        const user = users.find(u => u.username === eliminated);
 
-        const user = users.find(u => u.id === idx);
-
-
-        // console.log(user.protected)
-        if (idx !== -1 && !user.protected) {
-            users[idx].isDead = true;
-            users[idx].skin = 'ghost';
+        if (user && !user.protected) {
+            user.isDead = true;
+            user.skin = 'ghost';
         }
-
 
         io.emit('updateUsers', users);
     } else {
@@ -304,7 +299,7 @@ io.on('connection', (socket) => {
             return;
         }
 
-        if (users.length === 16) return; 
+        if (users.length === 16) return;
 
         const exists = users.some(u => u.username === player.username);
         if (exists) return;
@@ -380,7 +375,7 @@ io.on('connection', (socket) => {
 
                 }
             }, 1000);
-        } 
+        }
     });
 
     socket.on('leaveLobby', () => {

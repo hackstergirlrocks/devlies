@@ -107,37 +107,45 @@ router.post('/signup', (req, res) => {
 /* Route SignIn/Connexion */
 router.post('/signin', (req, res) => {
   const newToken = uid2(32);
+
   if (!checkBody(req.body, ['username', 'password'])) {
-    res.json({ result: false, error: 'Missing or empty fields' });
-    return;
+    return res.json({ result: false, error: 'Missing or empty fields' });
   }
+
   User.findOne({
     $or: [
       { username: req.body.username },
       { email: req.body.username }
     ]
-  }).then(data => {
-    User.updateOne(
-      {
-        $or: [
-          { username: req.body.username },
-          { email: req.body.username }
-        ]
-      },
-      { token: newToken }
-    ).then(() => {
-      if (data && bcrypt.compareSync(req.body.password, data.password)) {
-        res.json({ result: true, token: newToken, skin: data.skin_use, username: data.username });
-      } else {
-        res.json({ result: false, error: 'Password incorrect' });
+  })
+    .then(data => {
+      if (!data) {
+        return res.json({ result: false, error: 'User not found' });
       }
+
+      if (!bcrypt.compareSync(req.body.password, data.password)) {
+        return res.json({ result: false, error: 'Password incorrect' });
+      }
+
+    
+      return User.updateOne(
+        { _id: data._id },
+        { token: newToken }
+      ).then(() => {
+        return res.json({
+          result: true,
+          token: newToken,
+          skin: data.skin_use,
+          username: data.username
+        });
+      });
+    })
+    .catch(err => {
+      console.error(err);
+      return res.status(500).json({ result: false, error: 'Server error' });
     });
-    if (!data) {
-      res.json({ result: false, error: 'User not found' });
-      console.log('ff')
-    }
-  });
 });
+
 
 // ROUTE SKIN
 /* route récupère le Skin */
@@ -387,56 +395,58 @@ router.post('/win/:token', (req, res) => {
     });
 
   })
-}); 
+});
 
 /* modifie statistique et infos après une LOSE ! */
 router.post('/lose/:token', (req, res) => {
-  User.findOne({ token: req.params.token })
-    .then(user => {
-      if (user) {
-        function getLevelFromXP(xp) {
-          let level = 1;
-          let nextLevelXP = 100;
-          while (xp >= nextLevelXP) {
-            level++;
-            nextLevelXP = 100 * (level ** 2);
-          }
-          return level;
-        }
 
-        let coins = user.coins || 0;
-        let xp = user.experience || 0;
-        let win = user.stats.win || 0;
-        let game = user.stats.game || 0;
-
-        coins += Number(req.body.coins) || 0;
-        xp += Number(req.body.experience) || 0;
-        win += Number(req.body.win) || 0;
-        game += Number(req.body.game) || 0;
-
-
-        let level = getLevelFromXP(xp);
-        User.updateOne(
-          { token: req.params.token },
-          {
-            $set: {
-              coins: coins,
-              experience: xp,
-              level: level,
-              'stats.win': win,
-              'stats.game': game
-            },
-          }
-        ).then(result => {
-          if (result.modifiedCount > 0) {
-            res.json({ result: true, message: 'Stats de lose modifiées avec succès !' });
-          } else {
-            res.json({ result: false, message: "Pas de modification de stats de lose..." });
-          }
-        })
+  User.findOne({ token: req.params.token }).then(user => {
+    function getLevelFromXP(xp) {
+      let level = 1;
+      let nextLevelXP = 100;
+      while (xp >= nextLevelXP) {
+        level++;
+        nextLevelXP = 100 * (level ** 2);
       }
-    })
-})
+      return level;
+    }
+
+
+    let coins = user.coins || 0;
+    let xp = user.experience || 0;
+    let lose = user.stats.lose || 0;
+    let game = user.stats.game || 0;
+
+    coins += Number(req.body.coins) || 0;
+    xp += Number(req.body.experience) || 0;
+    lose += Number(req.body.lose) || 0;
+    game += Number(req.body.game) || 0;
+
+    console.log(req.body.lose)
+
+    let level = getLevelFromXP(xp);
+
+    User.updateOne(
+      { token: req.params.token },
+      {
+        $set: {
+          coins: coins,
+          experience: xp,
+          level: level,
+          'stats.lose': lose,
+          'stats.game': game
+        }
+      }
+    ).then(result => {
+      if (result.modifiedCount > 0) {
+        res.json({ result: true, message: "Stats de win modifiées !" });
+      } else {
+        res.json({ result: false, message: "Rien n'a changé..." });
+      }
+    });
+
+  })
+});
 
 //Route abandon de game
 router.post('/forfeit/:token', (req, res) => {
