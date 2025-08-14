@@ -79,22 +79,37 @@ export default function Play2({ navigation }) {
     const [modalVisibleProfil, setModalVisibleProfil] = useState(false)
 
     const [selectedMember, setSelectedMember] = useState(null)
+    const [security, setSecurity] = useState(false)
+
 
     // set time out, ferme pop-up au bout de 5 secondes
     useEffect(() => {
+        console.log(myName, security)
         if (gameStarted === true) {
             setModalVisibleRole(true);
             setTimeout(() => {
                 setModalVisibleRole(false);
             }, 5000);
         }
-
     }, [gameStarted])
+
+    useEffect(() => {
+
+        const findMe = users.find(user => user.username === myName);
+        if (findMe) {
+            setSecurity(false)
+        } else {
+            setSecurity(true)
+        }
+
+    }, [gameStarted, connected])
 
 
 
     useEffect(() => {
         if (!gameStarted) return;
+        if (!connected) return;
+        if (security) return;
 
         const aliveUsers = users.filter(user => !user.isDead);
         const hackers = aliveUsers.filter(user => user.role === "hacker");
@@ -284,17 +299,20 @@ export default function Play2({ navigation }) {
         });
 
         socket.on("gameReset", ({ users }) => {
-            setConnected(false);
-            setVotedTarget(null);
-            setUsers(users);
-            setMessages([]);
-            setMessagesDevOps([]);
-            setMessagesHacker([]);
-            setGameStarted(false);
-            setCountdown(null);
-            setError("");
-            setVotes({});
-            setHasVoted(false);
+            setTimeout(() => {
+                setConnected(false);
+                setVotedTarget(null);
+                setUsers(users);
+                setMessages([]);
+                setMessagesDevOps([]);
+                setMessagesHacker([]);
+                setGameStarted(false);
+                setCountdown(null);
+                setError("");
+                setVotes({});
+                setHasVoted(false);
+            }, 2000);
+
         });
 
         socket.on("gameError", ({ message }) => setError(message));
@@ -530,7 +548,9 @@ export default function Play2({ navigation }) {
                             ? <Image style={styles.btn} source={require('../../assets/btn/play-btn-down.png')} />
                             : <Image style={styles.btn} source={require('../../assets/btn/play-btn.png')} />
                         }
+
                     </TouchableOpacity>
+
                 </ImageBackground>
             ) : (
                 <View style={{ flex: 1 }}>
@@ -783,6 +803,7 @@ export default function Play2({ navigation }) {
                                     // }}
                                     onPress={() => {
                                         if (isDead) return;
+                                        if (security) return;
 
                                         if (phase === "night-vote") {
                                             if (myRole === "devops" && !hasInspected && !item.isDead && !item.DevOpsSeeU) {
@@ -1003,11 +1024,12 @@ export default function Play2({ navigation }) {
                                                         value={message}
                                                         onChangeText={setMessage}
                                                         placeholder="Écris un message..."
-                                                        editable={!isDead}
+                                                        editable={!isDead && !security}
                                                     />
 
                                                     <TouchableOpacity
-                                                        onPress={sendMessage} disabled={isDead}
+                                                        onPress={sendMessage}
+                                                        disabled={isDead || security}
                                                     >
                                                         <Image style={styles.envoie} source={require('../../assets/btn/envoyer-chat.png')} />
                                                     </TouchableOpacity>
