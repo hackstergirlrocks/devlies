@@ -17,7 +17,7 @@ export const userSlice = createSlice({
     setMusic: (state, action) => {
       state.value.music = action.payload;
     },
-      setUsername: (state, action) => {
+    setUsername: (state, action) => {
       state.value.username = action.payload;
     },
     logout: (state) => {
@@ -26,5 +26,5 @@ export const userSlice = createSlice({
   },
 });
 
-export const { login, logout, setSkin, setMusic, setUsername } = userSlice.actions;
+export const { login, logout, setSkin, setMusic, setUsername} = userSlice.actions;
 export default userSlice.reducer;

@@ -39,6 +39,7 @@ export default function App({ navigation }) {
                     dispatch(login({ token: data.token }));
                     dispatch(setSkin({ skin: data.skin }));
                     dispatch(setUsername(data.username));
+               
 
                     // setSignInUsername('');
                     // setSignInPassword('');

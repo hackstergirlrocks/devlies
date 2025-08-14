@@ -89,7 +89,7 @@ export default function Play2({ navigation }) {
             setModalVisibleRole(true);
             setTimeout(() => {
                 setModalVisibleRole(false);
-            }, 5000);
+            }, 3500);
         }
     }, [gameStarted])
 

@@ -72,7 +72,7 @@ const GameOverScreen = ({ route, navigation }) => {
     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/lose/${user.token}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ coins: coins, experience: xp, win: 1, game: 1 }),
+      body: JSON.stringify({ coins: coins, experience: xp, lose: 1, game: 1 }),
     }).then(response => response.json())
       .then(data => {
         if (data.result) {
