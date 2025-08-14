@@ -113,8 +113,8 @@ function resetGame(io) {
     users = [
         { id: 0, username: 'Bot_1', skin: 'xxx', role: 'devops', isDead: false, DevOpsSeeU: false, protected: false },
         { id: 1, username: 'Bot_2', skin: 'han', role: 'chatgpt', isDead: false, DevOpsSeeU: false, protected: false },
-        { id: 2, username: 'Bot_3', skin: 'cat', role: 'hacker', isDead: false, DevOpsSeeU: false, protected: false },
-        { id: 3, username: 'Bot_4', skin: 'basic', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
+        // { id: 2, username: 'Bot_3', skin: 'cat', role: 'hacker', isDead: false, DevOpsSeeU: false, protected: false },
+        // { id: 3, username: 'Bot_4', skin: 'basic', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
         // { id: 4, username: 'Bot_5', skin: 'plant', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
         // { id: 5, username: 'Bot_6', skin: 'nosferatu', role: 'dev', isDead: false, DevOpsSeeU: false, protected: false },
         // { id: 6, username: 'Bot_7', skin: 'wolf', role: 'hacker', isDead: false, DevOpsSeeU: false, protected: false },
@@ -304,7 +304,7 @@ io.on('connection', (socket) => {
             return;
         }
 
-        if (users.length === 6) return; // limite simple
+        if (users.length === 16) return; 
 
         const exists = users.some(u => u.username === player.username);
         if (exists) return;
