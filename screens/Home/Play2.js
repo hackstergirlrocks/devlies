@@ -101,7 +101,7 @@ export default function Play2({ navigation }) {
         } else {
             setSecurity(true)
         }
-
+ 
     }, [gameStarted, connected])
 
 
