@@ -380,7 +380,7 @@ io.on('connection', (socket) => {
 
                 }
             }, 1000);
-        }
+        } 
     });
 
     socket.on('leaveLobby', () => {

@@ -387,7 +387,7 @@ router.post('/win/:token', (req, res) => {
     });
 
   })
-});
+}); 
 
 /* modifie statistique et infos après une LOSE ! */
 router.post('/lose/:token', (req, res) => {
