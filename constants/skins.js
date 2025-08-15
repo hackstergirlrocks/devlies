@@ -210,11 +210,25 @@ const skins = [
     description: "Un raton tres hygienique."
   },
   {
+    name: "dino",
+    displayName: 'Dino',
+    require: require("../assets/Skin/dino-big.png"),
+    price: 100,
+    description: "Rawrr!"
+  },
+  {
     name: "kotaro",
     displayName: 'Kotaro',
     require: require("../assets/Skin/kotaro-big.png"),
     price: 120,
     description: "Moi, c'est Kotaro."
+  },
+  {
+    name: "neige",
+    displayName: 'Bonhomme de neige',
+    require: require("../assets/Skin/neige-big.png"),
+    price: 120,
+    description: "Yetiti."
   },
   {
     name: "stitch",
@@ -280,6 +294,13 @@ const skins = [
     description: "Un poisson un peu... special."
   },
   {
+    name: "batman",
+    displayName: 'Batman',
+    require: require("../assets/Skin/batman-big.png"),
+    price: 250,
+    description: "I am vengeance."
+  },
+  {
     name: "han",
     displayName: 'Villageois',
     require: require("../assets/Skin/haaaan-big.png"),
@@ -287,11 +308,32 @@ const skins = [
     description: "Haaaaan..."
   },
   {
+    name: "marsupilami",
+    displayName: 'Marsupilami',
+    require: require("../assets/Skin/marsupilami-big.png"),
+    price: 300,
+    description: "Houba houba..."
+  },
+  {
+    name: "joker",
+    displayName: 'Joker',
+    require: require("../assets/Skin/joker-big.png"),
+    price: 300,
+    description: "Why so serious?"
+  },
+  {
     name: "puck",
     displayName: 'Puck',
     require: require("../assets/Skin/puck-big.png"),
     price: 500,
     description: "Calme toi Guts..."
+  },
+  {
+    name: "goku",
+    displayName: 'Goku',
+    require: require("../assets/Skin/goku-big.png"),
+    price: 500,
+    description: "Kamahameha!!"
   },
   {
     name: "demon",

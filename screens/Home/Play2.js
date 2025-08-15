@@ -101,7 +101,7 @@ export default function Play2({ navigation }) {
         } else {
             setSecurity(true)
         }
- 
+
     }, [gameStarted, connected])
 
 
@@ -448,7 +448,14 @@ export default function Play2({ navigation }) {
 
 
     const leaveLobby = () => {
-        socket.emit("leaveLobby");
+        if (gameStarted) {
+            socket.emit("leaveLobby");
+            console.log('game started')
+        } else {
+            socket.emit("leaveLobbyNotStarted");
+            console.log('game not started')
+
+        }
         setConnected(false);
     };
 
@@ -524,7 +531,7 @@ export default function Play2({ navigation }) {
 
         setPressCheck(false)
         setPressNext(false)
-        socket.emit("leaveLobby");
+        leaveLobby()
         setConnected(false);
         setModalVisibleLeave(false);
 
@@ -613,9 +620,7 @@ export default function Play2({ navigation }) {
 
                             <View style={styles.iconeDroite}>
                                 <TouchableOpacity onPress={() => stopGame()}>
-
                                     <Image style={styles.icone} source={require('../../assets/btn/icone-role.png')} />
-
                                 </TouchableOpacity>
                                 <TouchableOpacity onPress={() => setModalVisibleInfo(!modalVisibleInfo)}>
                                     {gameStarted &&
