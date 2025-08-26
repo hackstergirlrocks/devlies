@@ -127,7 +127,7 @@ router.post('/signin', (req, res) => {
         return res.json({ result: false, error: 'Password incorrect' });
       }
 
-    
+
       return User.updateOne(
         { _id: data._id },
         { token: newToken }
@@ -487,7 +487,9 @@ router.get('/allfriends/:token', (req, res) => {
 /* route pour voir toutes ses demandes d'amis */
 router.get('/allrequestfriends/:token', (req, res) => {
   User.findOne({ token: req.params.token })
-    .populate('request_friends')
+    .populate({
+      path: 'request_friends',
+      select: -password})
     .then(data => {
       res.json({ result: true, request: data.request_friends })
     })
