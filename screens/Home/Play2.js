@@ -619,9 +619,9 @@ export default function Play2({ navigation }) {
                             </Modal>
 
                             <View style={styles.iconeDroite}>
-                                <TouchableOpacity onPress={() => stopGame()}>
+                                {/* <TouchableOpacity onPress={() => stopGame()}>
                                     <Image style={styles.icone} source={require('../../assets/btn/icone-role.png')} />
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                                 <TouchableOpacity onPress={() => setModalVisibleInfo(!modalVisibleInfo)}>
                                     {gameStarted &&
                                         <Image style={styles.icone} source={require('../../assets/btn/icone-role.png')} />
