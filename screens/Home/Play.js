@@ -324,6 +324,7 @@ export default function App({ navigation }) {
                 <ImageBackground style={styles.background} source={require('../../assets/HomePage/desk-home-page-bigger.png')}>
                     <Button style={styles.btnStart} title="Rejoindre le lobby" onPress={joinLobby} />
                 </ImageBackground>
+                
             ) : (
                 <>
                     <Text style={styles.title}>👥 Lobby</Text>
