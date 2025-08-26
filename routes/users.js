@@ -15,6 +15,7 @@ const bcrypt = require('bcrypt');
 // Récupère tous les users
 router.get('/allusers', async (req, res) => {
   User.find()
+  .select('-password')
     .then(data => {
       res.json({ result: true, users: data })
     })
@@ -339,6 +340,7 @@ router.put('/changepassword/:token', (req, res) => {
 /* récupère infos de l'user par rapport à son token */
 router.get('/:token', (req, res) => {
   User.findOne({ token: req.params.token })
+    .select('-password')
     .then(data => {
       console.log(data)
       res.json({ result: true, info: data })
@@ -476,7 +478,10 @@ router.post('/forfeit/:token', (req, res) => {
 /* route pour voir ses amis */
 router.get('/allfriends/:token', (req, res) => {
   User.findOne({ token: req.params.token })
-    .populate('friends')
+    .populate({
+      path: 'friends',
+      select: '-password -_id -token -email'
+    })
     .then(data => {
       if (data) {
         res.json({ result: true, friends: data.friends })
@@ -489,7 +494,8 @@ router.get('/allrequestfriends/:token', (req, res) => {
   User.findOne({ token: req.params.token })
     .populate({
       path: 'request_friends',
-      select: -password})
+      select: '-password -_id -token -email'
+    })
     .then(data => {
       res.json({ result: true, request: data.request_friends })
     })
@@ -498,7 +504,10 @@ router.get('/allrequestfriends/:token', (req, res) => {
 /* route pour voir les demandes d'amis envoyées */
 router.get('/requestsend/:token', (req, res) => {
   User.findOne({ token: req.params.token })
-    .populate('send_friends')
+    .populate({
+      path: 'send_friends',
+      select: '-password -_id -token -email'
+    })
     .then(data => {
       res.json({ result: true, request_send: data.send_friends })
     })
