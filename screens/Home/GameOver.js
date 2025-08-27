@@ -56,7 +56,7 @@ const GameOverScreen = ({ route, navigation }) => {
   function giveXpAndCoinWin(xp, coins) {
     console.log(xp, coins)
     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/win/${user.token}`, {
-      method: 'POST',
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ coins: coins, experience: xp, win: 1, game: 1 }),
     }).then(response => response.json())
@@ -70,7 +70,7 @@ const GameOverScreen = ({ route, navigation }) => {
   function giveXpAndCoinLose(xp, coins) {
     console.log(xp, coins)
     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/lose/${user.token}`, {
-      method: 'POST',
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ coins: coins, experience: xp, lose: 1, game: 1 }),
     }).then(response => response.json())

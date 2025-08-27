@@ -1,16 +1,42 @@
-// Play.js (version modifiée)
-
+import { StyleSheet, SafeAreaView, Button, Modal, ScrollView, Text, View, Image, TouchableOpacity, ImageBackground, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import React, { useEffect, useState, useRef } from "react";
-import { View, Text, Button, StyleSheet, Image, ScrollView, TextInput, Alert, TouchableOpacity, ImageBackground } from "react-native";
+import { useFonts } from 'expo-font'
+import { useDispatch } from 'react-redux';
+import { login, setSkin } from '../../reducers/user';
+import Player from './Player'
+import ProfilModal from '../ProfilModal';
+
 import io from "socket.io-client";
 import { useSelector } from 'react-redux';
 import skins from "../../constants/skins";
 
-const socket = io("http://192.168.1.27:3001");
+const socket = io(`http://${process.env.EXPO_PUBLIC_API_URL2}:3001`);
 
-export default function App({ navigation }) {
+export default function Play2({ navigation }) {
+    const dispatch = useDispatch();
+
+    const [MessageChat, setMessageChat] = useState('');
+    // const [error, setError] = useState('');
+
+    const [fontsLoaded] = useFonts({
+        'Minecraft': require('../../assets/fonts/Minecraft.ttf'),
+    });
+
+    if (!fontsLoaded) {
+        return null;
+    }
+
+
     const user = useSelector((state) => state.user.value);
     const scrollViewRef = useRef();
+
+    const [pressPlay, setPressPlay] = useState(false);
+
+
+    const [pressCroix, setPressCroix] = useState(false);
+    const [pressCheck, setPressCheck] = useState(false);
+    const [pressNext, setPressNext] = useState(false);
+
 
     const [connected, setConnected] = useState(false);
     const [users, setUsers] = useState([]);
@@ -20,7 +46,6 @@ export default function App({ navigation }) {
 
     const [messagesDevOps, setMessagesDevOps] = useState([]);
     const [messagesHacker, setMessagesHacker] = useState([]);
-
 
     const [message, setMessage] = useState("");
     const [messageHacker, setMessageHacker] = useState("");
@@ -38,16 +63,53 @@ export default function App({ navigation }) {
 
     const [myRole, setMyRole] = useState(null);
     const [isDead, setIsDead] = useState(false);
+    const [devOpsSeeU, setDevOpsSeeU] = useState(false);
+
     const [myName, setMyName] = useState(null);
 
     const [hasInspected, setHasInspected] = useState(false);
 
+
     const [votedTarget, setVotedTarget] = useState(null);
+
+    const [modalVisibleRole, setModalVisibleRole] = useState(false)
+    const [modalVisibleInfo, setModalVisibleInfo] = useState(false)
+    const [modalVisibleLeave, setModalVisibleLeave] = useState(false)
+    const [modalVisibleMembreLobby, setModalVisibleMembreLobby] = useState(false)
+    const [modalVisibleProfil, setModalVisibleProfil] = useState(false)
+
+    const [selectedMember, setSelectedMember] = useState(null)
+    const [security, setSecurity] = useState(false)
+
+
+    // set time out, ferme pop-up au bout de 5 secondes
+    useEffect(() => {
+        console.log(myName, security)
+        if (gameStarted === true) {
+            setModalVisibleRole(true);
+            setTimeout(() => {
+                setModalVisibleRole(false);
+            }, 3500);
+        }
+    }, [gameStarted])
+
+    useEffect(() => {
+
+        const findMe = users.find(user => user.username === myName);
+        if (findMe) {
+            setSecurity(false)
+        } else {
+            setSecurity(true)
+        }
+
+    }, [gameStarted, connected])
 
 
 
     useEffect(() => {
         if (!gameStarted) return;
+        if (!connected) return;
+        if (security) return;
 
         const aliveUsers = users.filter(user => !user.isDead);
         const hackers = aliveUsers.filter(user => user.role === "hacker");
@@ -73,6 +135,7 @@ export default function App({ navigation }) {
                 role: myRole
                 // image: require("../../assets/victory.png")
             });
+            // console.log('fin game')
             socket.emit("stopGame");
         } else if (hackers.length >= others.length) {
             // socket.emit("send_message", {
@@ -90,10 +153,20 @@ export default function App({ navigation }) {
                 // image: require("../../assets/victory.png")
             });
             socket.emit("stopGame");
+            // console.log('fin game')
+
         }
     }, [users]);
 
 
+    // useEffect(() => {
+
+    //     for (let i = 0; i < 150; i++) {
+    //         socket.emit("send_message", { username: 'OnlyGuts', message: 'FF' });
+    //     }
+
+
+    // }, [])
 
 
 
@@ -162,15 +235,17 @@ export default function App({ navigation }) {
 
         socket.on("updateUsers", (usersList) => {
             setUsers(usersList);
-
+            // console.log(usersList)
             const me = usersList.find(u => u.username === user.username);
             if (me) {
                 setMyRole(me.role);
                 setIsDead(me.isDead);
                 setMyName(me.username);
+                setDevOpsSeeU(me.devOpsSeeU)
 
             }
         });
+
 
         socket.on("chat_history", (history) => {
             setMessages(history.map(msg => ({
@@ -224,23 +299,124 @@ export default function App({ navigation }) {
         });
 
         socket.on("gameReset", ({ users }) => {
-            setConnected(false);
-            setVotedTarget(null);
-            setUsers(users);
-            setMessages([]);
-            setMessagesDevOps([]);
-            setMessagesHacker([]);
-            setGameStarted(false);
-            setCountdown(null);
-            setError("");
-            setVotes({});
-            setHasVoted(false);
+            setTimeout(() => {
+                setConnected(false);
+                setVotedTarget(null);
+                setUsers(users);
+                setMessages([]);
+                setMessagesDevOps([]);
+                setMessagesHacker([]);
+                setGameStarted(false);
+                setCountdown(null);
+                setError("");
+                setVotes({});
+                setHasVoted(false);
+            }, 2000);
+
         });
 
         socket.on("gameError", ({ message }) => setError(message));
 
         return () => socket.off();
     }, []);
+
+    // // useEffect pour récupérer tous ses amis, restart à chaque fois qu'on ferme le modal profil Ami
+    // useEffect(() => {
+    //     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allfriends/` + user.token)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             setAlreadyFriend(data)
+    //         });
+    // }, [modalVisibleMembreLobby, modalVisibleProfil])
+
+    // // useEffect pour récupèrer toutes les demandes d'amis reçues
+    // useEffect(() => {
+    //     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allrequestfriends/` + user.token)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             setRequestFriends(data)
+    //         })
+    // }, [modalVisibleMembreLobby, modalVisibleProfil])
+
+    // // useEffect pour récupèrer toutes les demandes d'amis envoyées
+    // useEffect(() => {
+    //     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/requestsend/` + user.token)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             setSendRequest(data)
+    //         })
+    // }, [modalVisibleMembreLobby, modalVisibleProfil])
+
+    // // fetch pour ajouter un ami
+    // const addAmi = (memberID) => {
+    //     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/requestfriend/` + user.token, {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({ friends: memberID })
+    //     }).then(response => response.json())
+    //         .then(data => {
+    //             setMsgBack(data.message)
+
+    //             setTimeout(() => {
+    //                 setMsgBack('');
+    //             }, 3000);
+    //         })
+    // }
+
+    // const recupInfo = (tokenMember) => {
+    //     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/` + tokenMember)
+    //         .then(reponse => reponse.json())
+    //         .then(data => {
+    //             setInfoSelected(data)
+    //         })
+    // }
+
+    // // fetch pour supprimer un ami
+    // const removeAmi = (memberID) => {
+    //     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/removefriend/` + user.token, {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({ friends: memberID })
+    //     }).then(response => response.json())
+    //         .then(data => {
+    //             setMsgBack(data.message)
+
+    //             setTimeout(() => {
+    //                 setMsgBack('');
+    //             }, 3000);
+    //         })
+    // }
+
+    // const acceptInvit = (memberID) => {
+    //     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/addfriend/` + user.token, {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({ friends: memberID })
+    //     }).then(response => response.json())
+    //         .then(data => {
+    //             setMsgBack(data.message)
+
+    //             setTimeout(() => {
+    //                 setMsgBack('');
+    //             }, 3000);
+    //         })
+    // }
+
+    // const removeInvit = (memberID) => {
+    //     fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/deleterequest/` + user.token, {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({ friends: memberID })
+    //     }).then(response => response.json())
+    //         .then(data => {
+    //             setMsgBack(data.message)
+
+    //             setTimeout(() => {
+    //                 setMsgBack('');
+    //             }, 3000);
+    //         })
+    // }
+
 
     const sendMessage = () => {
         if (message.trim() !== "") {
@@ -259,8 +435,6 @@ export default function App({ navigation }) {
 
 
     const joinLobby = () => {
-        const roles = ['hacker', 'devops'];
-        const randomRole = roles[Math.floor(Math.random() * roles.length)];
 
         socket.emit("joinLobby", {
             token: user.token,
@@ -274,7 +448,14 @@ export default function App({ navigation }) {
 
 
     const leaveLobby = () => {
-        socket.emit("leaveLobby");
+        if (gameStarted) {
+            socket.emit("leaveLobby");
+            console.log('game started')
+        } else {
+            socket.emit("leaveLobbyNotStarted");
+            console.log('game not started')
+
+        }
         setConnected(false);
     };
 
@@ -283,12 +464,19 @@ export default function App({ navigation }) {
     };
 
     const voteFor = (targetUsername) => {
-        if (isDead || targetUsername === myName) return;
+        const result = users.filter((u) => u.username === targetUsername);
+        if (isDead || targetUsername === myName || result[0].isDead) return;
+        // console.log(targetUsername, myName)
+
+        // console.log('t mort ? ', result[0].isDead);
 
         const isSameTarget = votedTarget === targetUsername;
-        console.log('Phase', phase)
-        console.log('isSameTarget', votedTarget, targetUsername)
+        // console.log('Phase', phase)
+        // console.log('isSameTarget', votedTarget, targetUsername)
         // console.log(votedTarget, targetUsername)
+
+        if (Date.now() - lastClickTime < 200) return;
+        lastClickTime = Date.now();
 
         if (phase === "vote") {
             if (isSameTarget) {
@@ -296,6 +484,7 @@ export default function App({ navigation }) {
                 setHasVoted(false);
                 setVotedTarget(null);
             } else {
+                socket.emit("unvotePlayer", votedTarget);
                 socket.emit("votePlayer", targetUsername);
                 setHasVoted(true);
                 setVotedTarget(targetUsername);
@@ -304,216 +493,775 @@ export default function App({ navigation }) {
             if (isSameTarget) {
                 socket.emit("unvotePlayerNight", targetUsername);
                 setHasVoted(false);
-                console.log('unVote Player')
-
+                // console.log('unVote Player')
                 setVotedTarget(null);
             } else {
+                socket.emit("unvotePlayerNight", votedTarget);
                 socket.emit("votePlayerNight", targetUsername);
                 setHasVoted(true);
-                console.log('Vote Player')
+                // console.log('Vote Player')
                 setVotedTarget(targetUsername);
             }
         }
     };
 
+    let lastClickTime = 0;
+
+
+    const roleImages = {
+        hacker: require('../../assets/HomePage/hacker.png'),
+        dev: require('../../assets/HomePage/devjunior.png'),
+        devops: require('../../assets/HomePage/devops.png'),
+        chatgpt: require('../../assets/HomePage/chatgpt.png')
+    };
+
+
+    const Check = () => {
+        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/forfeit/${user.token}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ lose: 1, game: 1 }),
+        }).then(response => response.json())
+            .then(data => {
+                if (data.result) {
+
+                }
+            });
+
+
+        setPressCheck(false)
+        setPressNext(false)
+        leaveLobby()
+        setConnected(false);
+        setModalVisibleLeave(false);
+
+    }
+
 
 
     return (
-        <View style={styles.container}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             {!connected ? (
                 <ImageBackground style={styles.background} source={require('../../assets/HomePage/desk-home-page-bigger.png')}>
-                    <Button style={styles.btnStart} title="Rejoindre le lobby" onPress={joinLobby} />
+                    {/* <Button style={styles.btnStart} title="Rejoindre le lobby" onPress={joinLobby} /> */}
+                    <TouchableOpacity
+                        style={styles.switchPage}
+                        activeOpacity={1}
+                        onPressIn={() => setPressPlay(true)}
+                        onPressOut={() => setPressPlay(false)}
+                        onPress={joinLobby}
+                    >
+                        {pressPlay
+                            ? <Image style={styles.btn} source={require('../../assets/btn/play-btn-down.png')} />
+                            : <Image style={styles.btn} source={require('../../assets/btn/play-btn.png')} />
+                        }
+
+                    </TouchableOpacity>
+
                 </ImageBackground>
-            
-            
             ) : (
-                <>
-                    <Text style={styles.title}>👥 Lobby</Text>
-                    {error ? <Text style={{ color: "red" }}>{error}</Text> : null}
+                <View style={{ flex: 1 }}>
 
-                    {countdown !== null && !gameStarted && (
-                        <Text style={{ fontSize: 18, color: "red" }}>
-                            La partie commence dans {countdown} secondes ⏳
-                        </Text>
-                    )}
+                    <ImageBackground style={styles.container} source={require('../../assets/game/in-game-page-bigger.png')}>
 
-
-                    {gameStarted && (
-                        <Text style={{ fontSize: 20, marginVertical: 10 }}>
-                            {phase === "day" && "🌞 Jour"}
-                            {phase === "night" && "🌙 Nuit"}
-                            {phase === "vote" && "🗳️ Vote"}
-                            {phase === "night-vote" && "🌒 Nuit"} ({phaseTime} s)
-                        </Text>
-                    )}
-
-                    {(phase === "vote" || phase === "night-vote") && (
-                        <View style={{ marginVertical: 20 }}>
-                            <Text style={{ marginTop: 10 }}>
-                                Votes en cours : {JSON.stringify(votes)}
-                            </Text>
-                        </View>
-                    )}
-
-                    <Button title="Quitter le lobby" onPress={leaveLobby} />
-                    <Button title="Stop la partie" onPress={stopGame} />
-
-                    <ScrollView contentContainerStyle={styles.usersContainer}>
-                        {users.map((item) => (
+                        <View style={styles.nav}>
                             <TouchableOpacity
-                                key={item.id}
-                                // onPress={() => voteFor(item.username)}
-
-                                // onPress={() => {
-                                //     if (isDead) return;
-                                //     console.log(phase)
-                                //     if (phase === "night-vote" && myRole === "devops") {
-                                //         socket.emit("send_message_devops", { username: 'Système', message: item.username + ' est ' + item.role, role: 'devops' });
-                                //         console.log('user', item.username, item.role)
-                                //     } else {
-                                //         voteFor(item.username)
-
-                                //     }
-                                // }}
-                                onPress={() => {
-                                    if (isDead) return;
-
-                                    if (phase === "night-vote") {
-                                        if (myRole === "devops" && !hasInspected) {
-                                            socket.emit("send_message_devops", {
-                                                username: 'Système',
-                                                message: `${item.username} est ${item.role}`,
-                                                role: 'devops',
-                                            });
-                                            setHasInspected(true);
-                                        } else if (myRole === "hacker" && (item.role !== 'hacker' || votedTarget === item.username)) {
-                                            voteFor(item.username);
-                                        }
-
-                                    } else if (phase === "vote") {
-                                        voteFor(item.username);
-                                    }
-                                }}
-
-                                disabled={
-                                    isDead ||
-
-                                    (
-                                        phase === "night-vote" &&
-                                        myRole !== "devops" &&
-                                        myRole !== "hacker"
-                                    )
-                                }
-
-                            >
-                                <View style={styles.userBox}>
-                                    <Image style={styles.skin} source={skins[item.skin].require} />
-                                    <Text style={styles.user}>{item.username}</Text>
-
-                                    {myRole !== null && (
-                                        (item.token === user.token || item.isDead || (myRole === "hacker" && item.role === "hacker")) && (
-                                            <Text style={styles.user}>{item.role}</Text>
-                                        )
-                                    )}
-
-                                    {(phase === "vote" && gameStarted || phase === "night-vote" && myRole === 'hacker') && (
-                                        <Text style={{ color: "red", fontWeight: "bold" }}>
-                                            Votes : {votes[item.username] || 0}
-                                        </Text>
-                                    )}
-                                </View>
-
+                                onPress={() => setModalVisibleLeave(!modalVisibleLeave)}
+                                activeOpacity={1}>
+                                <Image style={styles.fleche} source={require('../../assets/btn/icone-fleche-retour.png')} />
                             </TouchableOpacity>
 
-                        ))}
+                            <Modal
+                                animationType="slide"
+                                transparent={true}
+                                visible={modalVisibleLeave}
+                                onRequestClose={() => {
+                                    setModalVisibleLeave(!modalVisibleLeave);
+                                }}>
+                                <ImageBackground source={require('../../assets/game/pop-up-leave.png')} resizeMode='contain' style={{ flex: 1, justifyContent: 'center' }}>
+                                    <TouchableOpacity onPress={() => setModalVisibleLeave(!modalVisibleLeave)} style={{ width: 322, height: 23, left: 32, bottom: 11 }}>
+                                        <Image source={require('../../assets/HomePage/croix-bleu-pop-up.png')} style={{ bottom: 39, height: 22, width: 22, right: 123 }} />
+                                    </TouchableOpacity>
+                                    <View style={{ alignItems: 'center', justifyContent: 'center', width: 290, height: 275, left: 53 }}>
+                                        <View style={{ height: 100, alignItems: 'center', justifyContent: 'center' }}>
+                                            <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 18, paddingBottom: 10 }}>Voulez-vous vraiment quitter la partie en cours?</Text>
+                                            <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 12, color: 'gray' }}>Cela comptera comme une defaite et vous n'aurez ni coins, ni experience</Text>
+                                        </View>
+                                        <View style={{ flexDirection: 'row', gap: 20 }}>
+                                            <TouchableOpacity
+                                                activeOpacity={1}
+                                                onPressIn={() => setPressCheck(true)}
+                                                onPressOut={() => setPressCheck(false)}
+                                                onPress={() => {
+                                                    Check();
 
-                    </ScrollView>
+                                                }}
+                                            >
+                                                {pressCheck
+                                                    ? <Image style={styles.btnC} source={require('../../assets/btn/btn-check-down.png')} />
+                                                    : <Image style={styles.btnC} source={require('../../assets/btn/btn-check.png')} />
+                                                }
+                                            </TouchableOpacity>
+                                            <TouchableOpacity
+                                                activeOpacity={1}
+                                                onPressIn={() => setPressCroix(true)}
+                                                onPressOut={() => setPressCroix(false)}
+                                                onPress={() => setModalVisibleLeave(!modalVisibleLeave)}>
 
-                    <ScrollView
-                        style={styles.chatBox}
-                        ref={scrollViewRef}
-                        onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
-                    >
+                                                {pressCroix
+                                                    ? <Image style={styles.btnC} source={require('../../assets/btn/btn-croix-down.png')} />
+                                                    : <Image style={styles.btnC} source={require('../../assets/btn/btn-croix.png')} />
+                                                }
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                </ImageBackground>
+                            </Modal>
 
-                        {(phase === "vote" || phase === "day") &&
+                            <View style={styles.iconeDroite}>
+                                {/* <TouchableOpacity onPress={() => stopGame()}>
+                                    <Image style={styles.icone} source={require('../../assets/btn/icone-role.png')} />
+                                </TouchableOpacity> */}
+                                <TouchableOpacity onPress={() => setModalVisibleInfo(!modalVisibleInfo)}>
+                                    {gameStarted &&
+                                        <Image style={styles.icone} source={require('../../assets/btn/icone-role.png')} />
+                                    }
+                                </TouchableOpacity>
 
-                            messages.map((msg, index) => (
-                                <Text key={index} style={[styles.message, { color: msg.color }]}>
+                                {/* MODAL INFO DU ROLE */}
+                                <Modal
+                                    animationType="slide"
+                                    transparent={true}
+                                    visible={modalVisibleInfo}
+                                    onRequestClose={() => {
+                                        setModalVisibleInfo(!modalVisibleInfo);
+                                    }}>
+                                    <ImageBackground source={require('../../assets/HomePage/pop-up-windows.png')} resizeMode='contain' style={{ flex: 1, justifyContent: 'center' }}>
+                                        <TouchableOpacity onPress={() => setModalVisibleInfo(!modalVisibleInfo)} style={{ width: 322, height: 23, left: 32, bottom: 11 }}>
+                                            <Image source={require('../../assets/HomePage/croix-bleu-pop-up.png')} style={{ bottom: 39, height: 22, width: 22, right: 123 }} />
+                                        </TouchableOpacity>
+                                        {/* explication si je suis hacker */}
+                                        {myRole === 'hacker' &&
+                                            <View style={{ justifyContent: 'center', alignItems: 'center', width: 320, left: 35, height: 500 }}>
 
-                                    {msg.message}
+                                                <View style={{ width: 320, height: 250, justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Vous etes Hacker</Text>
+                                                    <Image source={require('../../assets/HomePage/hacker.png')} />
+                                                </View>
+                                                <View style={{ width: 300, height: 250, alignItems: 'center' }}>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 18, textDecorationLine: 'underline', paddingBottom: 5, color: 'red' }}>But du role :</Text>
+                                                    <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 17 }}>Il cherche a prendre le controle du projet en piratant tous les Devs. Chaque nuit, il choisit une cible a pirater avec les autres Hackers, et le jour il fait tout pour paraitre innocent et orienter les votes contre les Devs.</Text>
+                                                </View>
+                                            </View>
+                                        }
+                                        {/* explication si je suis devops */}
+                                        {myRole === 'devops' &&
+                                            <View style={{ justifyContent: 'center', alignItems: 'center', width: 320, left: 35, height: 500 }}>
 
-                                </Text>
-                            ))
-                        }
-                        {myRole === 'devops' &&
-                            messagesDevOps.map((msg, index) => (
-                                <Text key={index} style={[styles.message, { color: msg.color }]}>
-                                    {msg.message}
-                                </Text>
-                            ))
-                        }
-                        {(myRole === 'hacker' && phase === "night-vote") &&
+                                                <View style={{ width: 320, height: 250, justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Vous etes Dev Ops</Text>
+                                                    <Image source={require('../../assets/HomePage/devops.png')} />
+                                                </View>
+                                                <View style={{ width: 300, height: 250, alignItems: 'center' }}>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 18, textDecorationLine: 'underline', paddingBottom: 5, color: 'red' }}>But du role :</Text>
+                                                    <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 17 }}>Il utilise ses competences techniques pour reperer les infiltrés. Chaque nuit, il 'scan' un joueur pour savoir s’il est Hacker ou Dev. Son but est d’aider les Devs a cibler les bons suspects, tout en restant discret pour ne pas être elimine.</Text>
+                                                </View>
+                                            </View>
+                                        }
+                                        {/* explication si je suis chatgpt */}
+                                        {myRole === 'chatgpt' &&
+                                            <View style={{ justifyContent: 'center', alignItems: 'center', width: 320, left: 35, height: 500 }}>
 
-                            messagesHacker.map((msg, index) => (
-                                <Text key={index} style={[styles.message, { color: msg.color }]}>
-                                    {msg.message}
-                                </Text>
-                            ))
-                        }
-                    </ScrollView>
-                    {(myRole === 'hacker' && phase === "night-vote") &&
-                        <View>
-                            <TextInput
-                                style={styles.input}
-                                value={messageHacker}
-                                onChangeText={setMessageHacker}
-                                placeholder="Écris un message..."
-                                editable={!isDead}
-                            />
-                            <Button title="Envoyer" onPress={sendMessageHacker} disabled={isDead} />
+                                                <View style={{ width: 320, height: 250, justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Vous etes ChatGPT</Text>
+                                                    <Image source={require('../../assets/HomePage/chatgpt.png')} />
+                                                </View>
+                                                <View style={{ width: 300, height: 250, alignItems: 'center' }}>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 18, textDecorationLine: 'underline', paddingBottom: 5, color: 'red' }}>But du role :</Text>
+                                                    <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 17 }}>Il protege l’equipe en choisissant chaque nuit un joueur a soigner. Si ce joueur est pirate par les Hackers, il repare son code. Son but est de preserver les Devs et prolonger le projet jusqu’a ce que tous les hackers soient demasques.</Text>
+                                                </View>
+                                            </View>
+                                        }
+                                        {/* explication si je suis dev */}
+                                        {myRole === 'dev' &&
+                                            <View style={{ justifyContent: 'center', alignItems: 'center', width: 320, left: 35, height: 500 }}>
+
+                                                <View style={{ width: 320, height: 250, justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>Vous etes Dev Junior</Text>
+                                                    <Image source={require('../../assets/HomePage/devjunior.png')} />
+                                                </View>
+                                                <View style={{ width: 300, height: 250, alignItems: 'center' }}>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 18, textDecorationLine: 'underline', paddingBottom: 5, color: 'red' }}>But du role :</Text>
+                                                    <Text style={{ textAlign: 'center', fontFamily: 'Minecraft', fontSize: 17 }}>Son objectif est de proteger le projet en aidant l’équipe a reperer les Hackers. Il observe, participe aux discussions et vote chaque jour pour eliminer les suspects, en s’appuyant sur les indices laisses par les autres joueurs.</Text>
+                                                </View>
+                                            </View>
+                                        }
+                                    </ImageBackground>
+                                </Modal>
+
+                                <TouchableOpacity onPress={() => setModalVisibleMembreLobby(!modalVisibleMembreLobby)}>
+                                    <Image style={styles.icone} source={require('../../assets/btn/icone-friends.png')} />
+                                </TouchableOpacity>
+
+                                <Modal
+                                    animationType='fade'
+                                    transparent={true}
+                                    visible={modalVisibleMembreLobby}
+                                    onRequestClose={() => {
+                                        setModalVisibleMembreLobby(!modalVisibleMembreLobby)
+                                    }}>
+                                    <View style={{ flexDirection: 'row' }}>
+                                        {/* view créée pour fermer la modal */}
+                                        <TouchableOpacity style={{ width: 150 }} onPress={() => setModalVisibleMembreLobby(!modalVisibleMembreLobby)}>
+                                        </TouchableOpacity>
+                                        <ImageBackground source={require('../../assets/HomePage/pop-up-ami.png')} resizeMode='contain' style={{ flex: 1, justifyContent: 'center', width: 380 }}>
+                                            <View style={{ width: 260, height: 850 }}>
+                                                <View style={{ height: 80, paddingBottom: 10, flexDirection: 'row', alignItems: 'flex-end' }}>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20, left: 20, color: 'white', textDecorationLine: 'underline' }}>Membres du lobby :</Text>
+                                                    <Text style={{ fontFamily: 'Minecraft', fontSize: 20, left: 25, color: 'white' }}>({users.length})</Text>
+                                                </View>
+                                                <View style={{ width: 260, height: 850, alignItems: 'center', justifyContent: 'flex-start', backgroundColor: 'rgba(54, 76, 134, 0)' }}>
+                                                    <ScrollView
+                                                        contentContainerStyle={{ alignItems: 'center', paddingBottom: 100 }}>
+                                                        {users.map(member =>
+                                                            <ImageBackground
+                                                                key={member.username}
+                                                                source={require('../../assets/HomePage/pop-up-ami-input.png')}
+                                                            >
+                                                                <View style={{ height: 55, width: 240, justifyContent: 'center', left: 10 }}>
+                                                                    <TouchableOpacity onPress={() => {
+                                                                        setSelectedMember(member)
+                                                                        setModalVisibleProfil(!modalVisibleProfil)
+                                                                    }}>
+                                                                        <Text style={{ fontFamily: 'Minecraft', fontSize: 20 }}>
+                                                                            {member.username}
+                                                                        </Text>
+                                                                    </TouchableOpacity>
+                                                                </View>
+                                                            </ImageBackground>
+                                                        )}
+                                                    </ScrollView>
+                                                </View>
+                                            </View>
+                                        </ImageBackground>
+                                    </View>
+                                    {selectedMember && (
+                                        <Modal
+                                            animationType='slide'
+                                            transparent={true}
+                                            visible={modalVisibleProfil}
+                                            onRequestClose={() => {
+                                                setModalVisibleProfil(!modalVisibleProfil)
+                                            }}>
+                                            <ImageBackground source={require('../../assets/game/pop-up-leave.png')} resizeMode='contain' style={styles.image}>
+                                                <View>
+                                                    <TouchableOpacity onPress={() => setModalVisibleProfil(!modalVisibleProfil)} style={{ width: 300, left: 43, bottom: 10 }}>
+                                                        <Image source={require('../../assets/HomePage/croix-bleu-pop-up.png')} style={{ height: 22, width: 22, left: 10 }} />
+                                                    </TouchableOpacity>
+                                                </View>
+                                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                                    <View style={{ justifyContent: 'center', alignItems: 'center', height: 280, width: 230 }}>
+                                                        <Image source={skins.find(skin => skin.name === selectedMember.skin)?.require} style={{ width: 200, height: 200 }} />
+                                                        <Text style={{ fontFamily: 'Minecraft', height: 30, width: 220, textAlign: 'center', bottom: 5 }}>{selectedMember.username}</Text>
+                                                    </View>
+                                                </View>
+                                            </ImageBackground>
+                                        </Modal>
+                                    )}
+                                </Modal>
+
+                            </View>
                         </View>
-                    }
-                    {phase !== "night-vote" &&
-                        <View>
-                            <TextInput
-                                style={styles.input}
-                                value={message}
-                                onChangeText={setMessage}
-                                placeholder="Écris un message..."
-                                editable={!isDead}
-                            />
-                            <Button title="Envoyer" onPress={sendMessage} disabled={isDead} />
+                        <View style={[styles.topPart]}>
+                            {countdown !== null && !gameStarted && (
+                                <Text style={[styles.texte]}>
+                                    La partie commence dans {countdown} secondes
+                                </Text>
+                            )}
+                            {gameStarted && (
+                                <Text style={styles.texte}>
+                                    {phase === "day" && "Jour"}
+                                    {phase === "night" && "Nuit"}
+                                    {phase === "vote" && "Vote"}
+                                    {phase === "night-vote" && "Nuit"} ({phaseTime} s)
+                                </Text>
+                            )}
+                            {/* <Text style={styles.texte}>Les votes commencent dans 37 secondes...</Text> */}
                         </View>
-                    }
+                        <View style={styles.middle}>
+                            {users.map((item, index) => (
+                                <TouchableOpacity
 
-                </>
-            )}
-        </View>
+                                    key={item.id}
+                                    // onPress={() => voteFor(item.username)}
+
+                                    // onPress={() => {
+                                    //     if (isDead) return;
+                                    //     console.log(phase)
+                                    //     if (phase === "night-vote" && myRole === "devops") {
+                                    //         socket.emit("send_message_devops", { username: 'Système', message: item.username + ' est ' + item.role, role: 'devops' });
+                                    //         console.log('user', item.username, item.role)
+                                    //     } else {
+                                    //         voteFor(item.username)
+
+                                    //     }
+                                    // }}
+                                    onPress={() => {
+                                        if (isDead) return;
+                                        if (security) return;
+
+                                        if (phase === "night-vote") {
+                                            if (myRole === "devops" && !hasInspected && !item.isDead && !item.DevOpsSeeU) {
+
+                                                socket.emit("send_message_devops", {
+                                                    username: 'DevOps',
+                                                    message: `${item.username} est ${item.role}`,
+                                                    role: 'devops',
+                                                });
+                                                socket.emit("devops_see_you", item.id);
+
+                                                setHasInspected(true);
+                                            } else if (myRole === "hacker" && (item.role !== 'hacker' || votedTarget === item.username)) {
+                                                voteFor(item.username);
+                                            } else if (myRole === "chatgpt") {
+                                                // console.log(item.id)
+                                                console.log('jte propro suka mon reuf')
+                                                socket.emit("chatgpt_protect", item.id);
+                                            }
+
+                                        } else if (phase === "vote") {
+                                            voteFor(item.username);
+                                        }
+                                    }}
+
+                                    disabled={
+                                        isDead ||
+
+                                        (
+                                            phase === "night-vote" &&
+                                            myRole !== "devops" &&
+                                            myRole !== "hacker" &&
+                                            myRole !== "chatgpt"
+                                        )
+                                    }
+
+                                >
+                                    <View style={styles.main}>
+                                        <Text style={styles.username}>{index + 1} - {item.username}</Text>
+                                        <Image
+                                            style={styles.skin}
+                                            source={skins.find(s => s.name === item.skin)?.require}
+                                        />
+                                        {/* <View style={styles.roleetvote}>
+
+                                            {(phase === "vote" && gameStarted || phase === "night-vote" && myRole === 'hacker') && (
+                                                <Text style={[styles.vote, { minWidth: 20 }]}>
+                                                    {votes[item.username] || 0}
+                                                </Text>
+                                            )}
+
+                                            {myRole !== null && (
+                                                (item.token === user.token || item.isDead || (item.DevOpsSeeU === true && myRole === 'devops') || (myRole === "hacker" && item.role === "hacker")) && (
+                                                    <Image style={styles.logoRole} source={roleImages[item.role]} />
+                                                )
+                                            )}
+
+
+                                        </View> */}
+
+                                        <View style={styles.roleetvote}>
+                                            {/* Slot fixe pour l’icône de rôle */}
+                                            <View style={styles.roleSlot}>
+                                                {myRole !== null && (
+                                                    (item.token === user.token || item.isDead || item.DevOpsSeeU && myRole === 'devops' || (myRole === "hacker" && item.role === "hacker")) && (<Image style={styles.logoRole} source={roleImages[item.role]} />
+                                                    )
+                                                )}
+                                            </View>
+
+                                            {/* Vote toujours à droite */}
+                                            <Text style={[styles.vote, { minWidth: 20, textAlign: 'center' }]}>
+                                                {(((phase === "vote" && gameStarted) || (phase === "night-vote" && myRole === 'hacker')) && !item.isDead)
+                                                    ? (votes[item.username] || 0)
+                                                    : ""}
+                                            </Text>
+
+
+                                        </View>
+                                        <View style={styles.bouclier}>
+                                            {myRole !== null && (
+                                                (myRole === 'chatgpt' && phase === "night-vote" && item.protected) && (
+                                                    <Image style={styles.logoRole} source={require('../../assets/btn/icone-bouclier.png')} />
+                                                )
+                                            )}
+                                        </View>
+                                    </View>
+                                </TouchableOpacity>
+
+                            ))}
+                            {/* Pop-up rôle qui reste 5 secondes */}
+                            <Modal
+                                animationType="slide"
+                                transparent={true}
+                                visible={modalVisibleRole}
+                                onRequestClose={() => {
+                                    setModalVisibleRole(!modalVisibleRole);
+                                }}>
+                                <ImageBackground source={require('../../assets/game/role-pop-up.png')} resizeMode='contain' style={{ flex: 1, justifyContent: 'center' }}>
+                                    {/* si je suis hacker */}
+                                    {myRole === 'hacker' &&
+                                        <View>
+                                            <View style={{ width: 300, justifyContent: 'center', alignItems: 'center', left: 45, height: 150 }}>
+                                                <Image source={require('../../assets/HomePage/hacker.png')} />
+                                            </View>
+                                            <View>
+                                                <Text style={{ color: 'rgb(124, 168, 110)', fontFamily: 'Minecraft', width: 300, left: 45, textAlign: 'center', height: 70, fontSize: 25 }}>Vous etes Hacker!</Text>
+                                            </View>
+                                        </View>
+                                    }
+                                    {/* si je suis devops */}
+                                    {myRole === 'devops' &&
+                                        <View>
+                                            <View style={{ width: 300, justifyContent: 'center', alignItems: 'center', left: 45, height: 150 }}>
+                                                <Image source={require('../../assets/HomePage/devops.png')} />
+                                            </View>
+                                            <View>
+                                                <Text style={{ color: 'rgb(124, 168, 110)', fontFamily: 'Minecraft', width: 300, left: 45, textAlign: 'center', height: 70, fontSize: 25 }}>Vous etes Dev Ops!</Text>
+                                            </View>
+                                        </View>
+                                    }
+                                    {/* si je suis chatgpt */}
+                                    {myRole === 'chatgpt' &&
+                                        <View>
+                                            <View style={{ width: 300, justifyContent: 'center', alignItems: 'center', left: 45, height: 150 }}>
+                                                <Image source={require('../../assets/HomePage/chatgpt.png')} />
+                                            </View>
+                                            <View>
+                                                <Text style={{ color: 'rgb(124, 168, 110)', fontFamily: 'Minecraft', width: 300, left: 45, textAlign: 'center', height: 70, fontSize: 25 }}>Vous etes ChatGPT!</Text>
+                                            </View>
+                                        </View>
+                                    }
+                                    {/* si je suis devjunior */}
+                                    {myRole === 'dev' &&
+                                        <View>
+                                            <View style={{ width: 300, justifyContent: 'center', alignItems: 'center', left: 45, height: 150 }}>
+                                                <Image source={require('../../assets/HomePage/devjunior.png')} />
+                                            </View>
+                                            <View>
+                                                <Text style={{ color: 'rgb(124, 168, 110)', fontFamily: 'Minecraft', width: 300, left: 45, textAlign: 'center', height: 70, fontSize: 25 }}>Vous etes Dev Junior!</Text>
+                                            </View>
+                                        </View>
+                                    }
+                                </ImageBackground>
+                            </Modal>
+                        </View>
+                        <KeyboardAvoidingView
+                            style={{ flex: 1 }}
+                            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                            keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+                        >
+                            <View style={styles.divChat}>
+                                <View style={styles.chat}>
+                                    <ImageBackground style={styles.imageChat} source={require('../../assets/game/chat-div.png')}>
+
+                                        <ScrollView
+                                            style={styles.carreChat}
+                                            ref={scrollViewRef}
+                                            onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
+                                        >
+
+                                            {messages.map((msg, index) => {
+                                                if (myRole === 'hacker' && phase === 'night-vote') return null;
+                                                return (
+                                                    <Text key={index} style={[styles.messagesChat, { color: msg.color }]}>
+                                                        {msg.message}
+                                                    </Text>
+                                                );
+                                            })}
+                                            {myRole === 'devops' &&
+                                                messagesDevOps.map((msg, index) => (
+                                                    <Text key={index} style={[styles.messagesChat, { color: msg.color }]}>
+                                                        {msg.message}
+                                                    </Text>
+                                                ))
+                                            }
+                                            {(myRole === 'hacker' && phase === "night-vote") &&
+
+                                                messagesHacker.map((msg, index) => (
+                                                    <Text key={index} style={[styles.messagesChat, { color: msg.color }]}>
+                                                        {msg.message}
+                                                    </Text>
+                                                ))
+                                            }
+                                        </ScrollView>
+                                        <ImageBackground style={styles.input} source={require('../../assets/btn/input-long.png')}>
+                                            {/* <TextInput
+                                        style={styles.inputchat}
+                                        placeholder='chat'
+                                        placeholderTextColor={'black'}
+                                        value={MessageChat}
+                                        onChangeText={setMessageChat}
+                                        onSubmitEditing={Keyboard.dismiss}
+                                    />
+                                    <TouchableOpacity>
+                                        <Image style={styles.envoie} source={require('../../assets/btn/envoyer-chat.png')} />
+                                    </TouchableOpacity> */}
+                                            {(myRole === 'hacker' && phase === "night-vote") &&
+                                                <View style={styles.inputChatFix}>
+                                                    <TextInput
+                                                        style={styles.inputchat}
+                                                        value={messageHacker}
+                                                        onChangeText={setMessageHacker}
+                                                        placeholder="Écris un message..."
+                                                        editable={!isDead}
+                                                    />
+
+                                                    <TouchableOpacity
+                                                        onPress={sendMessageHacker} disabled={isDead}
+                                                    >
+                                                        <Image style={styles.envoie} source={require('../../assets/btn/envoyer-chat.png')} />
+                                                    </TouchableOpacity>
+                                                </View>
+                                            }
+                                            {phase !== "night-vote" &&
+                                                <View style={styles.inputChatFix}>
+                                                    <TextInput
+                                                        style={styles.inputchat}
+                                                        value={message}
+                                                        onChangeText={setMessage}
+                                                        placeholder="Écris un message..."
+                                                        editable={!isDead && !security}
+                                                    />
+
+                                                    <TouchableOpacity
+                                                        onPress={sendMessage}
+                                                        disabled={isDead || security}
+                                                    >
+                                                        <Image style={styles.envoie} source={require('../../assets/btn/envoyer-chat.png')} />
+                                                    </TouchableOpacity>
+                                                </View>
+                                            }
+                                        </ImageBackground>
+                                    </ImageBackground>
+                                </View>
+                            </View>
+                        </KeyboardAvoidingView>
+                    </ImageBackground >
+                </View >
+            )
+            }
+        </TouchableWithoutFeedback >
     );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
     background: {
         flex: 1,
         width: '100%',
         justifyContent: "center", alignItems: "center"
     },
-
-    container: { flex: 1, justifyContent: "center", alignItems: "center" },
-    title: { fontSize: 22, fontWeight: "bold", marginBottom: 20 },
-    usersContainer: { alignItems: "center", flexWrap: 'wrap', flexDirection: 'row' },
-    userBox: { alignItems: "center", marginBottom: 10, marginHorizontal: 5 },
-    user: { fontSize: 18, paddingTop: 5 },
-    skin: { width: 50, height: 50, resizeMode: "contain" },
-    chatBox: {
-        height: 100,
-        width: "100%",
-        borderWidth: 1,
-        borderColor: "#ccc",
-        marginVertical: 10,
-        padding: 10,
-        backgroundColor: "#f9f9f9",
+    nav: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 15,
     },
-    message: { fontSize: 14, marginBottom: 4 },
-    input: { borderWidth: 1, width: "100%", padding: 10, marginBottom: 10 },
+    iconeDroite: {
+        flexDirection: 'row',
+    },
+    icone: {
+        width: 50,
+        height: 52,
+        top: 35,
+    },
+    fleche: {
+        width: 75,
+        height: 60,
+        top: 30,
+    },
+    chat: {
+        width: '95%',
+        height: 320,
+        marginTop: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        //backgroundColor: 'rgba(242, 44, 44, 0.56)',
+    },
+    divChat: {
+        //backgroundColor: 'rgba(242, 44, 44, 0.56)',
+        alignItems: 'center',
+        flex: 1,
+        justifyContent: 'flex-end', // permet au chat de rester collé en bas
+    },
+    input: {
+        height: 45,
+        width: 350,
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        alignItems: 'center',
+        bottom: 25,
+        //backgroundColor: 'rgba(242, 44, 44, 0.56)',
+    },
+    envoie: {
+        width: 35,
+        height: 35,
+        marginRight: 20,
+        //backgroundColor: 'rgba(242, 44, 44, 0.56)',
+    },
+    inputchat: {
+        //backgroundColor: 'rgba(242, 44, 44, 0.56)',
+        width: 270,
+        marginLeft: 20,
+        fontFamily: 'Minecraft',
+        fontSize: 17,
+    },
+    carreChat: {
+        // backgroundColor: 'rgba(242, 44, 44, 0.56)',
+        width: 350,
+        height: 100,
+        marginTop: 15,
+        marginBottom: 30,
+    },
+    imageChat: {
+        width: 390,
+        height: 340,
+        alignItems: 'center',
+    },
+    chara: {
+        width: 100,
+        height: 90,
+        // backgroundColor: 'rgba(242, 44, 44, 0.56)',
+        padding: 0,
+        margin: 0,
+    },
+    middle: {
+        // backgroundColor: 'rgba(57, 44, 242, 0.56)',
+        flexDirection: 'row',
+        height: 360,
+        flexWrap: 'wrap',
+        top: 35,
+        minHeight: 360,
+    },
+    texte: {
+        top: 38,
+        textAlign: 'center',
+        // backgroundColor: 'rgba(48, 16, 191, 0.5)',
+        fontFamily: 'Minecraft',
+        fontSize: 17,
+        height: 30,
+        width: 390,
+    },
+    messagesChat: {
+        fontFamily: 'Minecraft',
+        fontSize: 17,
+    },
+
+    main: {
+
+        borderColor: 'black',
+        borderWidth: 2,
+        width: 97.5,
+        height: 90,
+
+    },
+    skin: {
+        width: 84,
+        height: 74,
+        top: -0.5,
+        left: 5,
+
+    },
+    username: {
+        padding: 3,
+        margin: 'auto',
+        width: 80,
+        height: 17,
+        fontFamily: 'Minecraft',
+    },
+    // roleetvote: {
+    //     // justifyContent: 'space-between',
+    //     // alignItems: 'flex-end',
+    //     // flexDirection: 'row',
+    //     // top: -90,
+    //     // width: '100%',
+    //     // height: '100%',
+    //     // // backgroundColor: 'rgba(25, 0, 0, 0.5)'
+    //     flexDirection: 'row',
+    //     justifyContent: 'space-between', // Rôle à gauche, vote à droite
+    //     alignItems: 'center',
+    //     top: -60,
+    //     width: '100%',
+    //     height: '100%',
+    // },
+    roleetvote: {
+        flexDirection: 'row',
+        justifyContent: 'space-between', // gauche = slot rôle, droite = vote
+        alignItems: 'center',
+        top: -60,
+        width: '100%',
+        height: '100%',
+    },
+    roleSlot: {
+        width: 25,   // même largeur que logoRole
+        height: 25,  // idem
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    logoRole: {
+        width: 25,
+        height: 25,
+    },
+    vote: {
+        fontWeight: 'bold',
+        color: "red",
+        fontFamily: 'Minecraft',
+    },
+    // vote: {
+    //     color: "red",
+    //     fontWeight: "bold",
+
+    // },
+    logoRole: {
+        width: 25,
+        height: 25,
+
+    },
+    inputChatFix: {
+        flexDirection: 'row'
+    },
+    topPart: {
+        height: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modal: {
+        justifyContent: 'center',
+        alignItems: 'center',
+
+        height: '100%',
+        backgroundColor: 'rgba(190, 47, 47, 0.5)',
+    },
+    modalChatGPT: {
+        flex: 1,
+    },
+    modalSeconde: {
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 25,
+    },
+    bouclier: {
+        bottom: 120,
+    },
+    btnC: {
+        width: 50,
+        height: 50,
+    },
+    image: {
+        flex: 1,
+        justifyContent: 'center',
+        width: 385
+    }
 });
