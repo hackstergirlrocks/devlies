@@ -348,7 +348,7 @@ router.get('/:token', (req, res) => {
 
 
 /* modifie statistique et infos après une WIN ! */
-router.post('/win/:token', (req, res) => {
+router.put('/win/:token', (req, res) => {
 
   User.findOne({ token: req.params.token }).then(user => {
     function getLevelFromXP(xp) {
@@ -398,7 +398,7 @@ router.post('/win/:token', (req, res) => {
 });
 
 /* modifie statistique et infos après une LOSE ! */
-router.post('/lose/:token', (req, res) => {
+router.put('/lose/:token', (req, res) => {
 
   User.findOne({ token: req.params.token }).then(user => {
     function getLevelFromXP(xp) {
@@ -449,7 +449,7 @@ router.post('/lose/:token', (req, res) => {
 });
 
 //Route abandon de game
-router.post('/forfeit/:token', (req, res) => {
+router.put('/forfeit/:token', (req, res) => {
   User.findOne({ token: req.params.token })
     .then(data => {
       if (data) {
