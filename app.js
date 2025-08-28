@@ -516,10 +516,9 @@ io.on('connection', (socket) => {
     socket.on('stopGame', () => resetGame(io));
 });
 
-const PORT = process.env.PORT || 3001; 
+const PORT = process.env.PORT || 3001;
 
-server.listen(PORT, () => {
-  console.log(`✅ Serveur lancé sur port ${PORT}`);
-});
+server.listen(PORT, () => console.log("✅ API port", PORT));
+
 
 module.exports = app;
