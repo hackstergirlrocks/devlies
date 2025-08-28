@@ -513,8 +513,10 @@ io.on('connection', (socket) => {
     socket.on('stopGame', () => resetGame(io));
 });
 
-server.listen(3001, () => {
-    console.log('✅ Serveur lancé sur http://localhost:3001');
+const PORT = process.env.PORT || 3001; 
+
+server.listen(PORT, () => {
+  console.log(`✅ Serveur lancé sur port ${PORT}`);
 });
 
 module.exports = app;
