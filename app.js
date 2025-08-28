@@ -25,7 +25,10 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
 const server = http.createServer(app);
-const io = new Server(server, { cors: { origin: '*' } });
+const io = new Server(server, {
+  path: "/socket.io",
+  cors: { origin: "*"} 
+});
 
 // --- Paramètres ---
 const DAY_DURATION = 25;
