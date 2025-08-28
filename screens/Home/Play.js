@@ -6,11 +6,16 @@ import { login, setSkin } from '../../reducers/user';
 import Player from './Player'
 import ProfilModal from '../ProfilModal';
 
-import io from "socket.io-client";
+import { io } from "socket.io-client";
+
 import { useSelector } from 'react-redux';
 import skins from "../../constants/skins";
 
-const socket = io(`http://${process.env.EXPO_PUBLIC_API_URL2}:3001`);
+const socket = io(`https://${process.env.EXPO_PUBLIC_API_URL2}`, {
+  path: "/socket.io",
+  transports: ["websocket"],
+});
+
 
 export default function Play2({ navigation }) {
     const dispatch = useDispatch();
@@ -517,7 +522,7 @@ export default function Play2({ navigation }) {
 
 
     const Check = () => {
-        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/forfeit/${user.token}`, {
+        fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/forfeit/${user.token}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ lose: 1, game: 1 }),

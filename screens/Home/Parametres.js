@@ -77,7 +77,7 @@ export default function Parametres({ navigation }) {
 
     const functionUsername = () => {
         if (PSEUDO_REGEX.test(changeUsername)) {
-            fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/changeusername/${user.token}`, {
+            fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/changeusername/${user.token}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: changeUsername }),
@@ -114,7 +114,7 @@ export default function Parametres({ navigation }) {
     const functionEmail = () => {
         //regex pour forme email
         if (EMAIL_REGEX.test(changeEmail)) {
-            fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/changeemail/${user.token}`, {
+            fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/changeemail/${user.token}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: changeEmail }),
@@ -147,7 +147,7 @@ export default function Parametres({ navigation }) {
 
 //fonction pour changer le mot de passe
     const functionPassword = () => {
-        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/changepassword/${user.token}`, {
+        fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/changepassword/${user.token}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             //vérification de l'ancien password pour bien validé

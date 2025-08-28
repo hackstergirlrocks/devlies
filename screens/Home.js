@@ -101,7 +101,7 @@ export default function App({ navigation }) {
 
   // useEffect pour récupérer tous ses amis, restart à chaque fois qu'on ferme le modal profil Ami
   useEffect(() => {
-    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allfriends/` + user.token)
+    fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/allfriends/` + user.token)
       .then(response => response.json())
       .then(data => {
         setInfoAmi(data.friends)
@@ -110,7 +110,7 @@ export default function App({ navigation }) {
 
   // useEffect pour récupèrer tous les membres
   useEffect(() => {
-    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allusers`)
+    fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/allusers`)
       .then(response => response.json())
       .then(data => {
         setAllUsers(data.users)
@@ -119,7 +119,7 @@ export default function App({ navigation }) {
 
   // useEffect pour récupèrer toutes les demandes d'amis reçues
   useEffect(() => {
-    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/allrequestfriends/` + user.token)
+    fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/allrequestfriends/` + user.token)
       .then(response => response.json())
       .then(data => {
         setRequestFriends(data.request)
@@ -128,7 +128,7 @@ export default function App({ navigation }) {
 
   // useEffect pour récupèrer toutes les demandes d'amis envoyées
   useEffect(() => {
-    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/requestsend/` + user.token)
+    fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/requestsend/` + user.token)
       .then(response => response.json())
       .then(data => {
         setSendRequest(data.request_send)
@@ -178,7 +178,7 @@ export default function App({ navigation }) {
 
   // fetch pour ajouter un ami
   const addAmi = () => {
-    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/requestfriend/` + user.token, {
+    fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/requestfriend/` + user.token, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ friends: selectedFriend._id })
@@ -194,7 +194,7 @@ export default function App({ navigation }) {
 
   // fetch pour supprimer un ami
   const removeAmi = () => {
-    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/removefriend/` + user.token, {
+    fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/removefriend/` + user.token, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ friends: selectedFriend._id })
@@ -209,7 +209,7 @@ export default function App({ navigation }) {
   }
 
   const acceptInvit = () => {
-    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/addfriend/` + user.token, {
+    fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/addfriend/` + user.token, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ friends: selectedFriend._id })
@@ -224,7 +224,7 @@ export default function App({ navigation }) {
   }
 
   const removeInvit = () => {
-    fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/deleterequest/` + user.token, {
+    fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/deleterequest/` + user.token, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ friends: selectedFriend._id })

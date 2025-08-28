@@ -31,7 +31,7 @@ export default function Shop({ navigation }) {
 
     // récupère toutes les infos de l'user et refresh la page à chaque achat
     useEffect(() => {
-        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/` + user.token)
+        fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/` + user.token)
             .then((response) => response.json())
             .then((data) => {
                 setInfoCoin(data.info.coins)
@@ -68,7 +68,7 @@ export default function Shop({ navigation }) {
 
     // route pour acheter un skin
     const buySkin = () => {
-        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/buySkin/` + user.token, {
+        fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/buySkin/` + user.token, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

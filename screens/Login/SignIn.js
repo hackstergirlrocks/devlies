@@ -29,7 +29,7 @@ export default function App({ navigation }) {
 
     // quand appuie sur next
     const Next = () => {
-        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/signin`, {
+        fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/signin`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username: signInUsername, password: signInPassword }),

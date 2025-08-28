@@ -27,7 +27,7 @@ export default function App({ navigation }) {
 
     // Récupération des skins de l'utilisateur
     useEffect(() => {
-        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/getskin/` + user.token)
+        fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/getskin/` + user.token)
             .then((response) => response.json())
             .then((data) => {
                 setSkinPlayerBdd(data.skin);
@@ -74,7 +74,7 @@ export default function App({ navigation }) {
 
     // Fonction pour sauvegarder le skin dans la BDD
     const SaveSkin = () => {
-        fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/sakeSkin`, {
+        fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/sakeSkin`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -105,7 +105,7 @@ export default function App({ navigation }) {
         const skinNames = Object.keys(skins); // récupère tous les noms
 
         for (let i = 0; i < skinNames.length; i++) {
-            fetch(`http://${process.env.EXPO_PUBLIC_API_URL}/users/addskin`, {
+            fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/addskin`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
