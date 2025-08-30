@@ -10,12 +10,12 @@ const io = new Server(server, {
   cors: { origin: '*' },
 });
 
-// --- Paramètres ---
+
 const DAY_DURATION = 25;
 const VOTE_DURATION = 25;
 const START_COUNTDOWN = 10;
 
-// --- Données ---
+
 let users = [
   { id: 0, username: 'Bot_1',  skin: 'xxx',     role: 'devops', isDead: false, DevOpsSeeU: false, protected: false },
   { id: 1, username: 'Bot_2',  skin: 'han',     role: 'chatgpt',isDead: false, DevOpsSeeU: false, protected: false },
@@ -45,14 +45,13 @@ let gameState = {
   phaseTime: DAY_DURATION,
   phaseTimer: null,
   voting: false,
-  votes: {},     // votes jour
-  hasVoted: {},  // sockets ayant voté (jour)
+  votes: {},
+  hasVoted: {},
 };
 
-let nightVotes = {};      // votes nuit
-let nightHasVoted = {};   // sockets ayant voté (nuit)
+let nightVotes = {};
+let nightHasVoted = {};
 
-// --- Reset ---
 function resetGame(io) {
   if (gameState.timer) clearInterval(gameState.timer);
   if (gameState.phaseTimer) clearInterval(gameState.phaseTimer);
@@ -80,10 +79,10 @@ function resetGame(io) {
     { id: 7, username: 'Bot_8',  skin: 'clown',   role: 'dev',    isDead: false, DevOpsSeeU: false, protected: false },
     { id: 8, username: 'Bot_9',  skin: 'duck',    role: 'dev',    isDead: false, DevOpsSeeU: false, protected: false },
     { id: 9, username: 'Bot_10', skin: 'steve',   role: 'dev',    isDead: false, DevOpsSeeU: false, protected: false },
-    { id:10, username: 'Bot_11', skin: 'pichu',   role: 'dev',    isDead: false, DevOpsSeeU: false, protected: false },
-    { id:11, username: 'Bot_12', skin: 'emo',     role: 'dev',    isDead: false, DevOpsSeeU: false, protected: false },
-    { id:12, username: 'Bot_13', skin: 'mafia',   role: 'dev',    isDead: false, DevOpsSeeU: false, protected: false },
-    { id:13, username: 'Bot_14', skin: 'requin',  role: 'dev',    isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 10, username: 'Bot_11', skin: 'pichu',   role: 'dev',    isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 11, username: 'Bot_12', skin: 'emo',     role: 'dev',    isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 12, username: 'Bot_13', skin: 'mafia',   role: 'dev',    isDead: false, DevOpsSeeU: false, protected: false },
+    { id: 13, username: 'Bot_14', skin: 'requin',  role: 'dev',    isDead: false, DevOpsSeeU: false, protected: false },
   ];
 
   chatHistory = [];
@@ -95,7 +94,7 @@ function resetGame(io) {
   io.emit('gameReset', { users });
 }
 
-// --- Phases ---
+
 function startPhase(io, phase) {
   if (gameState.phaseTimer) clearInterval(gameState.phaseTimer);
 
@@ -214,7 +213,6 @@ function endNightVoting(io) {
   startPhase(io, 'day');
 }
 
-// --- Socket.io ---
 io.on('connection', (socket) => {
   console.log('Connexion:', socket.id);
 
@@ -254,10 +252,10 @@ io.on('connection', (socket) => {
           gameState.started = true;
           io.emit('gameStarted');
 
-          // reset rôles
+
           users = users.map(u => ({ ...u, role: null }));
 
-          // nb hackers (≈ 1 pour 4)
+
           let nbHackers = Math.floor(users.length / 4);
           if (nbHackers < 1 && users.length > 1) nbHackers = 1;
 
@@ -294,12 +292,12 @@ io.on('connection', (socket) => {
     io.emit('updateUsers', users);
   });
 
-  // historiques
-  socket.emit('chat_history',         chatHistory);
-  socket.emit('chat_history_devops',  chatHistoryDevOps);
-  socket.emit('chat_history_hacker',  chatHistoryHacker);
 
-  // chats
+  socket.emit('chat_history', chatHistory);
+  socket.emit('chat_history_devops', chatHistoryDevOps);
+  socket.emit('chat_history_hacker', chatHistoryHacker);
+
+
   socket.on('send_message', (data) => {
     const me = users.find(u => String(u.id) === String(socket.id));
     if (me?.isDead) return;
@@ -338,7 +336,7 @@ io.on('connection', (socket) => {
     io.emit('updateUsers', users);
   });
 
-  // votes jour
+  
   socket.on('votePlayer', (targetUsername) => {
     if (!gameState.voting || gameState.phase !== 'vote') return;
     if (gameState.hasVoted[socket.id]) return;
@@ -366,7 +364,7 @@ io.on('connection', (socket) => {
     io.emit('voteUpdate', gameState.votes);
   });
 
-  // votes nuit (hackers)
+  
   socket.on('votePlayerNight', (targetUsername) => {
     if (!gameState.voting || gameState.phase !== 'night-vote') return;
     if (nightHasVoted[socket.id]) return;
@@ -399,5 +397,5 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
-  console.log('✅ API port', PORT);
+  console.log('API port', PORT);
 });
