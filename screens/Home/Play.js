@@ -12,8 +12,8 @@ import { useSelector } from 'react-redux';
 import skins from "../../constants/skins";
 
 const socket = io(`https://${process.env.EXPO_PUBLIC_API_URL2}`, {
-  path: "/socket.io",
-  transports: ["websocket"],
+    path: "/socket.io",
+    transports: ["websocket"],
 });
 
 
@@ -432,7 +432,7 @@ export default function Play2({ navigation }) {
 
     const sendMessageHacker = () => {
         if (messageHacker.trim() !== "") {
-            socket.emit("send_message_hacker", { username: user.username, message: '🐺 ' + messageHacker.trim() });
+            socket.emit("send_message_hacker", { username: user.username, message: messageHacker.trim() });
             setMessageHacker("");
         }
     };
@@ -830,7 +830,7 @@ export default function Play2({ navigation }) {
                                                 voteFor(item.username);
                                             } else if (myRole === "chatgpt") {
                                                 // console.log(item.id)
-                                                console.log('jte propro suka mon reuf')
+                                                //console.log('jte propro suka mon reuf')
                                                 socket.emit("chatgpt_protect", item.id);
                                             }
 
