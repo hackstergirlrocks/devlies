@@ -34,6 +34,9 @@ devlies/
 
 ## 📱 Tester l’application mobile
 
+![eas-update](https://github.com/user-attachments/assets/64710f0c-b100-4de8-8384-6a01555d173c)
+
+
 ---
 
 ## 📦 Frontend
