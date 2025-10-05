@@ -1,6 +1,6 @@
 # DevLies
 
-Bienvenue dans **DevLies**, un jeu multijoueur de déduction sociale où vos compétences en codage et en tromperie sont mises à l’épreuve. Ce monorepo contient le **frontend mobile** (React Native / Expo) et le **backend serveur** (Node.js / Express / Socket.IO).
+Bienvenue dans DevLies, un jeu multijoueur de déduction sociale inspiré du Loup-Garou, repensé en version développeur. Ce monorepo contient le frontend mobile (React Native / Expo) et le backend serveur (Node.js / Express / Socket.IO)
 
 ---
 
