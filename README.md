@@ -103,6 +103,7 @@ Pour démarrer le serveur en mode développement (avec rechargement automatique)
 npm run dev
 ```
 
+
 ## 📡 Communication en temps réel (Socket.IO)
 
 Le backend gère les événements suivants :
