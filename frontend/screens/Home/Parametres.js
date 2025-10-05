@@ -1,0 +1,412 @@
+import { StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, TextInput, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { useEffect, useState } from 'react';
+import { useFonts } from 'expo-font'
+import { useDispatch } from 'react-redux';
+import { login, logout, setSkin } from '../../reducers/user';
+import { useAudioPlayer } from 'expo-audio';
+import { playMusic, pauseMusic, toggleMusic } from "../../constants/music";
+import { useSelector } from 'react-redux';
+import { setMusic, setUsername } from '../../reducers/user';
+
+
+export default function Parametres({ navigation }) {
+
+    const audioSource = require('../../assets/Song/lonelytree.mp3');
+    const player = useAudioPlayer(audioSource);
+
+    const user = useSelector((state) => state.user.value);
+
+
+    const dispatch = useDispatch();
+
+    //setteur de confirmation pour les boutons
+    const [pressPassword, setPressPassword] = useState('');
+    const [pressUsername, setPressUsername] = useState('');
+    const [pressEmail, setPressEmail] = useState('');
+    const [pressLogout, setPressLogout] = useState(false);
+
+    //setteur de changement de username, password, email
+    const [changeUsername, setChangeUsername] = useState('');
+    const [changePassword, setChangePassword] = useState('');
+    const [changeNewPassword, setChangeNewPassword] = useState('');
+    const [changeEmail, setChangeEmail] = useState('');
+
+    //setteur pour messages d'erreurs
+    const [errorUsername, setErrorUsername] = useState('');
+    const [errorEmail, setErrorEmail] = useState('');
+    const [errorPassword, setErrorPassword] = useState('');
+
+    //regex pour bonne forme d'email et pour éviter les charactères spéciaux dans l'username
+    const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const PSEUDO_REGEX = /^[A-Za-z0-9]+$/;
+
+    //message de validation
+    const [valid, setValid] = useState('');
+
+    //setteur pour la masique
+    const [pressSound, setPressSound] = useState(false)
+    const [isPressed, setPressed] = useState(true)
+
+    // font Minecraft
+    const [fontsLoaded] = useFonts({
+        'Minecraft': require('../../assets/fonts/Minecraft.ttf'),
+    });
+
+    if (!fontsLoaded) {
+        return null;
+    }
+
+    //function on/off musique
+    const ChangeSound = () => {
+        setPressSound(!pressSound)
+        setPressed(!isPressed)
+        if (isPressed) {
+            // player.seekTo(0);
+            playMusic()
+            dispatch(setMusic(true));
+
+        } else {
+            // player.seekTo(0);
+            pauseMusic()
+            dispatch(setMusic(false));
+
+        }
+    }
+
+// fonction pour changer le nom d'utilisateur
+
+    const functionUsername = () => {
+        if (PSEUDO_REGEX.test(changeUsername)) {
+            fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/changeusername/${user.token}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: changeUsername }),
+            }).then(response => response.json())
+                .then(data => {
+                    if (data.result) {
+                        setChangeUsername('')
+                        setErrorUsername('')
+                        setValid('Username changed successfully !')
+                        dispatch(setUsername(changeUsername));
+// messages d'erreur et de validité de 3 secondes
+                        setTimeout(() => {
+                            setValid('');
+                            setErrorUsername('');
+                        }, 3000);
+                    } else {
+                        console.log(data.error)
+                        setErrorUsername(data.error)
+                        setTimeout(() => {
+                            setErrorUsername('');
+                        }, 3000);
+                    }
+                });
+        } else {
+//pas de charactère spéciaux autorisés
+            setErrorUsername('Username not valid, no special characters')
+            setTimeout(() => {
+                setErrorUsername('');
+            }, 3000);
+        }
+    }
+
+//fonction pour changer l'email de l'utilisateur
+    const functionEmail = () => {
+        //regex pour forme email
+        if (EMAIL_REGEX.test(changeEmail)) {
+            fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/changeemail/${user.token}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: changeEmail }),
+            }).then(response => response.json())
+                .then(data => {
+                    if (data.result) {
+                        //message d'erreur et de validité de 3 secondes
+                        setChangeEmail('')
+                        setValid('Email changed successfully !')
+                        setErrorEmail('')
+                        setTimeout(() => {
+                            setValid('')
+                            setErrorEmail('');
+                        }, 3000);
+                    } else {
+                        console.log(data.error)
+                        setErrorEmail(data.error)
+                        setTimeout(() => {
+                            setErrorEmail('');
+                        }, 3000);
+                    }
+                });
+        } else {
+            setErrorEmail('Email not valid')
+            setTimeout(() => {
+                setErrorEmail('');
+            }, 3000);
+        }
+    }
+
+//fonction pour changer le mot de passe
+    const functionPassword = () => {
+        fetch(`https://${process.env.EXPO_PUBLIC_API_URL}/users/changepassword/${user.token}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            //vérification de l'ancien password pour bien validé
+            body: JSON.stringify({ password: changePassword, newpassword: changeNewPassword }),
+        }).then(response => response.json())
+            .then(data => {
+                if (data.result) {
+                    //message d'erreur ou de validité de 3 secondes
+                    setChangeNewPassword('')
+                    setChangePassword('')
+                    setValid('Password changed successfully !')
+                    setErrorPassword('')
+                    setTimeout(() => {
+                        setValid('');
+                        setErrorPassword('');
+                    }, 3000);
+                } else {
+                    console.log(data.error)
+                    setErrorPassword(data.error)
+                    setTimeout(() => {
+                        setErrorPassword('');
+                    }, 3000);
+                }
+            });
+    }
+
+//fonction logout
+    const Logout = () => {
+        dispatch(logout({ token: null }));
+        navigation.navigate('Waiting')
+    }
+
+
+    return (
+
+        <ImageBackground style={styles.container} source={require('../../assets/SkinPage/background-blue-clair-bureau-big.png')}>
+
+            <View style={[styles.topPart, { flexDirection: 'row' }]}>
+                <TouchableOpacity
+                    style={styles.topMain}
+                    onPress={() => navigation.navigate('Home')}
+                    activeOpacity={1}
+                >
+                    <Image style={styles.fleche} source={require('../../assets/btn/icone-fleche-retour.png')} />
+                </TouchableOpacity>
+                <View style={[styles.soundlogout, { flexDirection: 'row' }]}>
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        onPressIn={() => setPressSound(!pressSound)}
+                        onPressOut={() => ChangeSound()}
+                    >
+                        {
+                            !user.music ? (
+                                pressSound ? (
+                                    <Image style={styles.imagesound} source={require('../../assets/btn/sound-off-down.png')} />
+                                ) : (
+                                    <Image style={styles.imagesound} source={require('../../assets/btn/sound-off.png')} />
+                                )
+                            ) : (
+                                pressSound ? (
+                                    <Image style={styles.imagesound} source={require('../../assets/btn/sound-on-red-down.png')} />
+                                ) : (
+                                    <Image style={styles.imagesound} source={require('../../assets/btn/sound-on-red.png')} />
+                                )
+                            )
+                        }
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        onPressIn={() => setPressLogout(true)}
+                        onPressOut={() => Logout()}
+                    >
+                        {pressLogout
+                            ? <Image style={styles.btnlogout} source={require('../../assets/btn/icone-logout-down.png')} />
+                            : <Image style={styles.btnlogout} source={require('../../assets/btn/icone-logout.png')} />
+                        }
+                    </TouchableOpacity>
+                </View>
+            </View>
+            {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
+            <View style={styles.content}>
+                <View style={styles.inputs}>
+
+                    {/* USERNAME */}
+                    <Text style={styles.errorU}>{errorUsername}</Text>
+                    <Text style={styles.valid}>{valid}</Text>
+                    <View style={styles.inputMain}>
+
+
+
+                        <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                            <TextInput style={[styles.username, { textAlign: 'center' }]} onChangeText={(value) => setChangeUsername(value)} value={changeUsername} placeholderTextColor="black" placeholder='change username'></TextInput>
+                        </ImageBackground>
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            onPressIn={() => setPressUsername(true)}
+                            onPress={() => functionUsername()}
+                            onPressOut={() => setPressUsername(false)}
+                        >
+                            {pressUsername
+                                ? <Image style={styles.btn} source={require('../../assets/btn/btn-check-down.png')} />
+                                : <Image style={styles.btn} source={require('../../assets/btn/btn-check.png')} />
+                            }
+                        </TouchableOpacity>
+                    </View>
+
+                    {/* EMAIL */}
+                    <Text style={styles.error}>{errorEmail}</Text>
+                    <View style={styles.inputMain}>
+
+
+
+                        <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                            <TextInput style={[styles.email, { textAlign: 'center' }]} placeholderTextColor="black" onChangeText={(value) => setChangeEmail(value)} value={changeEmail} placeholder='change email'></TextInput>
+                        </ImageBackground>
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            onPressIn={() => setPressEmail(true)}
+                            onPress={() => functionEmail()}
+                            onPressOut={() => setPressEmail(false)}
+                        >
+                            {pressEmail
+                                ? <Image style={styles.btn} source={require('../../assets/btn/btn-check-down.png')} />
+                                : <Image style={styles.btn} source={require('../../assets/btn/btn-check.png')} />
+                            }
+                        </TouchableOpacity>
+                    </View>
+
+                    {/* PASSWORD CONFIRM ET NEW */}
+                    <Text style={styles.error}>{errorPassword}</Text>
+
+                    <View style={styles.inputPass} >
+                        <View >
+                            <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                                <TextInput style={[styles.password, { textAlign: 'center' }]} secureTextEntry={true} onChangeText={(value) => setChangePassword(value)} value={changePassword} placeholderTextColor="black" placeholder='original password'></TextInput>
+                            </ImageBackground>
+
+                            <ImageBackground style={styles.inputImage} source={require('../../assets/input.png')}>
+                                <TextInput style={[styles.password, { textAlign: 'center' }]} secureTextEntry={true} onChangeText={(value) => setChangeNewPassword(value)} value={changeNewPassword} placeholderTextColor="black" placeholder='new password'></TextInput>
+                            </ImageBackground>
+                        </View>
+                        <TouchableOpacity
+                            activeOpacity={1}
+                            onPressIn={() => setPressPassword(true)}
+                            onPress={() => functionPassword()}
+                            onPressOut={() => setPressPassword(false)}
+                        >
+                            {pressPassword
+                                ? <Image style={styles.btn} source={require('../../assets/btn/btn-check-down.png')} />
+                                : <Image style={styles.btn} source={require('../../assets/btn/btn-check.png')} />
+                            }
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
+            {/* </TouchableWithoutFeedback> */}
+        </ImageBackground >
+    );
+}
+
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    topMain: {
+        // backgroundColor: 'red',
+        paddingTop: 50
+    },
+    inputs: {
+        //backgroundColor: 'rgba(145, 71, 255, 0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        top: '90',
+        gap: 10,
+    },
+    username: {
+        //backgroundColor: 'rgba(53, 141, 147, 0.5)',
+        fontFamily: 'Minecraft',
+        fontSize: '20',
+        paddingTop: 25,
+        marginLeft: 20,
+        width: 280,
+    },
+    password: {
+        //backgroundColor: 'rgba(138, 71, 255, 0.5)',
+        fontFamily: 'Minecraft',
+        fontSize: '20',
+        paddingTop: 25,
+        marginLeft: 20,
+        width: 280,
+    },
+    email: {
+        //backgroundColor: 'rgba(138, 71, 255, 0.5)',
+        fontFamily: 'Minecraft',
+        fontSize: '20',
+        paddingTop: 25,
+        marginLeft: 20,
+        width: 280,
+    },
+    inputImage: {
+        // backgroundColor: 'rgba(255, 99, 71, 0.5)',
+        width: 320,
+        height: 70,
+    },
+    error: {
+        color: 'red',
+        fontFamily: 'Minecraft',
+    },
+    errorU: {
+        color: 'red',
+        fontFamily: 'Minecraft',
+        top: 20
+    },
+    valid: {
+        color: 'rgb(29, 255, 104)',
+        fontFamily: 'Minecraft',
+    },
+    btnlogout: {
+        top: 30,
+        width: 70,
+        height: 70,
+        //backgroundColor: 'rgba(255, 99, 71, 0.5)',
+        right: 10,
+    },
+    imagesound: {
+        top: 30,
+        width: 70,
+        height: 70,
+        //backgroundColor: 'rgba(255, 99, 71, 0.5)',
+        right: 10,
+    },
+    topPart: {
+        //backgroundColor: 'rgba(255, 99, 71, 0.5)',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    btn: {
+        //backgroundColor: 'rgba(255, 99, 71, 0.5)',
+        width: 50,
+        height: 50,
+    },
+    content: {
+        //backgroundColor: 'rgba(135, 71, 255, 0.5)',
+        bottom: 85,
+    },
+    inputMain: {
+        alignItems: 'center',
+        flexDirection: 'row'
+    },
+    inputPass: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    fleche: {
+        width: 75,
+        height: 60,
+        marginLeft: 20,
+        marginTop: 20,
+    }
+});
